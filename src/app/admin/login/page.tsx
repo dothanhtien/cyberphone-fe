@@ -1,9 +1,51 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { MonitorSmartphone } from "lucide-react";
-import { LoginForm } from "@/components/forms/adminLoginForm";
+import {
+  AdminLoginForm,
+  LoginFormData,
+} from "@/components/forms/adminLoginForm";
+import apiClient from "@/lib/api/client";
 
 export default function AdminLoginPage() {
+  const router = useRouter();
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      router.replace("/admin/dashboard");
+    } else {
+      setCheckingAuth(false);
+    }
+  }, [router]);
+
+  const handleSubmit = async (formData: LoginFormData) => {
+    try {
+      setIsError(false);
+      setLoggingIn(true);
+      const result = await apiClient.post("/auth/login", formData);
+
+      const accessToken = result.data?.accessToken;
+
+      if (accessToken) {
+        localStorage.setItem("accessToken", accessToken);
+        router.push("/admin/dashboard");
+      }
+    } catch (err) {
+      setIsError(true);
+      console.log("An error occurred when logging in", err);
+    } finally {
+      setLoggingIn(false);
+    }
+  };
+
+  if (checkingAuth) return null;
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -13,7 +55,12 @@ export default function AdminLoginPage() {
           </div>
           Cyberphone
         </a>
-        <LoginForm />
+
+        <AdminLoginForm
+          loggingIn={loggingIn}
+          isError={isError}
+          onSubmit={handleSubmit}
+        />
       </div>
     </div>
   );
