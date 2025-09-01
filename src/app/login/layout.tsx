@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import "../../globals.css";
+import "../globals.css";
 
 export const metadata: Metadata = {
-  title: "Cyberphone | Admin | Login",
+  title: "Cyberphone | Login",
   description: "TBD",
 };
 
-export default function AdminLoginLayout({
+export default function LoginLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div>{children}</div>;
+  return <>{children}</>;
 }
