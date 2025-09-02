@@ -3,14 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MonitorSmartphone } from "lucide-react";
+
 import { LoginForm, LoginFormData } from "@/components/forms/loginForm";
 import apiClient from "@/lib/api/client";
+import { useAppDispatch } from "@/lib/hooks";
+import { setLoggedInUser } from "@/lib/store/features/auth/authSlice";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [loggingIn, setLoggingIn] = useState(false);
   const [isError, setIsError] = useState(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -30,7 +34,7 @@ export default function AdminLoginPage() {
       const accessToken = result.data?.accessToken;
 
       if (accessToken) {
-        localStorage.setItem("accessToken", accessToken);
+        dispatch(setLoggedInUser({ ...result.data.data, accessToken }));
         router.push("/admin/dashboard");
       }
     } catch (err) {

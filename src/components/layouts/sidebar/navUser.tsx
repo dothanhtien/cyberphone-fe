@@ -19,21 +19,25 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { logout } from "@/lib/store/features/auth/authSlice";
+import { useMemo } from "react";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}) {
+export function NavUser() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const loggedInUser = useAppSelector((state) => state.auth.user);
+  const user = useMemo(() => {
+    return {
+      name: loggedInUser?.fullName ?? "Loading",
+      email: loggedInUser?.email ?? "Loading",
+      avatar: loggedInUser?.avatarUrl ?? "https://github.com/shadcn.png",
+    };
+  }, [loggedInUser]);
   const { isMobile } = useSidebar();
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
+    dispatch(logout());
     router.push("/login");
   };
 
