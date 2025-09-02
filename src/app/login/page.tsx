@@ -3,10 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MonitorSmartphone } from "lucide-react";
-import {
-  AdminLoginForm,
-  LoginFormData,
-} from "@/components/forms/adminLoginForm";
+import { LoginForm, LoginFormData } from "@/components/forms/loginForm";
 import apiClient from "@/lib/api/client";
 
 export default function AdminLoginPage() {
@@ -56,7 +53,7 @@ export default function AdminLoginPage() {
           Cyberphone
         </a>
 
-        <AdminLoginForm
+        <LoginForm
           loggingIn={loggingIn}
           isError={isError}
           onSubmit={handleSubmit}

@@ -10,17 +10,13 @@ export interface LoginFormData {
   password: string;
 }
 
-interface AdminLoginFormProps {
+interface LoginFormProps {
   loggingIn: boolean;
   isError: boolean;
   onSubmit: ({ identifier, password }: LoginFormData) => void;
 }
 
-export function AdminLoginForm({
-  isError,
-  loggingIn,
-  onSubmit,
-}: AdminLoginFormProps) {
+export function LoginForm({ isError, loggingIn, onSubmit }: LoginFormProps) {
   const [formData, setFormData] = useState<LoginFormData>({
     identifier: "",
     password: "",

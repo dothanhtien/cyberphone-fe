@@ -11,7 +11,7 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({
   children,
-  redirectPath = "/admin/login",
+  redirectPath = "/login",
   homePath = "/admin/dashboard",
 }: ProtectedRouteProps) {
   const router = useRouter();
@@ -25,7 +25,6 @@ export default function ProtectedRoute({
 
     if (token) {
       setIsAuthenticated(true);
-      router.replace(homePath);
     } else {
       setIsAuthenticated(false);
       if (pathname !== redirectPath) {
