@@ -1,12 +1,14 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import {
   BadgeCheck,
   LayoutDashboard,
   LayoutGrid,
   MonitorSmartphone,
   Package,
+  Users,
 } from "lucide-react";
 
 import {
@@ -60,6 +62,11 @@ const data = {
         },
       ],
     },
+    {
+      title: "Users",
+      url: "/admin/users",
+      icon: Users,
+    },
   ],
 };
 
@@ -70,7 +77,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/admin/dashboard">
+              <Link href="/admin/dashboard">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <MonitorSmartphone className="size-4" />
                 </div>
@@ -78,7 +85,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <span className="truncate font-medium">Cyberphone</span>
                   <span className="truncate text-xs">Admin Portal</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
