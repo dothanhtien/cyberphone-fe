@@ -21,19 +21,17 @@ export default function ProtectedRoute({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-      if (pathname !== redirectPath) {
-        router.replace(redirectPath);
-      }
+    let token: string | null = null;
+    if (typeof window !== "undefined") {
+      token = localStorage.getItem("accessToken");
     }
 
+    if (!token && pathname !== redirectPath) {
+      router.replace(redirectPath);
+    }
+    setIsAuthenticated(!!token);
     setIsAuthChecked(true);
-  }, [router, pathname, redirectPath, homePath]);
+  }, [window, router, pathname, redirectPath, homePath]);
 
   if (!isAuthChecked) return null;
 
