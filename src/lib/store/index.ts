@@ -11,6 +11,7 @@ import {
   persistStore,
 } from "redux-persist";
 import { encryptTransform } from "redux-persist-transform-encrypt";
+
 import authReducer from "./features/auth/authSlice";
 
 const rootReducer = combineReducers({
@@ -22,14 +23,14 @@ export type RootState = ReturnType<typeof rootReducer>;
 const persistConfig = {
   key: "root",
   storage,
+  version: 1, // Add versioning to prevent migration issues
   transforms: [
     encryptTransform({
-      secretKey: process.env.NEXT_PUBLIC_REDUX_ENCRYPTION_KEY || "",
+      secretKey: process.env.NEXT_PUBLIC_REDUX_ENCRYPTION_KEY ?? "",
       onError: (error) =>
         console.error("Redux persist encryption error:", error),
     }),
   ],
-  version: 1, // Add versioning to prevent migration issues
 };
 
 const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer);
@@ -46,5 +47,6 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-export type AppStore = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+export type AppStore = typeof store;
+export type AppState = ReturnType<AppStore["getState"]>;

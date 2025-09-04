@@ -31,10 +31,9 @@ export default function AdminLoginPage() {
       setLoggingIn(true);
       const result = await apiClient.post("/auth/login", formData);
 
-      const accessToken = result.data?.accessToken;
-
-      if (accessToken) {
-        dispatch(setLoggedInUser({ ...result.data.data, accessToken }));
+      if (result.data?.data) {
+        dispatch(setLoggedInUser(result.data.data));
+        localStorage.setItem("accessToken", result.data?.accessToken);
         router.push("/admin/dashboard");
       }
     } catch (err) {

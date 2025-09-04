@@ -1,7 +1,8 @@
 "use client";
 
-import { ChevronsUpDown, CircleUserRound, LogOut } from "lucide-react";
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronsUpDown, CircleUserRound, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -21,7 +22,6 @@ import {
 } from "@/components/ui/sidebar";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { logout } from "@/lib/store/features/auth/authSlice";
-import { useMemo } from "react";
 
 export function NavUser() {
   const router = useRouter();
@@ -38,6 +38,7 @@ export function NavUser() {
 
   const handleLogout = () => {
     dispatch(logout());
+    localStorage.removeItem("accessToken");
     router.push("/login");
   };
 
