@@ -11,3 +11,11 @@ export interface Brand {
   updatedAt: string | undefined;
   updatedBy: string | undefined;
 }
+
+export interface CreateBrand {
+  name: string;
+  slug: string;
+  description?: string;
+  websiteUrl?: string;
+  logoUrl?: string;
+}

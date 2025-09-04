@@ -1,4 +1,9 @@
+import { CreateBrand } from "@/app/interfaces";
 import apiClient from "./client";
+
+export const createBrand = (data: CreateBrand) => {
+  return apiClient.post("/brands", data);
+};
 
 export const getBrands = (
   {
