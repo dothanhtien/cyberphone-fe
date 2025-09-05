@@ -7,8 +7,9 @@ import { DataTable } from "@/components/tables/dataTable";
 import { Brand } from "@/app/interfaces";
 import { apiService } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { columns } from "./brandsTable/column";
-import { BrandModal } from "./brandModal";
+import { getColumns } from "./components/brandsTablecolumn";
+import { BrandModal } from "./components/brandModal";
+import { ConfirmDeleteBrandDialog } from "./components/confirmDeleteBrandDialog";
 
 export default function BrandsPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +17,16 @@ export default function BrandsPage() {
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [pageCount, setPageCount] = useState(0);
 
-  const [brandModalOpen, setBrandModalOpen] = useState(false);
+  const [brandModal, setBrandModal] = useState<{
+    open: boolean;
+    action: "create" | "edit";
+    brand: Brand | null;
+  }>({ open: false, action: "create", brand: null });
+
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    brand: Brand | null;
+  }>({ open: false, brand: null });
 
   const fetchBrands = useCallback(async () => {
     setIsLoading(true);
@@ -45,16 +55,34 @@ export default function BrandsPage() {
     fetchBrands();
   }, [fetchBrands]);
 
+  const handleCreateBrand = () =>
+    setBrandModal({ open: true, action: "create", brand: null });
+
+  const handleEditBrand = (brand: Brand) =>
+    setBrandModal({ open: true, action: "edit", brand });
+
+  const handleCloseBrandModal = () =>
+    setBrandModal({ open: false, action: "create", brand: null });
+
+  const handleDeleteBrand = (brand: Brand) =>
+    setDeleteDialog({ open: true, brand });
+
+  const handleCloseDeleteDialog = () =>
+    setDeleteDialog({ open: false, brand: null });
+
   return (
     <>
       <div className="flex justify-between">
         <PageHeading>Brands</PageHeading>
 
-        <Button onClick={() => setBrandModalOpen(true)}>New brand</Button>
+        <Button onClick={handleCreateBrand}>New brand</Button>
       </div>
 
       <DataTable
-        columns={columns}
+        columns={getColumns({
+          onEdit: handleEditBrand,
+          onDelete: handleDeleteBrand,
+        })}
         data={brandList}
         isLoading={isLoading}
         pagination={pagination}
@@ -63,8 +91,17 @@ export default function BrandsPage() {
       />
 
       <BrandModal
-        open={brandModalOpen}
-        onOpenChange={setBrandModalOpen}
+        action={brandModal.action}
+        data={brandModal.brand}
+        open={brandModal.open}
+        onOpenChange={(isOpen) => !isOpen && handleCloseBrandModal()}
+        onSuccess={fetchBrands}
+      />
+
+      <ConfirmDeleteBrandDialog
+        data={deleteDialog.brand}
+        open={deleteDialog.open}
+        onOpenChange={(isOpen) => !isOpen && handleCloseDeleteDialog()}
         onSuccess={fetchBrands}
       />
     </>

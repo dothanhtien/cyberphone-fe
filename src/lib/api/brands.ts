@@ -16,3 +16,11 @@ export const getBrands = (
 ) => {
   return apiClient.get(`/brands?page=${page}&limit=${limit}`);
 };
+
+export const updateBrand = (id: string, data: CreateBrand) => {
+  return apiClient.patch(`/brands/${id}`, data);
+};
+
+export const deleteBrand = (id: string) => {
+  return apiClient.delete(`/brands/${id}`);
+};
