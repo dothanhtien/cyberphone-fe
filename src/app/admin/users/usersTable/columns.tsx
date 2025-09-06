@@ -3,7 +3,7 @@
 import { SquarePen, Trash } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 
-import { User } from "@/app/interfaces";
+import { User } from "@/interfaces";
 import { formatRelative } from "@/app/utils";
 import { Button } from "@/components/ui/button";
 import {
