@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { PaginationState } from "@tanstack/react-table";
 
 import PageHeading from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
-import { Brand } from "@/app/interfaces";
+import { Brand } from "@/interfaces";
 import { apiService } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { getColumns } from "./components/brandsTablecolumn";
@@ -14,7 +15,10 @@ import { ConfirmDeleteBrandDialog } from "./components/confirmDeleteBrandDialog"
 export default function BrandsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [brandList, setBrandList] = useState<Brand[]>([]);
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [pageCount, setPageCount] = useState(0);
 
   const [brandModal, setBrandModal] = useState<{
@@ -38,11 +42,18 @@ export default function BrandsPage() {
 
       if (data) {
         setBrandList(data.items);
-        setPagination({
+        const next = {
           pageIndex: data.currentPage - 1,
           pageSize: data.itemsPerPage,
-        });
-        setPageCount(Math.ceil(data.totalCount / data.itemsPerPage));
+        };
+        setPagination((prev) =>
+          prev.pageIndex !== next.pageIndex || prev.pageSize !== next.pageSize
+            ? next
+            : prev
+        );
+        setPageCount(
+          Math.max(1, Math.ceil(data.totalCount / data.itemsPerPage))
+        );
       }
     } catch (err) {
       console.error("Failed to fetch brands:", err);
@@ -79,10 +90,14 @@ export default function BrandsPage() {
       </div>
 
       <DataTable
-        columns={getColumns({
-          onEdit: handleEditBrand,
-          onDelete: handleDeleteBrand,
-        })}
+        columns={useMemo(
+          () =>
+            getColumns({
+              onEdit: handleEditBrand,
+              onDelete: handleDeleteBrand,
+            }),
+          [handleEditBrand, handleDeleteBrand]
+        )}
         data={brandList}
         isLoading={isLoading}
         pagination={pagination}

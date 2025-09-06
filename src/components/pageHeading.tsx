@@ -1,11 +1,23 @@
+import { JSX } from "react";
+
+type Props = Readonly<{
+  children: React.ReactNode;
+  as?: keyof JSX.IntrinsicElements;
+  className?: string;
+}>;
+
 export default function PageHeading({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  as: Tag = "h3",
+  className,
+}: Props) {
   return (
-    <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-8">
+    <Tag
+      className={`scroll-m-20 text-2xl font-semibold tracking-tight mb-8 ${
+        className ?? ""
+      }`}
+    >
       {children}
-    </h3>
+    </Tag>
   );
 }

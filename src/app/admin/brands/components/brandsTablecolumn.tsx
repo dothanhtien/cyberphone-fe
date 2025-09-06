@@ -4,7 +4,7 @@ import { SquarePen, Trash } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import { Brand } from "@/app/interfaces";
+import { Brand } from "@/interfaces";
 
 interface GetColumnsProps {
   onEdit: (brand: Brand) => void;
@@ -28,8 +28,22 @@ export const getColumns = ({
     header: "Logo",
     cell: ({ row }) => {
       const src = row.getValue<string>("logoUrl");
+      const name = row.original.name;
+      if (!src) {
+        return (
+          <div className="h-6 w-6 rounded bg-muted text-xs grid place-items-center">
+            —
+          </div>
+        );
+      }
       return (
-        <img src={src} alt="Logo" className="h-6 w-6 object-contain rounded" />
+        <img
+          src={src}
+          alt={`${name} logo`}
+          loading="lazy"
+          className="h-6 w-6 object-contain rounded"
+          referrerPolicy="no-referrer"
+        />
       );
     },
   },

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 import {
   AlertDialog,
@@ -11,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Brand } from "@/app/interfaces";
+import { Brand } from "@/interfaces";
 import { apiService } from "@/lib/api";
 
 interface ConfirmDeleteBrandDialogProps {
@@ -43,7 +44,12 @@ export function ConfirmDeleteBrandDialog({
       onOpenChange(false);
     } catch (err) {
       console.error("Error deleting brand:", err);
-      toast.error("Failed to delete brand. Please try again.");
+      const message =
+        err instanceof AxiosError
+          ? err.response?.data?.message ??
+            "Failed to delete brand. Please try again."
+          : "Failed to delete brand. Please try again.";
+      toast.error(message);
     } finally {
       setLoading(false);
     }

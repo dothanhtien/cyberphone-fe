@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Separator } from "@radix-ui/react-separator";
 import "../globals.css";
 
 import ProtectedRoute from "@/components/protectedRoute";
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { AppSidebar } from "@/components/layouts";
 import { Toaster } from "@/components/ui/sonner";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
   title: "Cyberphone | Admin",

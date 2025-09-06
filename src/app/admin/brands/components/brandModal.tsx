@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { apiService } from "@/lib/api";
-import { Brand } from "@/app/interfaces";
+import { Brand } from "@/interfaces";
 
 const optionalUrl = z
   .string()
