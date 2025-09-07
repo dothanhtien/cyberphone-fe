@@ -1,4 +1,5 @@
 import apiClient from "./client";
+import { Paginated, User } from "@/interfaces";
 
 export const getUsers = (
   {
@@ -9,5 +10,5 @@ export const getUsers = (
     limit: number;
   } = { page: 1, limit: 10 }
 ) => {
-  return apiClient.get(`/users?page=${page}&limit=${limit}`);
+  return apiClient.get<Paginated<User>>(`/users?page=${page}&limit=${limit}`);
 };

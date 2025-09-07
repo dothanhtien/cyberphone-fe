@@ -1,16 +1,21 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { PaginationState } from "@tanstack/react-table";
 
 import { apiService } from "@/lib/api";
-import { User } from "@/app/interfaces";
-import { DataTable } from "./usersTable/dataTable";
+import { User } from "@/interfaces";
 import { columns } from "./usersTable/columns";
+import PageHeading from "@/components/pageHeading";
+import { DataTable } from "@/components/tables/dataTable";
 
-export default function UserListingPage() {
+export default function UsersPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [userList, setUserList] = useState<User[]>([]);
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [pageCount, setPageCount] = useState(0);
 
   const fetchUsers = useCallback(async () => {
@@ -23,11 +28,18 @@ export default function UserListingPage() {
 
       if (data) {
         setUserList(data.items);
-        setPagination({
+        const next = {
           pageIndex: data.currentPage - 1,
           pageSize: data.itemsPerPage,
-        });
-        setPageCount(Math.ceil(data.totalCount / data.itemsPerPage));
+        };
+        setPagination((prev) =>
+          prev.pageIndex !== next.pageIndex || prev.pageSize !== next.pageSize
+            ? next
+            : prev
+        );
+        setPageCount(
+          Math.max(1, Math.ceil(data.totalCount / data.itemsPerPage))
+        );
       }
     } catch (err) {
       console.error("Failed to fetch users:", err);
@@ -42,9 +54,7 @@ export default function UserListingPage() {
 
   return (
     <>
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-8">
-        User List
-      </h3>
+      <PageHeading>Users</PageHeading>
 
       <DataTable
         columns={columns}

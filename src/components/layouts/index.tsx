@@ -33,7 +33,7 @@ const data = {
     },
     {
       title: "Brands",
-      url: "#",
+      url: "/admin/brands",
       icon: BadgeCheck,
     },
     {
