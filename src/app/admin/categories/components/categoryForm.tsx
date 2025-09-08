@@ -193,7 +193,14 @@ export function CategoryForm({ action = "create", data }: CategoryFormProps) {
         onOpenChange={setModalOpen}
         onSelect={(category) => {
           setModalOpen(false);
-          form.setValue("parentId", category?.id);
+          if (category && data && category.id === data.id) {
+            toast.error("A category cannot be its own parent");
+            return;
+          }
+          form.setValue("parentId", category?.id, {
+            shouldDirty: true,
+            shouldValidate: true,
+          });
           setParentCategory(category ?? null);
         }}
       />
