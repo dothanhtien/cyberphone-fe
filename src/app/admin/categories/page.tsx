@@ -55,6 +55,10 @@ export default function CategoriesPage() {
     fetchCategories();
   }, [fetchCategories]);
 
+  const handleEdit = (category: Category) => {
+    router.push(`/admin/categories/${category.id}/edit`);
+  };
+
   return (
     <>
       <div className="flex justify-between">
@@ -66,7 +70,9 @@ export default function CategoriesPage() {
       </div>
 
       <DataTable
-        columns={getColumns()}
+        columns={getColumns({
+          onEdit: handleEdit,
+        })}
         data={categoryList}
         isLoading={isLoading}
         pagination={pagination}

@@ -4,14 +4,21 @@ import { SquarePen, Trash } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Category } from "@/interfaces";
 
-// interface GetColumnsProps {
-//   onEdit: (brand: Brand) => void;
-//   onDelete: (brand: Brand) => void;
-// }
+interface GetColumnsProps {
+  onEdit: (category: Category) => void;
+  // onDelete: (category: Category) => void;
+}
 
-export const getColumns = (): ColumnDef<Category>[] => [
+export const getColumns = ({
+  onEdit,
+}: GetColumnsProps): ColumnDef<Category>[] => [
   {
     accessorKey: "name",
     header: "Name",
@@ -54,19 +61,24 @@ export const getColumns = (): ColumnDef<Category>[] => [
             variant="default"
             size="icon"
             className="size-8 mr-2 cursor-pointer"
-            // onClick={() => onEdit(row.original)}
+            onClick={() => onEdit(row.original)}
           >
             <SquarePen />
           </Button>
 
-          <Button
-            variant="destructive"
-            size="icon"
-            className="size-8 cursor-pointer"
-            // onClick={() => onDelete(row.original)}
-          >
-            <Trash />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="destructive"
+                size="icon"
+                className="size-8 cursor-pointer"
+                // onClick={() => onDelete(row.original)}
+              >
+                <Trash />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>It is getting the implemetation</TooltipContent>
+          </Tooltip>
         </div>
       );
     },

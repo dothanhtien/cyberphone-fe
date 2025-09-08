@@ -5,6 +5,7 @@ export interface Category {
   description: string | null;
   logoUrl: string | null;
   parentId: string | null;
+  parent: Category | null;
   isActive: boolean;
   createdAt: string;
   createdBy: string;
@@ -19,3 +20,5 @@ export interface CreateCategoryData {
   logoUrl?: string;
   parentId?: string;
 }
+
+export type UpdateCategoryData = Partial<CreateCategoryData>;

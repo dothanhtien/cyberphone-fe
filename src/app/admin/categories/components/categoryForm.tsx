@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { Control, FieldValues, Path, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +23,11 @@ import { SelectParentCategoryDialog } from "./selectParentCategoryDialog";
 import { apiService } from "@/lib/api";
 import { Category } from "@/interfaces";
 
+const emptyToUndefined = z
+  .string()
+  .transform((val) => (val.trim() === "" ? undefined : val))
+  .optional();
+
 const optionalUrl = z
   .string()
   .url({ message: "Must be a valid URL" })
@@ -32,18 +37,11 @@ const optionalUrl = z
   .optional();
 
 const formSchema = z.object({
-  name: z.string().min(1, "Name is required").max(255, "Max 255 characters"),
-  slug: z.string().min(1, "Slug is required").max(255, "Max 255 characters"),
-  description: z
-    .string()
-    .or(z.literal(""))
-    .transform((val) => (val === "" ? undefined : val))
-    .optional(),
+  name: z.string().min(1, "Name is required").max(255),
+  slug: z.string().min(1, "Slug is required").max(255),
+  description: emptyToUndefined,
   logoUrl: optionalUrl,
-  parentId: z
-    .string()
-    .transform((val) => (val === "" ? undefined : val))
-    .optional(),
+  parentId: emptyToUndefined,
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -56,19 +54,21 @@ const defaultValues: FormSchema = {
   parentId: undefined,
 };
 
-interface FormInputProps<T extends FieldValues> {
+interface FormFieldWrapperProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
   label: string;
-  type?: string;
+  type?: "text" | "textarea" | "url";
 }
 
-function FormInput<T extends FieldValues>({
+function FormFieldWrapper<T extends FieldValues>({
   control,
   name,
   label,
   type = "text",
-}: FormInputProps<T>) {
+}: FormFieldWrapperProps<T>) {
+  const Component = type === "textarea" ? Textarea : Input;
+
   return (
     <FormField
       control={control}
@@ -77,7 +77,10 @@ function FormInput<T extends FieldValues>({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input {...field} type={type} />
+            <Component
+              {...field}
+              type={type !== "textarea" ? type : undefined}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -86,89 +89,80 @@ function FormInput<T extends FieldValues>({
   );
 }
 
-interface FormTextareaProps<T extends FieldValues> {
-  control: Control<T>;
-  name: Path<T>;
-  label: string;
+interface CategoryFormProps {
+  action?: "create" | "update";
+  data?: Category | null;
 }
 
-function FormTextarea<T extends FieldValues>({
-  control,
-  name,
-  label,
-}: FormTextareaProps<T>) {
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Textarea {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-}
-
-export function CategoryForm() {
-  const [modal, setModal] = useState<{
-    open: boolean;
-  }>({ open: false });
-  const [parentCategory, setParentCategory] = useState<Category>();
+export function CategoryForm({ action = "create", data }: CategoryFormProps) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [parentCategory, setParentCategory] = useState<Category | null>(null);
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  useEffect(() => {
+    if (!data) return;
+    form.reset(
+      Object.fromEntries(
+        Object.entries(data).map(([k, v]) => [k, v ?? undefined])
+      ) as FormSchema
+    );
+    setParentCategory(data.parent ?? null);
+  }, [data, form]);
+
+  const onSubmit = async (values: FormSchema) => {
     try {
-      await apiService.categories.createCategory(values);
-      toast.success("Category created successfully");
-      form.reset();
+      const op = data
+        ? () => apiService.categories.updateCategory(data.id, values)
+        : () => apiService.categories.createCategory(values);
+
+      await op();
+      toast.success(
+        `Category ${action === "create" ? "created" : "updated"} successfully`
+      );
+      if (action === "create") form.reset();
     } catch (err) {
-      let errorMessage = "Failed to create category";
-      if (err instanceof AxiosError) {
-        errorMessage = err.response?.data?.message ?? errorMessage;
-      }
+      const errorMessage =
+        err instanceof AxiosError
+          ? err.response?.data?.message ?? "Request failed"
+          : "Failed to save category";
+
       console.error(errorMessage, err);
       toast.error(errorMessage);
     }
   };
-
-  const handleCloseModal = () => setModal({ open: false });
 
   return (
     <>
       <div className="max-w-[800px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormInput control={form.control} name="name" label="Name" />
-
-            <FormInput control={form.control} name="slug" label="Slug" />
-
-            <FormTextarea
+            <FormFieldWrapper control={form.control} name="name" label="Name" />
+            <FormFieldWrapper control={form.control} name="slug" label="Slug" />
+            <FormFieldWrapper
               control={form.control}
               name="description"
               label="Description"
+              type="textarea"
+            />
+            <FormFieldWrapper
+              control={form.control}
+              name="logoUrl"
+              label="Logo URL"
+              type="url"
             />
 
-            <FormInput control={form.control} name="logoUrl" label="Logo URL" />
-
             <div>
-              <div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setModal({ open: true })}
-                >
-                  <Link /> Assign parent category
-                </Button>
-              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setModalOpen(true)}
+              >
+                <Link /> Assign parent category
+              </Button>
 
               {parentCategory && (
                 <div className="mt-3">
@@ -177,18 +171,20 @@ export function CategoryForm() {
               )}
             </div>
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit">
+              {action === "create" ? "Create" : "Update"}
+            </Button>
           </form>
         </Form>
       </div>
 
       <SelectParentCategoryDialog
-        open={modal.open}
-        onOpenChange={(isOpen) => !isOpen && handleCloseModal()}
+        open={modalOpen}
+        onOpenChange={(isOpen) => !isOpen && setModalOpen(false)}
         onSelect={(category) => {
-          handleCloseModal();
+          setModalOpen(false);
           form.setValue("parentId", category?.id);
-          setParentCategory(category);
+          setParentCategory(category ?? null);
         }}
       />
     </>
