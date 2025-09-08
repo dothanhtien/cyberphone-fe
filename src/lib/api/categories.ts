@@ -27,7 +27,7 @@ export const getCategories = (
   });
 };
 
-export const getCategoryDetails = (id: string) => {
+export const getCategory = (id: string) => {
   return apiClient.get<Category>(`/categories/${id}`);
 };
 

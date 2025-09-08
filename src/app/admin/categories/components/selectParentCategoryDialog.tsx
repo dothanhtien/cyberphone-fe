@@ -149,10 +149,12 @@ export function SelectParentCategoryDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button type="button" variant="outline">
+              Cancel
+            </Button>
           </DialogClose>
           <Button
-            type="submit"
+            type="button"
             onClick={() =>
               onSelect(categoryList.find((cat) => cat.id === selectedValue))
             }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PaginationState } from "@tanstack/react-table";
 
@@ -45,7 +45,7 @@ export default function CategoriesPage() {
         );
       }
     } catch (err) {
-      console.error("Failed to fetch brands:", err);
+      console.error("Failed to fetch categories:", err);
     } finally {
       setIsLoading(false);
     }
@@ -70,9 +70,13 @@ export default function CategoriesPage() {
       </div>
 
       <DataTable
-        columns={getColumns({
-          onEdit: handleEdit,
-        })}
+        columns={useMemo(
+          () =>
+            getColumns({
+              onEdit: handleEdit,
+            }),
+          [handleEdit]
+        )}
         data={categoryList}
         isLoading={isLoading}
         pagination={pagination}

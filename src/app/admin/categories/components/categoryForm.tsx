@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 import { Control, FieldValues, Path, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "lucide-react";
+import { Link as LinkIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -115,15 +115,19 @@ export function CategoryForm({ action = "create", data }: CategoryFormProps) {
 
   const onSubmit = async (values: FormSchema) => {
     try {
-      const op = data
-        ? () => apiService.categories.updateCategory(data.id, values)
-        : () => apiService.categories.createCategory(values);
+      const op =
+        action === "update" && data
+          ? () => apiService.categories.updateCategory(data.id, values)
+          : () => apiService.categories.createCategory(values);
 
       await op();
       toast.success(
         `Category ${action === "create" ? "created" : "updated"} successfully`
       );
-      if (action === "create") form.reset();
+      if (action === "create") {
+        form.reset(defaultValues);
+        setParentCategory(null);
+      }
     } catch (err) {
       const errorMessage =
         err instanceof AxiosError
@@ -161,7 +165,7 @@ export function CategoryForm({ action = "create", data }: CategoryFormProps) {
                 variant="outline"
                 onClick={() => setModalOpen(true)}
               >
-                <Link /> Assign parent category
+                <LinkIcon /> Assign parent category
               </Button>
 
               {parentCategory && (
@@ -171,8 +175,14 @@ export function CategoryForm({ action = "create", data }: CategoryFormProps) {
               )}
             </div>
 
-            <Button type="submit">
-              {action === "create" ? "Create" : "Update"}
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting
+                ? action === "create"
+                  ? "Creating..."
+                  : "Updating..."
+                : action === "create"
+                ? "Create"
+                : "Update"}
             </Button>
           </form>
         </Form>
@@ -180,7 +190,7 @@ export function CategoryForm({ action = "create", data }: CategoryFormProps) {
 
       <SelectParentCategoryDialog
         open={modalOpen}
-        onOpenChange={(isOpen) => !isOpen && setModalOpen(false)}
+        onOpenChange={setModalOpen}
         onSelect={(category) => {
           setModalOpen(false);
           form.setValue("parentId", category?.id);

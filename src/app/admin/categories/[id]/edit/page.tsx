@@ -17,7 +17,7 @@ export default function EditCategoryPage() {
 
     const fetchCategory = async () => {
       try {
-        const result = await apiService.categories.getCategoryDetails(id);
+        const result = await apiService.categories.getCategory(id);
         setCategory(result.data);
       } catch (error) {
         console.error("Failed to fetch category", error);
