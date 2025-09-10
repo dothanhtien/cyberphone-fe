@@ -41,21 +41,26 @@ const data = {
       url: "/admin/categories",
       icon: LayoutGrid,
     },
+    // {
+    //   title: "Products",
+    //   url: "#",
+    //   icon: Package,
+    //   isActive: false,
+    //   items: [
+    //     {
+    //       title: "Create",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "List",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
     {
       title: "Products",
-      url: "#",
+      url: "/admin/products",
       icon: Package,
-      isActive: false,
-      items: [
-        {
-          title: "Create",
-          url: "#",
-        },
-        {
-          title: "List",
-          url: "#",
-        },
-      ],
     },
     {
       title: "Users",
