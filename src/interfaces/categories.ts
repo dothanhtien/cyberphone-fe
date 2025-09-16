@@ -17,7 +17,7 @@ export interface CreateCategoryData {
   name: string;
   slug: string;
   description?: string;
-  logoUrl?: string;
+  logo?: File;
   parentId?: string;
 }
 
