@@ -1,3 +1,4 @@
+import { toFormData } from "@/app/utils";
 import apiClient from "./client";
 import {
   Category,
@@ -7,7 +8,10 @@ import {
 } from "@/interfaces";
 
 export const createCategory = (data: CreateCategoryData) => {
-  return apiClient.post("/categories", data);
+  const formData = toFormData(data);
+  return apiClient.post("/categories", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 };
 
 export const getCategories = (
@@ -32,5 +36,8 @@ export const getCategory = (id: string) => {
 };
 
 export const updateCategory = (id: string, data: UpdateCategoryData) => {
-  return apiClient.patch(`/categories/${id}`, data);
+  const formData = toFormData(data);
+  return apiClient.patch(`/categories/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 };
