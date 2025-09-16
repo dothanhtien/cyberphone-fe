@@ -24,10 +24,17 @@ export function UploadLogo({ initialUrl }: UploadLogoProps) {
     }
   }, [logo, initialUrl]);
 
+  useEffect(() => {
+    return () => {
+      if (preview?.startsWith("blob:")) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
   const handleFile = (file: File) => {
     setValue("logo", file, { shouldDirty: true, shouldValidate: true });
     if (initialUrl) setValue("removeLogo", false);
-    setPreview(URL.createObjectURL(file));
+    const url = URL.createObjectURL(file);
+    setPreview(url);
   };
 
   const handleClick = () => inputRef.current?.click();
