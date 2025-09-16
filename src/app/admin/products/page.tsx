@@ -2,10 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 
 import PageHeading from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
 import { getColumns } from "./components/productsTableColumn";
+import { Button } from "@/components/ui/button";
 import { Product } from "@/interfaces";
 import { apiService } from "@/lib/api";
 
@@ -17,6 +19,7 @@ export default function ProductsPage() {
     pageSize: 10,
   });
   const [pageCount, setPageCount] = useState(0);
+  const router = useRouter();
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);
@@ -54,7 +57,13 @@ export default function ProductsPage() {
 
   return (
     <>
-      <PageHeading>Products</PageHeading>
+      <div className="flex justify-between">
+        <PageHeading>Products</PageHeading>
+
+        <Button onClick={() => router.push("/admin/products/new")}>
+          New product
+        </Button>
+      </div>
 
       <DataTable
         columns={getColumns({})}

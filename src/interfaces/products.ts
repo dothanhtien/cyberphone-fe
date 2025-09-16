@@ -27,3 +27,5 @@ export interface CreateProductData {
   metaTitle?: string;
   metaDescription?: string;
 }
+
+export type UpdateProductData = Partial<CreateProductData>;

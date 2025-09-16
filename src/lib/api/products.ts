@@ -1,12 +1,14 @@
 import apiClient from "./client";
 import {
-  Category,
-  CreateCategoryData,
   CreateProductData,
   Paginated,
   Product,
-  UpdateCategoryData,
+  UpdateProductData,
 } from "@/interfaces";
+
+export const createProduct = (data: CreateProductData) => {
+  return apiClient.post("/products", data);
+};
 
 export const getProducts = (
   {
@@ -23,4 +25,8 @@ export const getProducts = (
       limit,
     },
   });
+};
+
+export const updateProduct = (id: string, data: UpdateProductData) => {
+  return apiClient.patch(`/products/${id}`, data);
 };

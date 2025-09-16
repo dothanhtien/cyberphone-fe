@@ -2,22 +2,22 @@ import SelectDialog from "@/components/forms/formItems/selectDialog";
 import { Category } from "@/interfaces";
 import { apiService } from "@/lib/api";
 
-interface SelectParentCategoryDialogProps {
+interface SelectCategoryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSelect: (category: Category) => void;
 }
 
-export default function SelectParentCategoryDialog({
+export default function SelectCategoryDialog({
   open,
   onOpenChange,
   onSelect,
-}: SelectParentCategoryDialogProps) {
+}: SelectCategoryDialogProps) {
   return (
     <SelectDialog<Category>
       open={open}
-      title="Select parent category"
-      description="Choose a parent category from the list below."
+      title="Select category"
+      description="Choose a category from the list below."
       onOpenChange={onOpenChange}
       onSelect={onSelect}
       fetchItemsFunc={apiService.categories.getCategories}
