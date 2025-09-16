@@ -22,25 +22,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { SelectParentCategoryDialog } from "./selectParentCategoryDialog";
 import { apiService } from "@/lib/api";
 import { Category } from "@/interfaces";
+import { UploadLogo } from "./uploadLogo";
 
 const emptyToUndefined = z
   .string()
-  .transform((val) => (val.trim() === "" ? undefined : val))
-  .optional();
-
-const optionalUrl = z
-  .string()
-  .url({ message: "Must be a valid URL" })
-  .max(512, { message: "URL must be at most 512 characters" })
-  .or(z.literal(""))
-  .transform((val) => (val === "" ? undefined : val))
+  .transform((val) => (val?.trim() === "" ? undefined : val))
   .optional();
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required").max(255),
   slug: z.string().min(1, "Slug is required").max(255),
   description: emptyToUndefined,
-  logoUrl: optionalUrl,
+  logo: z.any().optional(),
+  removeLogo: z.boolean().optional(),
   parentId: emptyToUndefined,
 });
 
@@ -49,8 +43,9 @@ type FormSchema = z.infer<typeof formSchema>;
 const defaultValues: FormSchema = {
   name: "",
   slug: "",
-  description: undefined,
-  logoUrl: undefined,
+  description: "",
+  logo: undefined,
+  removeLogo: undefined,
   parentId: undefined,
 };
 
@@ -121,9 +116,11 @@ export function CategoryForm({ action = "create", data }: CategoryFormProps) {
           : () => apiService.categories.createCategory(values);
 
       await op();
+
       toast.success(
         `Category ${action === "create" ? "created" : "updated"} successfully`
       );
+
       if (action === "create") {
         form.reset(defaultValues);
         setParentCategory(null);
@@ -152,11 +149,19 @@ export function CategoryForm({ action = "create", data }: CategoryFormProps) {
               label="Description"
               type="textarea"
             />
-            <FormFieldWrapper
+
+            <FormField
               control={form.control}
-              name="logoUrl"
-              label="Logo URL"
-              type="url"
+              name="logo"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Logo</FormLabel>
+                  <FormControl>
+                    <UploadLogo initialUrl={data?.logoUrl ?? null} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
 
             <div>
