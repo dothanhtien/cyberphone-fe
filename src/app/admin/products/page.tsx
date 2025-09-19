@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 
 import PageHeading from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
-import { getColumns } from "./components/productsTableColumn";
 import { Button } from "@/components/ui/button";
+import { getColumns } from "./components/productsTableColumn";
 import { Product } from "@/interfaces";
 import { apiService } from "@/lib/api";
 
@@ -55,6 +55,10 @@ export default function ProductsPage() {
     fetchProducts();
   }, [fetchProducts]);
 
+  const handleEdit = (product: Product) => {
+    router.push(`/admin/products/${product.id}/edit`);
+  };
+
   return (
     <>
       <div className="flex justify-between">
@@ -66,7 +70,13 @@ export default function ProductsPage() {
       </div>
 
       <DataTable
-        columns={getColumns({})}
+        columns={useMemo(
+          () =>
+            getColumns({
+              onEdit: handleEdit,
+            }),
+          [handleEdit]
+        )}
         data={productList}
         isLoading={isLoading}
         pagination={pagination}

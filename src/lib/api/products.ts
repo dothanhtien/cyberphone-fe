@@ -27,6 +27,10 @@ export const getProducts = (
   });
 };
 
+export const getProduct = (id: string) => {
+  return apiClient.get<Product>(`/products/${id}`);
+};
+
 export const updateProduct = (id: string, data: UpdateProductData) => {
   return apiClient.patch(`/products/${id}`, data);
 };

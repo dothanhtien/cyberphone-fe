@@ -1,3 +1,6 @@
+import { Category } from "./categories";
+import { Brand } from "./brands";
+
 export interface Product {
   id: string;
   name: string;
@@ -8,7 +11,9 @@ export interface Product {
   metaTitle: string | null;
   metaDescription: string | null;
   brandId: string;
+  brand?: Brand; // TODO: need to review
   categoryId: string;
+  category?: Category; // TODO: need to review
   isActive: boolean;
   createdAt: string;
   createdBy: string;

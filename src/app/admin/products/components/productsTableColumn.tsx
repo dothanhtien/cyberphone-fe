@@ -12,12 +12,13 @@ import {
 import { Product } from "@/interfaces";
 
 interface GetColumnsProps {
-  // onEdit: (products: Product) => void;
+  onEdit: (products: Product) => void;
   // onDelete: (products: Product) => void;
 }
 
-export const getColumns = ({}: // onEdit,
-GetColumnsProps): ColumnDef<Product>[] => [
+export const getColumns = ({
+  onEdit,
+}: GetColumnsProps): ColumnDef<Product>[] => [
   {
     accessorKey: "name",
     header: "Name",
@@ -32,26 +33,21 @@ GetColumnsProps): ColumnDef<Product>[] => [
     cell: ({ row }) => {
       return (
         <div className="text-center">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="default"
-                size="icon"
-                className="size-8 mr-2 cursor-pointer"
-                // onClick={() => onEdit(row.original)}
-              >
-                <SquarePen />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>It is getting the implemetation</TooltipContent>
-          </Tooltip>
+          <Button
+            variant={null}
+            size="icon"
+            className="size-8 mr-2 cursor-pointer"
+            onClick={() => onEdit(row.original)}
+          >
+            <SquarePen />
+          </Button>
 
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant="destructive"
+                variant={null}
                 size="icon"
-                className="size-8 cursor-pointer"
+                className="size-8 cursor-pointer text-red-500"
                 // onClick={() => onDelete(row.original)}
               >
                 <Trash />
