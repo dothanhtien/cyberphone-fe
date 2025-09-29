@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronsUpDown, CircleUserRound, LogOut } from "lucide-react";
 
@@ -19,19 +20,25 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-
-const user = {
-  name: "Tien Do Thanh",
-  email: "tien@example.com",
-  avatar: "https://github.com/shadcn.png",
-};
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { logout } from "@/lib/store/features/auth/authSlice";
 
 export function NavUser() {
   const router = useRouter();
   const { isMobile } = useSidebar();
+  const dispatch = useAppDispatch();
+  const loggedInUser = useAppSelector((state) => state.auth.user);
+  const user = useMemo(() => {
+    return {
+      name: loggedInUser?.fullName ?? "Unknown",
+      email: loggedInUser?.email ?? "Unknown",
+      avatar: loggedInUser?.avatarUrl ?? "https://github.com/shadcn.png",
+    };
+  }, [loggedInUser]);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    dispatch(logout());
     router.push("/admin/login");
   };
 
@@ -46,7 +53,14 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase()}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
@@ -66,7 +80,14 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
