@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "CyberPhone | Login",
-  description: "To be defined",
+  description: "Admin login page for CyberPhone",
 };
 
 export default function AdminLoginLayout({

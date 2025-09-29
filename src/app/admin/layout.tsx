@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import "../globals.css";
 import {
   SidebarInset,
   SidebarProvider,
@@ -18,8 +17,9 @@ import { Toaster } from "@/components/ui/sonner";
 import ProtectedRoute from "@/components/protectedRoute";
 
 export const metadata: Metadata = {
-  title: "Cyberphone | Admin",
-  description: "TBD",
+  title: "CyberPhone | Admin",
+  description:
+    "Admin dashboard for CyberPhone - Manage users, brands, categories and products",
 };
 
 export default function AdminLayout({
