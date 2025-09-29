@@ -12,7 +12,6 @@ interface ProtectedRouteProps {
 export default function ProtectedRoute({
   children,
   redirectPath = "/admin/login",
-  homePath = "/admin/dashboard",
 }: ProtectedRouteProps) {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -30,7 +29,7 @@ export default function ProtectedRoute({
     }
     setIsAuthenticated(!!token);
     setIsAuthChecked(true);
-  }, [router, pathname, redirectPath, homePath]);
+  }, [router, pathname, redirectPath]);
 
   if (!isAuthChecked) return null;
 
