@@ -36,6 +36,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!formData.identifier.trim() || !formData.password.trim()) {
+      setIsError(true);
+      return;
+    }
+
     try {
       setIsError(false);
       setLoggingIn(true);
