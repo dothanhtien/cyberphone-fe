@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LoginData } from "@/interfaces";
 import { apiService } from "@/lib/api";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { setLoggedInUser } from "@/lib/store/features/auth/authSlice";
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -17,6 +19,7 @@ interface LoginFormProps {
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const [loggingIn, setLoggingIn] = useState(false);
   const [isError, setIsError] = useState(false);
+  const dispatch = useAppDispatch();
 
   const [formData, setFormData] = useState<LoginData>({
     identifier: "",
@@ -46,10 +49,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       setIsError(false);
       setLoggingIn(true);
       const res = await apiService.auth.login(formData);
-      const accessToken = res.data.accessToken;
-      if (accessToken) {
-        localStorage.setItem("accessToken", accessToken);
-      }
+      dispatch(setLoggedInUser(res.data));
+      localStorage.setItem("accessToken", res.data.accessToken);
       onSuccess();
     } catch (err) {
       setIsError(true);

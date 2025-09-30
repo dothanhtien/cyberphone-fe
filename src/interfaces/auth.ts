@@ -1,4 +1,4 @@
-import { UserRoles } from "@/enums";
+import { User } from "./users";
 
 export interface LoginData {
   identifier: string;
@@ -6,19 +6,6 @@ export interface LoginData {
 }
 
 export interface LoginResponse {
-  data: {
-    id: string;
-    email: string;
-    phone: string | null;
-    fullName: string;
-    avatarUrl: string | null;
-    role: UserRoles;
-    lastLogin: string;
-    isActive: boolean;
-    createdAt: string;
-    createdBy: string | null;
-    updatedAt: string | null;
-    updatedBy: string | null;
-  };
+  data: User;
   accessToken: string;
 }
