@@ -53,7 +53,7 @@ export default function AdminLayout({
           </header>
 
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="min-h-[100vh] flex-1 rounded-xl md:min-h-min p-8">
+            <div className="min-h-[100vh] max-w-[1280px] flex-1 rounded-xl md:min-h-min p-8">
               {children}
             </div>
           </div>
