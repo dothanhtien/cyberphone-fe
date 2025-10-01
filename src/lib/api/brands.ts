@@ -1,5 +1,13 @@
-import { Brand, Paginated } from "@/interfaces";
 import apiClient from "./client";
+import { Brand, CreateBrandRequest, Paginated } from "@/interfaces";
+import { toFormData } from "@/utils";
+
+export const createBrand = (data: CreateBrandRequest) => {
+  const formData = toFormData(data);
+  return apiClient.post("/brands", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
 
 export const getBrands = (
   {

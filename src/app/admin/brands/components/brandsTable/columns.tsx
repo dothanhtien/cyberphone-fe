@@ -47,7 +47,9 @@ export const getBrandsTableColumns = ({
           src={src}
           alt={`${name} logo`}
           loading="lazy"
-          className="h-6 w-6 object-contain rounded"
+          width={24}
+          height={24}
+          className="object-contain rounded"
           referrerPolicy="no-referrer"
         />
       );
