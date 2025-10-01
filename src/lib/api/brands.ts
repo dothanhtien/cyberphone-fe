@@ -20,3 +20,14 @@ export const getBrands = (
 ) => {
   return apiClient.get<Paginated<Brand>>(`/brands?page=${page}&limit=${limit}`);
 };
+
+export const getBrand = (id: string) => {
+  return apiClient.get<Brand>(`/brands/${id}`);
+};
+
+export const updateBrand = (id: string, data: Partial<CreateBrandRequest>) => {
+  const formData = toFormData(data);
+  return apiClient.patch(`/brands/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};

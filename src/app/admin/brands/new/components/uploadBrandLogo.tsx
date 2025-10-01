@@ -5,21 +5,33 @@ import { Trash2, UploadCloud } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-export default function UploadBrandLogo() {
+interface UploadBrandLogoProps {
+  initialLogo?: string | null;
+}
+
+export default function UploadBrandLogo({ initialLogo }: UploadBrandLogoProps) {
   const [preview, setPreview] = useState<string | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { setValue, watch } = useFormContext();
 
   const logo = watch("logo");
 
   useEffect(() => {
-    if (!logo) {
-      setPreview(null);
+    if (!logo && !isDirty) {
+      setPreview(initialLogo ?? null);
+      setIsDirty(true);
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
     }
-  }, [logo]);
+  }, [logo, initialLogo, isDirty]);
 
   const handleFileChange = (file: File) => {
     setValue("logo", file, { shouldDirty: true, shouldValidate: true });
+    if (initialLogo) {
+      setValue("removeLogo", false);
+    }
     const url = URL.createObjectURL(file);
     setPreview(url);
   };
@@ -37,6 +49,9 @@ export default function UploadBrandLogo() {
 
   const handleRemove = () => {
     setValue("logo", undefined, { shouldDirty: true, shouldValidate: true });
+    if (initialLogo) {
+      setValue("removeLogo", true, { shouldDirty: true, shouldValidate: true });
+    }
     setPreview(null);
     if (inputRef.current) inputRef.current.value = "";
   };
@@ -71,6 +86,7 @@ export default function UploadBrandLogo() {
             width={160}
             height={160}
             className="rounded-lg border shadow-sm object-cover"
+            priority
           />
           <Button
             type="button"

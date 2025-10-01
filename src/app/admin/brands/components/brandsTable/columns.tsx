@@ -62,17 +62,14 @@ export const getBrandsTableColumns = ({
       return (
         <div className="text-center">
           <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant={null}
-                size="icon"
-                className="size-8 mr-2 cursor-pointer"
-                onClick={() => onEdit(row.original)}
-              >
-                <SquarePen />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>It is getting the implemetation</TooltipContent>
+            <Button
+              variant={null}
+              size="icon"
+              className="size-8 mr-2 cursor-pointer"
+              onClick={() => onEdit(row.original)}
+            >
+              <SquarePen />
+            </Button>
           </Tooltip>
 
           <Tooltip>

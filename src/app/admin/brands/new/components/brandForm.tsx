@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import UploadBrandLogo from "./uploadBrandLogo";
 import { apiService } from "@/lib/api";
+import { Brand } from "@/interfaces";
 
 const optionalUrl = z
   .string()
@@ -36,6 +38,7 @@ const formSchema = z.object({
     .optional(),
   logo: z.any().optional(),
   websiteUrl: optionalUrl,
+  removeLogo: z.boolean().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -46,26 +49,54 @@ const defaultValues: FormSchema = {
   description: "",
   logo: undefined,
   websiteUrl: "",
+  removeLogo: undefined,
 };
 
-export default function BrandForm() {
+interface BrandFormProps {
+  action?: "create" | "update";
+  brand?: Brand;
+}
+
+export default function BrandForm({
+  action = "create",
+  brand,
+}: BrandFormProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
+  useEffect(() => {
+    if (brand) {
+      form.reset(
+        Object.fromEntries(
+          Object.entries(brand).map(([k, v]) => [k, v ?? undefined])
+        ) as FormSchema
+      );
+    }
+  }, [form, brand]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await apiService.brands.createBrand(values);
+      const op =
+        action === "update" && brand
+          ? () => apiService.brands.updateBrand(brand.id, values)
+          : () => apiService.brands.createBrand(values);
 
-      toast.success("Category created successfully");
+      await op();
 
-      form.reset(defaultValues);
+      toast.success(
+        `Brand ${action === "create" ? "created" : "updated"} successfully`
+      );
+
+      if (action === "create") {
+        form.reset(defaultValues);
+      }
     } catch (err) {
       const errorMessage =
         err instanceof AxiosError
           ? err.response?.data?.message ?? "Request failed"
-          : "Failed to save category";
+          : "Failed to save brand";
       console.error(errorMessage, err);
       toast.error(errorMessage);
     }
@@ -123,7 +154,7 @@ export default function BrandForm() {
             <FormItem>
               <FormLabel>Logo</FormLabel>
               <FormControl>
-                <UploadBrandLogo />
+                <UploadBrandLogo initialLogo={brand?.logoUrl} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -143,9 +174,20 @@ export default function BrandForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Creating..." : "Create"}
-        </Button>
+        {action === "create" && (
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting ? "Creating..." : "Create"}
+          </Button>
+        )}
+        {action === "update" && (
+          <Button
+            type="submit"
+            className="mr-2"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? "Updating..." : "Update"}
+          </Button>
+        )}
       </form>
     </Form>
   );
