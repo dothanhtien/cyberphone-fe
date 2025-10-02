@@ -64,9 +64,9 @@ export const getCategoriesColumns = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant="default"
+                variant={null}
                 size="icon"
-                className="size-8 mr-2 cursor-pointer"
+                className="size-8 mr-2"
                 onClick={() => onEdit(row.original)}
               >
                 <SquarePen />
@@ -78,9 +78,9 @@ export const getCategoriesColumns = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant="destructive"
+                variant={null}
                 size="icon"
-                className="size-8 cursor-pointer"
+                className="size-8 text-red-500"
                 onClick={() => onDelete(row.original)}
               >
                 <Trash />

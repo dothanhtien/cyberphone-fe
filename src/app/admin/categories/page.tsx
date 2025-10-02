@@ -1,22 +1,24 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { PaginationState } from "@tanstack/react-table";
 
 import PageHeading from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
 import { getCategoriesColumns } from "./components/categoriesTable/columns";
 import { Category } from "@/interfaces";
 import { apiService } from "@/lib/api";
+import { usePagination } from "@/hooks/usePagination";
 
 export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [pageCount, setPageCount] = useState(0);
+  const {
+    pagination,
+    setPagination,
+    pageCount,
+    updatePageCount,
+    updatePagination,
+  } = usePagination();
 
   const fetchCategories = useCallback(async () => {
     setIsLoading(true);
@@ -28,25 +30,20 @@ export default function CategoriesPage() {
 
       if (data) {
         setCategoryList(data.items);
-        const next = {
-          pageIndex: data.currentPage - 1,
-          pageSize: data.itemsPerPage,
-        };
-        setPagination((prev) =>
-          prev.pageIndex !== next.pageIndex || prev.pageSize !== next.pageSize
-            ? next
-            : prev
-        );
-        setPageCount(
-          Math.max(1, Math.ceil(data.totalCount / data.itemsPerPage))
-        );
+        updatePagination(data.currentPage, data.itemsPerPage);
+        updatePageCount(data.totalCount, data.itemsPerPage);
       }
     } catch (err) {
       console.error("Failed to fetch categories:", err);
     } finally {
       setIsLoading(false);
     }
-  }, [pagination.pageIndex, pagination.pageSize]);
+  }, [
+    pagination.pageIndex,
+    pagination.pageSize,
+    updatePageCount,
+    updatePagination,
+  ]);
 
   useEffect(() => {
     fetchCategories();
