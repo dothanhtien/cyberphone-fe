@@ -11,3 +11,11 @@ export interface Brand {
   updatedAt: string | null;
   updatedBy: string | null;
 }
+
+export interface CreateBrandRequest {
+  name: string;
+  slug: string;
+  description?: string;
+  logo?: File;
+  websiteUrl?: string;
+}

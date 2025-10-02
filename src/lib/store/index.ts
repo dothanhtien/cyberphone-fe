@@ -13,9 +13,11 @@ import storage from "redux-persist/lib/storage";
 import { encryptTransform } from "redux-persist-transform-encrypt";
 
 import authReducer from "./features/auth/authSlice";
+import brandsReducer from "./features/brands/brandsSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  brands: brandsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

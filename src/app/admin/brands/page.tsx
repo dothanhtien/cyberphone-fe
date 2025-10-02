@@ -1,13 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PaginationState } from "@tanstack/react-table";
 
 import PageHeading from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
+import { Button } from "@/components/ui/button";
 import { getBrandsTableColumns } from "./components/brandsTable/columns";
 import { Brand } from "@/interfaces";
 import { apiService } from "@/lib/api";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { setCurrentBrand } from "@/lib/store/features/brands/brandsSlice";
 
 export default function BrandsPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +21,8 @@ export default function BrandsPage() {
     pageSize: 10,
   });
   const [pageCount, setPageCount] = useState(0);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const fetchBrands = useCallback(async () => {
     setIsLoading(true);
@@ -52,13 +58,24 @@ export default function BrandsPage() {
     fetchBrands();
   }, [fetchBrands]);
 
+  const handleEditBrand = (brand: Brand) => {
+    dispatch(setCurrentBrand(brand));
+    router.push(`/admin/brands/${brand.id}/edit`);
+  };
+
   return (
     <>
-      <PageHeading>Brands</PageHeading>
+      <div className="flex justify-between">
+        <PageHeading>Brands</PageHeading>
+
+        <Button onClick={() => router.push("/admin/brands/new")}>
+          New brand
+        </Button>
+      </div>
 
       <DataTable
         columns={getBrandsTableColumns({
-          onEdit: () => {},
+          onEdit: handleEditBrand,
           onDelete: () => {},
         })}
         data={brandList}
