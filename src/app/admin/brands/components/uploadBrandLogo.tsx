@@ -27,10 +27,21 @@ export default function UploadBrandLogo({ initialLogo }: UploadBrandLogoProps) {
     }
   }, [logo, initialLogo, isDirty]);
 
+  useEffect(() => {
+    return () => {
+      if (preview && preview.startsWith("blob:")) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
+
   const handleFileChange = (file: File) => {
     setValue("logo", file, { shouldDirty: true, shouldValidate: true });
     if (initialLogo) {
       setValue("removeLogo", false);
+    }
+    if (preview && preview.startsWith("blob:")) {
+      URL.revokeObjectURL(preview);
     }
     const url = URL.createObjectURL(file);
     setPreview(url);
@@ -51,6 +62,9 @@ export default function UploadBrandLogo({ initialLogo }: UploadBrandLogoProps) {
     setValue("logo", undefined, { shouldDirty: true, shouldValidate: true });
     if (initialLogo) {
       setValue("removeLogo", true, { shouldDirty: true, shouldValidate: true });
+    }
+    if (preview && preview.startsWith("blob:")) {
+      URL.revokeObjectURL(preview);
     }
     setPreview(null);
     if (inputRef.current) inputRef.current.value = "";
