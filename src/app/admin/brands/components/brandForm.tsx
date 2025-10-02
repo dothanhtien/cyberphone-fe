@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { RequiredLabel } from "@/components/requiredLabel";
 import UploadBrandLogo from "./uploadBrandLogo";
 import { apiService } from "@/lib/api";
 import { Brand } from "@/interfaces";
@@ -36,7 +37,11 @@ const formSchema = z.object({
     .or(z.literal(""))
     .transform((val) => (val === "" ? undefined : val))
     .optional(),
-  logo: z.any().optional(),
+  logo: z
+    .custom<File>((val) => val instanceof File, {
+      message: "Logo must be a valid file",
+    })
+    .optional(),
   websiteUrl: optionalUrl,
   removeLogo: z.boolean().optional(),
 });
@@ -110,7 +115,7 @@ export default function BrandForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <RequiredLabel>Name</RequiredLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -124,7 +129,7 @@ export default function BrandForm({
           name="slug"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Slug</FormLabel>
+              <RequiredLabel>Slug</RequiredLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>

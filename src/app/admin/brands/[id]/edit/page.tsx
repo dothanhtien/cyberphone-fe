@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import PageHeading from "@/components/pageHeading";
 import Loading from "@/components/loading";
-import BrandForm from "../../new/components/brandForm";
+import BrandForm from "../../components/brandForm";
 import { Brand } from "@/interfaces";
 import { apiService } from "@/lib/api";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
