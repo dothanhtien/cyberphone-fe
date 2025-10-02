@@ -5,7 +5,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import { persistor, store } from "@/lib/store";
 
-export default function StoreProvider({
+export function StoreProvider({
   children,
 }: {
   children: React.ReactNode;

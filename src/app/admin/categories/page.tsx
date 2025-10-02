@@ -1,17 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-import PageHeading from "@/components/pageHeading";
+import { Button } from "@/components/ui/button";
+import { PageHeading } from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
 import { getCategoriesColumns } from "./components/categoriesTable/columns";
 import { Category } from "@/interfaces";
 import { apiService } from "@/lib/api";
-import { usePagination } from "@/hooks/usePagination";
+import { usePagination } from "@/hooks";
 
 export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const router = useRouter();
   const {
     pagination,
     setPagination,
@@ -51,7 +54,13 @@ export default function CategoriesPage() {
 
   return (
     <>
-      <PageHeading>Categories</PageHeading>
+      <div className="flex justify-between">
+        <PageHeading>Categories</PageHeading>
+
+        <Button onClick={() => router.push("/admin/categories/new")}>
+          New category
+        </Button>
+      </div>
 
       <DataTable
         columns={getCategoriesColumns({

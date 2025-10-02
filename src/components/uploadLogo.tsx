@@ -5,27 +5,25 @@ import { Trash2, UploadCloud } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-interface UploadBrandLogoProps {
+interface UploadLogoProps {
   initialLogo?: string | null;
 }
 
-export default function UploadBrandLogo({ initialLogo }: UploadBrandLogoProps) {
+export function UploadLogo({ initialLogo }: UploadLogoProps) {
   const [preview, setPreview] = useState<string | null>(null);
-  const [isDirty, setIsDirty] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { setValue, watch } = useFormContext();
 
   const logo = watch("logo");
 
   useEffect(() => {
-    if (!logo && !isDirty) {
+    if (!logo) {
       setPreview(initialLogo ?? null);
-      setIsDirty(true);
       if (inputRef.current) {
         inputRef.current.value = "";
       }
     }
-  }, [logo, initialLogo, isDirty]);
+  }, [logo, initialLogo]);
 
   useEffect(() => {
     return () => {

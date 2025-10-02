@@ -12,3 +12,13 @@ export interface Category {
   updatedAt: string | null;
   updatedBy: string | null;
 }
+
+export interface CreateCategoryRequest {
+  name: string;
+  slug: string;
+  description?: string;
+  logo?: File;
+  parentId?: string;
+}
+
+export type UpdateCategoryRequest = Partial<CreateCategoryRequest>;

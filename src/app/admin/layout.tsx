@@ -14,7 +14,7 @@ import {
 import { AppSidebar } from "@/components/layouts";
 import { Separator } from "@/components/ui/separator";
 import { Toaster } from "@/components/ui/sonner";
-import ProtectedRoute from "@/components/protectedRoute";
+import { ProtectedRoute } from "@/components/protectedRoute";
 
 export const metadata: Metadata = {
   title: "CyberPhone | Admin",

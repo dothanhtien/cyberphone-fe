@@ -38,7 +38,7 @@ export const getCategoriesColumns = ({
       if (!src) {
         return (
           <div className="h-6 w-6 rounded bg-muted text-xs grid place-items-center">
-            —
+            -
           </div>
         );
       }

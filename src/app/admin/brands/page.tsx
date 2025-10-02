@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PaginationState } from "@tanstack/react-table";
 
-import PageHeading from "@/components/pageHeading";
+import { PageHeading } from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
 import { Button } from "@/components/ui/button";
 import { getBrandsTableColumns } from "./components/brandsTable/columns";
