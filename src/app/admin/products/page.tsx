@@ -40,7 +40,7 @@ export default function ProductsPage() {
         updatePageCount(data.totalCount, data.itemsPerPage);
       }
     } catch (err) {
-      console.error("Failed to fetch categories:", err);
+      console.error("Failed to fetch products:", err);
     } finally {
       setIsLoading(false);
     }

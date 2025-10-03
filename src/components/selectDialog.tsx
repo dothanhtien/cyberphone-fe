@@ -84,7 +84,7 @@ export default function SelectDialog<T>({
     if (open) {
       fetchItems();
     }
-  }, [open, items, fetchItems]);
+  }, [open, fetchItems]);
 
   const handlePageChange = (pageIndex: number) => {
     if (pageIndex >= 0 && pageIndex < pageCount) {

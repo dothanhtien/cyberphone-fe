@@ -15,7 +15,7 @@ import { clearCurrentProduct } from "@/lib/store/features/products/productsSlice
 export default function EditProductPage() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const currentProduct = useAppSelector(
     (state) => state.products.currentProduct
