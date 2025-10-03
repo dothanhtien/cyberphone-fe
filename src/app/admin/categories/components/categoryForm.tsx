@@ -82,7 +82,7 @@ export function CategoryForm({
     }
   }, [form, category]);
 
-  const onSubmit = async (values: FormSchema) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const op =
         action === "update" && category

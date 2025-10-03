@@ -16,8 +16,8 @@ export function SelectCategoryDialog({
   return (
     <SelectDialog<Category>
       open={open}
-      title="Select parent category"
-      description="Choose a parent category from the list below."
+      title="Select category"
+      description="Choose a category from the list below."
       onOpenChange={onOpenChange}
       onSelect={onSelect}
       fetchItemsFunc={apiService.categories.getCategories}

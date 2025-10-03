@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
 import { getProductsTableColumns } from "./components/productsTable/columns";
@@ -12,6 +14,7 @@ import { apiService } from "@/lib/api";
 export default function ProductsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [productList, setProductList] = useState<Product[]>([]);
+  const router = useRouter();
   const {
     pagination,
     setPagination,
@@ -51,7 +54,13 @@ export default function ProductsPage() {
 
   return (
     <>
-      <PageHeading>Products</PageHeading>
+      <div className="flex justify-between">
+        <PageHeading>Products</PageHeading>
+
+        <Button onClick={() => router.push("/admin/products/new")}>
+          New product
+        </Button>
+      </div>
 
       <DataTable
         columns={getProductsTableColumns({
