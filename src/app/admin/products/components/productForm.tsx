@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,11 +21,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RequiredLabel } from "@/components/requiredLabel";
 import { SelectBrandDialog } from "./selectBrandDialog";
 import { SelectCategoryDialog } from "./selectCategoryDialog";
-import { Brand, Category } from "@/interfaces";
+import { Brand, Category, Product } from "@/interfaces";
 import { apiService } from "@/lib/api";
-import { RequiredLabel } from "@/components/requiredLabel";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { setCurrentProduct } from "@/lib/store/features/products/productsSlice";
 
 const emptyToUndefined = z
   .string()
@@ -57,7 +60,12 @@ const defaultValues: ProductForm = {
   metaDescription: undefined,
 };
 
-export function ProductForm() {
+interface ProductFormProps {
+  action?: "create" | "update";
+  product?: Product;
+}
+
+export function ProductForm({ action, product }: ProductFormProps) {
   const [brandModal, setBrandModal] = useState<{
     open: boolean;
     brand: Brand | null;
@@ -66,6 +74,9 @@ export function ProductForm() {
     open: boolean;
     category: Category | null;
   }>({ open: false, category: null });
+
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const form = useForm<ProductForm>({
     resolver: zodResolver(formSchema),
@@ -77,13 +88,48 @@ export function ProductForm() {
     setValue,
   } = form;
 
+  useEffect(() => {
+    if (!product) return;
+    form.reset(
+      Object.fromEntries(
+        Object.entries(product).map(([k, v]) => [k, v ?? undefined])
+      ) as ProductForm
+    );
+
+    if (product.brand) {
+      setBrandModal((prevValue) => ({
+        ...prevValue,
+        brand: product.brand || null,
+      }));
+    }
+
+    if (product.category) {
+      setCategoryModal((prevValue) => ({
+        ...prevValue,
+        category: product.category || null,
+      }));
+    }
+  }, [product, form]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await apiService.products.createProduct(values);
-      toast.success(`Product created successfully`);
-      form.reset(defaultValues);
-      setBrandModal((prevValue) => ({ ...prevValue, brand: null }));
-      setCategoryModal((prevValue) => ({ ...prevValue, category: null }));
+      const op =
+        action === "update" && product
+          ? () => apiService.products.updateProduct(product.id, values)
+          : () => apiService.products.createProduct(values);
+      const result = await op();
+
+      toast.success(
+        `Product ${action === "create" ? "created" : "updated"} successfully`
+      );
+
+      if (action === "create") {
+        form.reset(defaultValues);
+        setBrandModal((prevValue) => ({ ...prevValue, brand: null }));
+        setCategoryModal((prevValue) => ({ ...prevValue, category: null }));
+        dispatch(setCurrentProduct(result.data));
+        router.push(`/admin/products/${result.data.id}/edit`);
+      }
     } catch (err) {
       const errorMessage =
         err instanceof AxiosError
@@ -296,9 +342,16 @@ export function ProductForm() {
             />
           </div>
 
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? "Creating..." : "Create"}
-          </Button>
+          {action === "create" && (
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? "Creating..." : "Create"}
+            </Button>
+          )}
+          {action === "update" && (
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? "Updating..." : "Update"}
+            </Button>
+          )}
         </form>
       </Form>
     </>

@@ -3,12 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AxiosError } from "axios";
-import { AlertCircleIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { PageHeading } from "@/components/pageHeading";
 import { Loading } from "@/components/loading";
+import { NotFoundAlert } from "@/components/notFoundAlert";
 import { BrandForm } from "../../components/brandForm";
 import { Brand } from "@/interfaces";
 import { apiService } from "@/lib/api";
@@ -55,12 +54,7 @@ export default function EditBrandPage() {
 
       {loading && <Loading />}
 
-      {!loading && !brand && (
-        <Alert variant="destructive">
-          <AlertCircleIcon className="h-4 w-4" />
-          <AlertTitle>Brand not found.</AlertTitle>
-        </Alert>
-      )}
+      {!loading && !brand && <NotFoundAlert>Brand not found.</NotFoundAlert>}
 
       {!loading && brand && <BrandForm action="update" brand={brand} />}
     </>

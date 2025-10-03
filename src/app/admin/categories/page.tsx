@@ -55,7 +55,7 @@ export default function CategoriesPage() {
     fetchCategories();
   }, [fetchCategories]);
 
-  const handleEditCategories = (category: Category) => {
+  const handleEditCategory = (category: Category) => {
     dispatch(setCurrentCategory(category));
     router.push(`/admin/categories/${category.id}/edit`);
   };
@@ -72,7 +72,7 @@ export default function CategoriesPage() {
 
       <DataTable
         columns={getCategoriesColumns({
-          onEdit: handleEditCategories,
+          onEdit: handleEditCategory,
           onDelete: () => {},
         })}
         data={categoryList}

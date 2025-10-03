@@ -3,12 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AxiosError } from "axios";
-import { AlertCircleIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeading } from "@/components/pageHeading";
 import { Loading } from "@/components/loading";
-import { Alert, AlertTitle } from "@/components/ui/alert";
+import { NotFoundAlert } from "@/components/notFoundAlert";
 import { CategoryForm } from "../../components/categoryForm";
 import { Category } from "@/interfaces";
 import { apiService } from "@/lib/api";
@@ -58,10 +57,7 @@ export default function EditCategoryPage() {
       {loading && <Loading />}
 
       {!loading && !category && (
-        <Alert variant="destructive">
-          <AlertCircleIcon className="h-4 w-4" />
-          <AlertTitle>Category not found.</AlertTitle>
-        </Alert>
+        <NotFoundAlert>Category not found.</NotFoundAlert>
       )}
 
       {!loading && category && (

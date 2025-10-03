@@ -10,11 +10,14 @@ import { getProductsTableColumns } from "./components/productsTable/columns";
 import { usePagination } from "@/hooks";
 import { Product } from "@/interfaces";
 import { apiService } from "@/lib/api";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { setCurrentProduct } from "@/lib/store/features/products/productsSlice";
 
 export default function ProductsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [productList, setProductList] = useState<Product[]>([]);
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const {
     pagination,
     setPagination,
@@ -52,6 +55,11 @@ export default function ProductsPage() {
     fetchProducts();
   }, [fetchProducts]);
 
+  const handleEditProduct = (product: Product) => {
+    dispatch(setCurrentProduct(product));
+    router.push(`/admin/products/${product.id}/edit`);
+  };
+
   return (
     <>
       <div className="flex justify-between">
@@ -64,7 +72,7 @@ export default function ProductsPage() {
 
       <DataTable
         columns={getProductsTableColumns({
-          onEdit: () => {},
+          onEdit: handleEditProduct,
           onDelete: () => {},
         })}
         data={productList}
