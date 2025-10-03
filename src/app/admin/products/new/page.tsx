@@ -1,7 +1,7 @@
 "use client";
 
 import { PageHeading } from "@/components/pageHeading";
-import { ProductForm } from "../components/components/productForm";
+import { ProductForm } from "../components/productForm";
 
 export default function NewProductPage() {
   return (
