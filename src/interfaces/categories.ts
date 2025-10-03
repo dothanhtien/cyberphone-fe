@@ -21,4 +21,6 @@ export interface CreateCategoryRequest {
   parentId?: string;
 }
 
-export type UpdateCategoryRequest = Partial<CreateCategoryRequest>;
+export type UpdateCategoryRequest = Partial<CreateCategoryRequest> & {
+  removeLogo?: boolean;
+};

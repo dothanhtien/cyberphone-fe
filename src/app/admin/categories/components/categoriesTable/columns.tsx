@@ -61,24 +61,19 @@ export const getCategoriesColumns = ({
     cell: ({ row }) => {
       return (
         <div className="text-center">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant={null}
-                size="icon"
-                className="size-8 mr-2"
-                onClick={() => onEdit(row.original)}
-              >
-                <SquarePen />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>It is getting the implemetation</TooltipContent>
-          </Tooltip>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 mr-2"
+            onClick={() => onEdit(row.original)}
+          >
+            <SquarePen />
+          </Button>
 
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant={null}
+                variant="ghost"
                 size="icon"
                 className="size-8 text-red-500"
                 onClick={() => onDelete(row.original)}

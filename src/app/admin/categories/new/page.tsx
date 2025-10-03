@@ -1,7 +1,7 @@
 "use client";
 
 import { PageHeading } from "@/components/pageHeading";
-import { CategoryForm } from "./components/categoryForm";
+import { CategoryForm } from "../components/categoryForm";
 
 export default function NewCategoriesPage() {
   return (

@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { PageHeading } from "@/components/pageHeading";
 import { Loading } from "@/components/loading";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { CategoryForm } from "../../new/components/categoryForm";
+import { CategoryForm } from "../../components/categoryForm";
 import { Category } from "@/interfaces";
 import { apiService } from "@/lib/api";
 import { clearCurrentCategory } from "@/lib/store/features/categories/categoriesSlice";

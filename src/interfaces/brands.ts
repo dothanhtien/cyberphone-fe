@@ -19,3 +19,7 @@ export interface CreateBrandRequest {
   logo?: File;
   websiteUrl?: string;
 }
+
+export type UpdateBrandRequest = Partial<CreateBrandRequest> & {
+  removeLogo?: boolean;
+};

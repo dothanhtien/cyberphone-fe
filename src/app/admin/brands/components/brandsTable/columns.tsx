@@ -63,7 +63,7 @@ export const getBrandsTableColumns = ({
         <div className="text-center">
           <Tooltip>
             <Button
-              variant={null}
+              variant="ghost"
               size="icon"
               className="size-8 mr-2"
               onClick={() => onEdit(row.original)}
@@ -75,7 +75,7 @@ export const getBrandsTableColumns = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant={null}
+                variant="ghost"
                 size="icon"
                 className="size-8 text-red-500"
                 onClick={() => onDelete(row.original)}

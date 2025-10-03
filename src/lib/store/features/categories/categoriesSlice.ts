@@ -10,7 +10,7 @@ const initialState: CategoriesState = {
 };
 
 const categoriesSlice = createSlice({
-  name: "caregories",
+  name: "categories",
   initialState,
   reducers: {
     setCurrentCategory: (state, action: PayloadAction<Category>) => {
