@@ -6,16 +6,16 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
-import { getCategoriesColumns } from "./components/categoriesTable/columns";
-import { Category } from "@/interfaces";
-import { apiService } from "@/lib/api";
+import { getProductsTableColumns } from "./components/productsTable/columns";
 import { usePagination } from "@/hooks";
+import { Product } from "@/interfaces";
+import { apiService } from "@/lib/api";
 import { useAppDispatch } from "@/lib/store/hooks";
-import { setCurrentCategory } from "@/lib/store/features/categories/categoriesSlice";
+import { setCurrentProduct } from "@/lib/store/features/products/productsSlice";
 
-export default function CategoriesPage() {
+export default function ProductsPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const [productList, setProductList] = useState<Product[]>([]);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const {
@@ -26,21 +26,21 @@ export default function CategoriesPage() {
     updatePagination,
   } = usePagination();
 
-  const fetchCategories = useCallback(async () => {
+  const fetchProducts = useCallback(async () => {
     setIsLoading(true);
     try {
-      const { data } = await apiService.categories.getCategories({
+      const { data } = await apiService.products.getProducts({
         page: pagination.pageIndex + 1,
         limit: pagination.pageSize,
       });
 
       if (data) {
-        setCategoryList(data.items);
+        setProductList(data.items);
         updatePagination(data.currentPage, data.itemsPerPage);
         updatePageCount(data.totalCount, data.itemsPerPage);
       }
     } catch (err) {
-      console.error("Failed to fetch categories:", err);
+      console.error("Failed to fetch products:", err);
     } finally {
       setIsLoading(false);
     }
@@ -52,30 +52,30 @@ export default function CategoriesPage() {
   ]);
 
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    fetchProducts();
+  }, [fetchProducts]);
 
-  const handleEditCategory = (category: Category) => {
-    dispatch(setCurrentCategory(category));
-    router.push(`/admin/categories/${category.id}/edit`);
+  const handleEditProduct = (product: Product) => {
+    dispatch(setCurrentProduct(product));
+    router.push(`/admin/products/${product.id}/edit`);
   };
 
   return (
     <>
       <div className="flex justify-between">
-        <PageHeading>Categories</PageHeading>
+        <PageHeading>Products</PageHeading>
 
-        <Button onClick={() => router.push("/admin/categories/new")}>
-          New category
+        <Button onClick={() => router.push("/admin/products/new")}>
+          New product
         </Button>
       </div>
 
       <DataTable
-        columns={getCategoriesColumns({
-          onEdit: handleEditCategory,
+        columns={getProductsTableColumns({
+          onEdit: handleEditProduct,
           onDelete: () => {},
         })}
-        data={categoryList}
+        data={productList}
         isLoading={isLoading}
         pagination={pagination}
         onPaginationChange={setPagination}

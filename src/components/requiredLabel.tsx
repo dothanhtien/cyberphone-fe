@@ -1,10 +1,16 @@
 import { ReactNode } from "react";
+import clsx from "clsx";
 
 import { FormLabel } from "@/components/ui/form";
 
-export function RequiredLabel({ children }: { children: ReactNode }) {
+interface RequiredLabelProps {
+  children: ReactNode;
+  className?: string;
+}
+
+export function RequiredLabel({ children, className }: RequiredLabelProps) {
   return (
-    <FormLabel className="gap-1">
+    <FormLabel className={clsx("gap-1", className)}>
       {children} <span className="text-red-500">*</span>
     </FormLabel>
   );
