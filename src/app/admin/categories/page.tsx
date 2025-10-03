@@ -10,11 +10,14 @@ import { getCategoriesColumns } from "./components/categoriesTable/columns";
 import { Category } from "@/interfaces";
 import { apiService } from "@/lib/api";
 import { usePagination } from "@/hooks";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { setCurrentCategory } from "@/lib/store/features/categories/categoriesSlice";
 
 export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const {
     pagination,
     setPagination,
@@ -52,6 +55,11 @@ export default function CategoriesPage() {
     fetchCategories();
   }, [fetchCategories]);
 
+  const handleEditCategories = (category: Category) => {
+    dispatch(setCurrentCategory(category));
+    router.push(`/admin/categories/${category.id}/edit`);
+  };
+
   return (
     <>
       <div className="flex justify-between">
@@ -64,7 +72,7 @@ export default function CategoriesPage() {
 
       <DataTable
         columns={getCategoriesColumns({
-          onEdit: () => {},
+          onEdit: handleEditCategories,
           onDelete: () => {},
         })}
         data={categoryList}

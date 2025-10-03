@@ -182,11 +182,7 @@ export function BrandForm({ action = "create", brand }: BrandFormProps) {
           </Button>
         )}
         {action === "update" && (
-          <Button
-            type="submit"
-            className="mr-2"
-            disabled={form.formState.isSubmitting}
-          >
+          <Button type="submit" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? "Updating..." : "Update"}
           </Button>
         )}

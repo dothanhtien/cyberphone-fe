@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -40,6 +40,7 @@ const formSchema = z.object({
       message: "Logo must be a valid file",
     })
     .optional(),
+  removeLogo: z.boolean().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -50,9 +51,18 @@ const defaultValues: FormSchema = {
   description: "",
   parentId: undefined,
   logo: undefined,
+  removeLogo: undefined,
 };
 
-export function CategoryForm() {
+interface CategoryFormProps {
+  action?: "create" | "update";
+  category?: Category;
+}
+
+export function CategoryForm({
+  action = "create",
+  category,
+}: CategoryFormProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [parentCategory, setParentCategory] = useState<Category | null>(null);
 
@@ -61,14 +71,34 @@ export function CategoryForm() {
     defaultValues,
   });
 
+  useEffect(() => {
+    if (category) {
+      form.reset(
+        Object.fromEntries(
+          Object.entries(category).map(([k, v]) => [k, v ?? undefined])
+        ) as FormSchema
+      );
+      setParentCategory(category.parent ?? null);
+    }
+  }, [form, category]);
+
   const onSubmit = async (values: FormSchema) => {
     try {
-      await apiService.categories.createCategory(values);
+      const op =
+        action === "update" && category
+          ? () => apiService.categories.updateCategory(category.id, values)
+          : () => apiService.categories.createCategory(values);
 
-      toast.success(`Category created successfully`);
+      await op();
 
-      form.reset(defaultValues);
-      setParentCategory(null);
+      toast.success(
+        `Category ${action === "create" ? "created" : "updated"} successfully`
+      );
+
+      if (action === "create") {
+        form.reset(defaultValues);
+        setParentCategory(null);
+      }
     } catch (err) {
       const errorMessage =
         err instanceof AxiosError
@@ -133,7 +163,7 @@ export function CategoryForm() {
               <FormItem>
                 <FormLabel>Logo</FormLabel>
                 <FormControl>
-                  <UploadLogo initialLogo={null} />
+                  <UploadLogo initialLogo={category?.logoUrl} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -153,9 +183,16 @@ export function CategoryForm() {
             </Button>
           </div>
 
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? "Creating..." : "Create"}
-          </Button>
+          {action === "create" && (
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? "Creating..." : "Create"}
+            </Button>
+          )}
+          {action === "update" && (
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? "Updating..." : "Update"}
+            </Button>
+          )}
         </form>
       </Form>
 

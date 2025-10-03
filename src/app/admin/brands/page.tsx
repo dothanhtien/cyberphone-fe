@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PaginationState } from "@tanstack/react-table";
 
 import { PageHeading } from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
@@ -12,17 +11,20 @@ import { Brand } from "@/interfaces";
 import { apiService } from "@/lib/api";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { setCurrentBrand } from "@/lib/store/features/brands/brandsSlice";
+import { usePagination } from "@/hooks";
 
 export default function BrandsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [brandList, setBrandList] = useState<Brand[]>([]);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [pageCount, setPageCount] = useState(0);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const {
+    pagination,
+    setPagination,
+    pageCount,
+    updatePageCount,
+    updatePagination,
+  } = usePagination();
 
   const fetchBrands = useCallback(async () => {
     setIsLoading(true);
@@ -34,25 +36,20 @@ export default function BrandsPage() {
 
       if (data) {
         setBrandList(data.items);
-        const next = {
-          pageIndex: data.currentPage - 1,
-          pageSize: data.itemsPerPage,
-        };
-        setPagination((prev) =>
-          prev.pageIndex !== next.pageIndex || prev.pageSize !== next.pageSize
-            ? next
-            : prev
-        );
-        setPageCount(
-          Math.max(1, Math.ceil(data.totalCount / data.itemsPerPage))
-        );
+        updatePagination(data.currentPage, data.itemsPerPage);
+        updatePageCount(data.totalCount, data.itemsPerPage);
       }
     } catch (err) {
       console.error("Failed to fetch brands:", err);
     } finally {
       setIsLoading(false);
     }
-  }, [pagination.pageIndex, pagination.pageSize]);
+  }, [
+    pagination.pageIndex,
+    pagination.pageSize,
+    updatePageCount,
+    updatePagination,
+  ]);
 
   useEffect(() => {
     fetchBrands();

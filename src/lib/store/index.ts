@@ -14,10 +14,12 @@ import { encryptTransform } from "redux-persist-transform-encrypt";
 
 import authReducer from "./features/auth/authSlice";
 import brandsReducer from "./features/brands/brandsSlice";
+import categoriesReducer from "./features/categories/categoriesSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   brands: brandsReducer,
+  categories: categoriesReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
