@@ -38,7 +38,7 @@ const data = {
     },
     {
       title: "Categories",
-      url: "#",
+      url: "/admin/categories",
       icon: LayoutGrid,
     },
     {

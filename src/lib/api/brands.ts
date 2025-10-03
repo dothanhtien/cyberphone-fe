@@ -1,5 +1,10 @@
 import apiClient from "./client";
-import { Brand, CreateBrandRequest, Paginated } from "@/interfaces";
+import {
+  Brand,
+  CreateBrandRequest,
+  Paginated,
+  UpdateBrandRequest,
+} from "@/interfaces";
 import { toFormData } from "@/utils";
 
 export const createBrand = (data: CreateBrandRequest) => {
@@ -25,7 +30,7 @@ export const getBrand = (id: string) => {
   return apiClient.get<Brand>(`/brands/${id}`);
 };
 
-export const updateBrand = (id: string, data: Partial<CreateBrandRequest>) => {
+export const updateBrand = (id: string, data: UpdateBrandRequest) => {
   const formData = toFormData(data);
   return apiClient.patch(`/brands/${id}`, formData, {
     headers: { "Content-Type": "multipart/form-data" },

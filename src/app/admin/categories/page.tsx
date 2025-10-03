@@ -3,19 +3,19 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/pageHeading";
 import { DataTable } from "@/components/tables/dataTable";
-import { Button } from "@/components/ui/button";
-import { getBrandsTableColumns } from "./components/brandsTable/columns";
-import { Brand } from "@/interfaces";
+import { getCategoriesColumns } from "./components/categoriesTable/columns";
+import { Category } from "@/interfaces";
 import { apiService } from "@/lib/api";
-import { useAppDispatch } from "@/lib/store/hooks";
-import { setCurrentBrand } from "@/lib/store/features/brands/brandsSlice";
 import { usePagination } from "@/hooks";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { setCurrentCategory } from "@/lib/store/features/categories/categoriesSlice";
 
-export default function BrandsPage() {
+export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [brandList, setBrandList] = useState<Brand[]>([]);
+  const [categoryList, setCategoryList] = useState<Category[]>([]);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const {
@@ -26,21 +26,21 @@ export default function BrandsPage() {
     updatePagination,
   } = usePagination();
 
-  const fetchBrands = useCallback(async () => {
+  const fetchCategories = useCallback(async () => {
     setIsLoading(true);
     try {
-      const { data } = await apiService.brands.getBrands({
+      const { data } = await apiService.categories.getCategories({
         page: pagination.pageIndex + 1,
         limit: pagination.pageSize,
       });
 
       if (data) {
-        setBrandList(data.items);
+        setCategoryList(data.items);
         updatePagination(data.currentPage, data.itemsPerPage);
         updatePageCount(data.totalCount, data.itemsPerPage);
       }
     } catch (err) {
-      console.error("Failed to fetch brands:", err);
+      console.error("Failed to fetch categories:", err);
     } finally {
       setIsLoading(false);
     }
@@ -52,30 +52,30 @@ export default function BrandsPage() {
   ]);
 
   useEffect(() => {
-    fetchBrands();
-  }, [fetchBrands]);
+    fetchCategories();
+  }, [fetchCategories]);
 
-  const handleEditBrand = (brand: Brand) => {
-    dispatch(setCurrentBrand(brand));
-    router.push(`/admin/brands/${brand.id}/edit`);
+  const handleEditCategories = (category: Category) => {
+    dispatch(setCurrentCategory(category));
+    router.push(`/admin/categories/${category.id}/edit`);
   };
 
   return (
     <>
       <div className="flex justify-between">
-        <PageHeading>Brands</PageHeading>
+        <PageHeading>Categories</PageHeading>
 
-        <Button onClick={() => router.push("/admin/brands/new")}>
-          New brand
+        <Button onClick={() => router.push("/admin/categories/new")}>
+          New category
         </Button>
       </div>
 
       <DataTable
-        columns={getBrandsTableColumns({
-          onEdit: handleEditBrand,
+        columns={getCategoriesColumns({
+          onEdit: handleEditCategories,
           onDelete: () => {},
         })}
-        data={brandList}
+        data={categoryList}
         isLoading={isLoading}
         pagination={pagination}
         onPaginationChange={setPagination}

@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { RequiredLabel } from "@/components/requiredLabel";
-import UploadBrandLogo from "./uploadBrandLogo";
+import { UploadLogo } from "@/components/uploadLogo";
 import { apiService } from "@/lib/api";
 import { Brand } from "@/interfaces";
 
@@ -62,10 +62,7 @@ interface BrandFormProps {
   brand?: Brand;
 }
 
-export default function BrandForm({
-  action = "create",
-  brand,
-}: BrandFormProps) {
+export function BrandForm({ action = "create", brand }: BrandFormProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -159,7 +156,7 @@ export default function BrandForm({
             <FormItem>
               <FormLabel>Logo</FormLabel>
               <FormControl>
-                <UploadBrandLogo initialLogo={brand?.logoUrl} />
+                <UploadLogo initialLogo={brand?.logoUrl} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -185,11 +182,7 @@ export default function BrandForm({
           </Button>
         )}
         {action === "update" && (
-          <Button
-            type="submit"
-            className="mr-2"
-            disabled={form.formState.isSubmitting}
-          >
+          <Button type="submit" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? "Updating..." : "Update"}
           </Button>
         )}

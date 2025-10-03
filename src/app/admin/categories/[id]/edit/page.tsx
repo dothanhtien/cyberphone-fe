@@ -6,32 +6,34 @@ import { AxiosError } from "axios";
 import { AlertCircleIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { PageHeading } from "@/components/pageHeading";
 import { Loading } from "@/components/loading";
-import { BrandForm } from "../../components/brandForm";
-import { Brand } from "@/interfaces";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { CategoryForm } from "../../components/categoryForm";
+import { Category } from "@/interfaces";
 import { apiService } from "@/lib/api";
+import { clearCurrentCategory } from "@/lib/store/features/categories/categoriesSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { clearCurrentBrand } from "@/lib/store/features/brands/brandsSlice";
 
-export default function EditBrandPage() {
+export default function EditCategoryPage() {
   const { id } = useParams<{ id: string }>();
-  const [brand, setBrand] = useState<Brand | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(false);
-  const currentBrand = useAppSelector((state) => state.brands.currentBrand);
+  const currentCategory = useAppSelector(
+    (state) => state.categories.currentCategory
+  );
   const dispatch = useAppDispatch();
 
-  const fetchBrand = useCallback(async () => {
+  const fetchCategory = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await apiService.brands.getBrand(id);
-      setBrand(result.data);
+      const result = await apiService.categories.getCategory(id);
+      setCategory(result.data);
     } catch (err) {
       const errorMessage =
         err instanceof AxiosError
           ? err.response?.data?.message ?? "Request failed"
-          : "Failed to fetch brand";
+          : "Failed to fetch category";
       console.error(errorMessage, err);
       toast.error(errorMessage);
     } finally {
@@ -40,29 +42,31 @@ export default function EditBrandPage() {
   }, [id]);
 
   useEffect(() => {
-    if (currentBrand) {
-      setBrand(currentBrand);
-      dispatch(clearCurrentBrand());
+    if (currentCategory) {
+      setCategory(currentCategory);
+      dispatch(clearCurrentCategory());
       setLoading(false);
     } else {
-      fetchBrand();
+      fetchCategory();
     }
-  }, [currentBrand, dispatch, fetchBrand]);
+  }, [currentCategory, dispatch, fetchCategory]);
 
   return (
     <>
-      <PageHeading>Edit brand</PageHeading>
+      <PageHeading>Edit category</PageHeading>
 
       {loading && <Loading />}
 
-      {!loading && !brand && (
+      {!loading && !category && (
         <Alert variant="destructive">
           <AlertCircleIcon className="h-4 w-4" />
-          <AlertTitle>Brand not found.</AlertTitle>
+          <AlertTitle>Category not found.</AlertTitle>
         </Alert>
       )}
 
-      {!loading && brand && <BrandForm action="update" brand={brand} />}
+      {!loading && category && (
+        <CategoryForm action="update" category={category} />
+      )}
     </>
   );
 }

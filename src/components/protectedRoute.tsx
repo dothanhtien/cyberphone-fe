@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
   homePath?: string;
 }
 
-export default function ProtectedRoute({
+export function ProtectedRoute({
   children,
   redirectPath = "/admin/login",
 }: ProtectedRouteProps) {

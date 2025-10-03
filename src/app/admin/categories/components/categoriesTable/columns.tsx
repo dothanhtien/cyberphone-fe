@@ -5,22 +5,22 @@ import { SquarePen, Trash } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import { Brand } from "@/interfaces";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Category } from "@/interfaces";
 
-interface GetBrandsTableColumnsProps {
-  onEdit: (brand: Brand) => void;
-  onDelete: (brand: Brand) => void;
+interface GetColumnsProps {
+  onEdit: (category: Category) => void;
+  onDelete: (category: Category) => void;
 }
 
-export const getBrandsTableColumns = ({
+export const getCategoriesColumns = ({
   onEdit,
   onDelete,
-}: GetBrandsTableColumnsProps): ColumnDef<Brand>[] => [
+}: GetColumnsProps): ColumnDef<Category>[] => [
   {
     accessorKey: "name",
     header: "Name",
@@ -49,7 +49,7 @@ export const getBrandsTableColumns = ({
           loading="lazy"
           width={24}
           height={24}
-          className="object-contain rounded"
+          className="h-6 w-6 object-contain rounded"
           referrerPolicy="no-referrer"
         />
       );
@@ -61,16 +61,14 @@ export const getBrandsTableColumns = ({
     cell: ({ row }) => {
       return (
         <div className="text-center">
-          <Tooltip>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 mr-2"
-              onClick={() => onEdit(row.original)}
-            >
-              <SquarePen />
-            </Button>
-          </Tooltip>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 mr-2"
+            onClick={() => onEdit(row.original)}
+          >
+            <SquarePen />
+          </Button>
 
           <Tooltip>
             <TooltipTrigger asChild>
