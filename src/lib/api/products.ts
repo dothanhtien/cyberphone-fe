@@ -3,6 +3,7 @@ import {
   CreateProductRequest,
   Paginated,
   Product,
+  ProductVariant,
   UpdateProductRequest,
 } from "@/interfaces";
 
@@ -33,4 +34,8 @@ export const getProduct = (id: string) => {
 
 export const updateProduct = (id: string, data: UpdateProductRequest) => {
   return apiClient.patch(`/products/${id}`, data);
+};
+
+export const getVariants = (productId: string) => {
+  return apiClient.get<ProductVariant[]>(`/products/${productId}/variants`);
 };
