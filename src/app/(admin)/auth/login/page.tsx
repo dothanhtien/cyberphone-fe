@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2Icon, TabletSmartphone } from "lucide-react";
@@ -24,7 +24,19 @@ export default function LoginPage() {
     identifier: "",
     password: "",
   });
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      router.replace("/admin/dashboard");
+    } else {
+      setCheckingAuth(false);
+    }
+  }, [router]);
+
+  if (checkingAuth) return null;
 
   const handleLogin = async (e: React.SyntheticEvent) => {
     e.preventDefault();
