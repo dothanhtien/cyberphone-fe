@@ -1,17 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { CategoriesTable } from "./components/CategoriesTable";
 import { usePagination } from "@/hooks";
-import { categoriesApi } from "@/services";
-import { Category } from "@/types";
+import { useCategories } from "@/features/categories/queries";
 
 export default function CategoriesPage() {
-  const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
   const {
     pagination,
     setPagination,
@@ -20,32 +18,23 @@ export default function CategoriesPage() {
     updatePagination,
   } = usePagination();
 
-  const fetchCategories = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await categoriesApi.getAll({
-        page: pagination.pageIndex + 1,
-        limit: pagination.pageSize,
-      });
-
-      setCategories(response.items);
-      updatePagination(response.currentPage, response.itemsPerPage);
-      updatePageCount(response.totalCount, response.itemsPerPage);
-    } catch (err) {
-      console.error("Failed to fetch categories:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    pagination.pageIndex,
-    pagination.pageSize,
-    updatePageCount,
-    updatePagination,
-  ]);
+  const { data, isLoading, isError } = useCategories({
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+  });
 
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    if (isError) {
+      toast.error("An error occurred when fetching categories", {
+        position: "top-right",
+      });
+    }
+
+    if (data) {
+      updatePagination(data.currentPage, data.itemsPerPage);
+      updatePageCount(data.totalCount, data.itemsPerPage);
+    }
+  }, [data, isError, updatePagination, updatePageCount]);
 
   return (
     <>
@@ -57,8 +46,8 @@ export default function CategoriesPage() {
       </div>
 
       <CategoriesTable
-        data={categories}
-        loading={loading}
+        data={data?.items ?? []}
+        loading={isLoading}
         pagination={pagination}
         pageCount={pageCount}
         onPaginationChange={setPagination}

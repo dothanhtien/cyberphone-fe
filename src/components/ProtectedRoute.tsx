@@ -14,17 +14,20 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    let token: string | null = null;
-    if (typeof window !== "undefined") {
-      token = localStorage.getItem("accessToken");
-    }
+    const checkAuthentication = () => {
+      let token: string | null = null;
+      if (typeof window !== "undefined") {
+        token = localStorage.getItem("accessToken");
+      }
 
-    if (!token && pathname !== "/auth/login") {
-      router.push("/auth/login");
-    }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsAuthenticated(!!token);
-    setIsAuthChecked(true);
+      if (!token && pathname !== "/auth/login") {
+        router.push("/auth/login");
+      }
+      setIsAuthenticated(!!token);
+      setIsAuthChecked(true);
+    };
+
+    checkAuthentication();
   }, [router, pathname]);
 
   if (!isAuthChecked) return null;
