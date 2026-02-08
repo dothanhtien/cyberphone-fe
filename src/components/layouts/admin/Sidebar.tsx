@@ -44,7 +44,7 @@ const menuItems = [
   },
   {
     name: "Categories",
-    url: "/admin/dashboard",
+    url: "/admin/categories",
     icon: Layers,
   },
   {
