@@ -51,7 +51,7 @@ export const categoriesColumns: ColumnDef<Category>[] = [
     cell: ({ cell }) => formatDateTime(cell.getValue<string>()),
   },
   {
-    accessorKey: "actions",
+    id: "actions",
     header: () => <div className="text-center">Actions</div>,
     cell: () => {
       return (

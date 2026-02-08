@@ -6,7 +6,7 @@ export function usePagination() {
     pageIndex: 0,
     pageSize: 10,
   });
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
 
   const updatePageCount = useCallback(
     (totalCount: number, itemsPerPage: number) => {
