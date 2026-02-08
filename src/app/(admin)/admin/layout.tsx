@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/layouts/admin/Sidebar";
+import { AppSidebarInset } from "@/components/layouts/admin/SidebarInset";
 
 export const metadata: Metadata = {
   title: "CyberPhone | Admin",
@@ -13,5 +16,12 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <ProtectedRoute>{children}</ProtectedRoute>;
+  return (
+    <ProtectedRoute>
+      <SidebarProvider>
+        <AppSidebar />
+        <AppSidebarInset>{children}</AppSidebarInset>
+      </SidebarProvider>
+    </ProtectedRoute>
+  );
 }
