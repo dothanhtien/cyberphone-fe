@@ -5,7 +5,7 @@ interface AppProvidersProps {
   children: React.ReactNode;
 }
 
-export function AppsProvider({ children }: AppProvidersProps) {
+export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ReactQueryProvider>
       <TooltipProvider>{children}</TooltipProvider>
