@@ -15,46 +15,51 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { authApi } from "@/services";
 import { LoginRequest } from "@/types";
+import { useLogin } from "@/features/auth/mutations";
 
 export default function LoginPage() {
-  const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState<LoginRequest>({
     identifier: "",
     password: "",
   });
   const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
+  const loginMutation = useLogin();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      router.replace("/admin/dashboard");
-    } else {
-      setCheckingAuth(false);
-    }
+    const checkAuthentication = () => {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        router.replace("/admin/dashboard");
+      } else {
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuthentication();
   }, [router]);
 
   if (checkingAuth) return null;
 
   const handleLogin = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    setLoading(true);
 
-    try {
-      const response = await authApi.login(credentials);
-      localStorage.setItem("accessToken", response.accessToken);
-      router.push("/admin/dashboard");
-    } catch (error) {
-      console.log("Login failed: ", error);
-      toast.error("Username/Phone or password is invalid", {
-        position: "top-right",
-      });
-    } finally {
-      setCredentials({ identifier: "", password: "" });
-      setLoading(false);
-    }
+    loginMutation.mutate(credentials, {
+      onSuccess: (response) => {
+        localStorage.setItem("accessToken", response.accessToken);
+        router.push("/admin/dashboard");
+      },
+      onError: (error) => {
+        console.log("Login failed: ", error);
+        toast.error("Username/Phone or password is invalid", {
+          position: "top-right",
+        });
+      },
+      onSettled: () => {
+        setCredentials({ identifier: "", password: "" });
+      },
+    });
   };
 
   const handleInputChange = (
@@ -95,7 +100,7 @@ export default function LoginPage() {
                     <Input
                       id="identifier"
                       required
-                      disabled={loading}
+                      disabled={loginMutation.isPending}
                       onChange={(e) =>
                         handleInputChange("identifier", e.target.value)
                       }
@@ -108,7 +113,7 @@ export default function LoginPage() {
                       id="password"
                       type="password"
                       required
-                      disabled={loading}
+                      disabled={loginMutation.isPending}
                       onChange={(e) =>
                         handleInputChange("password", e.target.value)
                       }
@@ -116,8 +121,10 @@ export default function LoginPage() {
                   </Field>
 
                   <Field>
-                    <Button type="submit" disabled={loading}>
-                      {loading && <Loader2Icon className="animate-spin" />}
+                    <Button type="submit" disabled={loginMutation.isPending}>
+                      {loginMutation.isPending && (
+                        <Loader2Icon className="animate-spin" />
+                      )}
                       Login
                     </Button>
 
