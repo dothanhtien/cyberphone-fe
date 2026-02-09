@@ -1,5 +1,6 @@
 import { apiClient } from "@/lib/axios/client";
-import { Brand, PaginatedResponse, PaginationParams } from "@/types";
+import { Brand } from "./types";
+import { PaginatedResponse, PaginationParams } from "@/types";
 
 export const brandsApi = {
   findAll: async (

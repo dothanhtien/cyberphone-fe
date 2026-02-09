@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/react-query/queryKeys";
-import { CreateCategoryRequest } from "@/types";
+import { CreateCategoryRequest } from "./types";
 import { categoriesApi } from "./api";
 
 export const useCreateCategory = () => {

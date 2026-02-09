@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { SquarePen, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Category } from "@/types";
+import { Category } from "@/features/categories/types";
 import { formatDateTime } from "@/utils";
 
 export const categoriesColumns: ColumnDef<Category>[] = [

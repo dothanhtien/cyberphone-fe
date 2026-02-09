@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { SquarePen, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Brand } from "@/types";
+import { Brand } from "@/features/brands/types";
 import { formatDateTime } from "@/utils";
 
 export const brandsColumns: ColumnDef<Brand>[] = [

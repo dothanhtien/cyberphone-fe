@@ -2,7 +2,7 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { DataTable } from "@/components/data-table/DataTable";
 import { categoriesColumns } from "./CategoriesColumns";
-import { Category } from "@/types";
+import { Category } from "@/features/categories/types";
 
 export function CategoriesTable({
   data = [],

@@ -2,7 +2,7 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { brandsColumns } from "./BrandsColumns";
 import { DataTable } from "@/components/data-table/DataTable";
-import { Brand } from "@/types";
+import { Brand } from "@/features/brands/types";
 
 export function BrandsTable({
   data = [],

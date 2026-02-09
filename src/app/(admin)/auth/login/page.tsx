@@ -15,7 +15,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { LoginRequest } from "@/types";
+import { LoginRequest } from "@/features/auth/types";
 import { useLogin } from "@/features/auth/mutations";
 
 export default function LoginPage() {
