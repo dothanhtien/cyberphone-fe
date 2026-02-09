@@ -37,6 +37,14 @@ export interface LoginResponse {
   accessToken: string;
 }
 
+export interface CreateCategoryRequest {
+  name: string;
+  slug: string;
+  parentId?: string | null;
+  description?: string | null;
+  logo?: File;
+}
+
 export interface PaginationParams {
   page?: number;
   limit?: number;
@@ -47,4 +55,10 @@ export interface PaginatedResponse<T> {
   totalCount: number;
   currentPage: number;
   itemsPerPage: number;
+}
+
+export interface ApiError {
+  message: string;
+  code?: string;
+  errors?: Record<string, string>;
 }
