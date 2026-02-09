@@ -7,7 +7,7 @@ import {
 } from "@/types";
 
 export const categoriesApi = {
-  getAll: async (
+  findAll: async (
     params?: PaginationParams,
   ): Promise<PaginatedResponse<Category>> => {
     return apiClient.get("/categories", { params });

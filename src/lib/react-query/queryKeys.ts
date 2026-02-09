@@ -9,6 +9,12 @@ export const queryKeys = {
   categories: {
     all: ["categories"] as const,
     list: (params?: PaginationParams) =>
-      ["categories", "list", params] as const,
+      [...queryKeys.categories.all, "list", params] as const,
+  },
+
+  brands: {
+    all: ["brands"] as const,
+    list: (params?: PaginationParams) =>
+      [...queryKeys.categories.all, "list", params] as const,
   },
 };

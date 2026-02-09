@@ -49,7 +49,7 @@ const menuItems = [
   },
   {
     name: "Brands",
-    url: "/admin/dashboard",
+    url: "/admin/brands",
     icon: BadgeCheck,
   },
   {
