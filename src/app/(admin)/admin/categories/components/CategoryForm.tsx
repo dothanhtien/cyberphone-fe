@@ -140,7 +140,9 @@ export function CategoryForm({ onSubmit, defaultValues }: CategoryFormProps) {
           <FieldGroup>
             <div className="grid grid-cols-2 gap-4">
               <Field>
-                <FieldLabel htmlFor="name">Category name</FieldLabel>
+                <RequiredFieldLabel htmlFor="name">
+                  Category name
+                </RequiredFieldLabel>
                 <Input
                   id="name"
                   placeholder="Smartphone"
