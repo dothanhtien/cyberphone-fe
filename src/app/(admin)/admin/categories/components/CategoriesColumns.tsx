@@ -24,7 +24,7 @@ export const categoriesColumns: ColumnDef<Category>[] = [
             loading="eager"
             width={64}
             height={64}
-            className="h-16 w-16 object-contain rounded"
+            className="object-contain rounded"
             referrerPolicy="no-referrer"
           />
         </div>
