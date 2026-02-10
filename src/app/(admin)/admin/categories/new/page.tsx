@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
-import { CategoryForm } from "../components/CategoryForm";
+import { CategoryForm } from "@/features/categories/components/CategoryForm";
 import { CreateCategoryFormValues } from "@/features/categories/schemas";
 import { useCreateCategory } from "@/features/categories/mutations";
 import { ApiError } from "@/types";

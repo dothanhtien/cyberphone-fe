@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
 import { usePagination } from "@/hooks";
 import { useBrands } from "@/features/brands/queries";
-import { BrandsTable } from "./components/BrandsTable";
+import { BrandsTable } from "@/features/brands/components/BrandsTable";
 
 export default function BrandsPage() {
   const {
@@ -44,7 +44,7 @@ export default function BrandsPage() {
         <PageHeading>Brands</PageHeading>
 
         <Button size="lg" asChild>
-          <Link href="/admin/brands">
+          <Link href="/admin/brands/new">
             <Plus /> New brand
           </Link>
         </Button>

@@ -75,6 +75,7 @@ export function CategoryForm({ onSubmit, defaultValues }: CategoryFormProps) {
                   id="name"
                   placeholder="Smartphone"
                   {...register("name")}
+                  aria-invalid={!!errors.name}
                 />
                 <FieldError>{errors.name?.message}</FieldError>
               </Field>
