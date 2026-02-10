@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
-import { CategoriesTable } from "./components/CategoriesTable";
+import { CategoriesTable } from "@/features/categories/components/CategoriesTable";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
 import { usePagination } from "@/hooks";

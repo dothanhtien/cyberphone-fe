@@ -7,29 +7,29 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
-import { CategoryForm } from "@/features/categories/components/CategoryForm";
-import { CreateCategoryFormValues } from "@/features/categories/schemas";
-import { useCreateCategory } from "@/features/categories/mutations";
+import { BrandForm } from "@/features/brands/components/BrandForm";
+import { CreateBrandFormValues } from "@/features/brands/schemas";
+import { useCreateBrand } from "@/features/brands/mutations";
 import { ApiError } from "@/types";
 
-export default function NewCategoryPage() {
+export default function NewBrandPage() {
   const router = useRouter();
-  const createMutation = useCreateCategory();
+  const createMutation = useCreateBrand();
   const isSubmitting = createMutation.isPending;
 
-  const handleCreateCategory = (data: CreateCategoryFormValues) => {
+  const handleCreateBrand = (data: CreateBrandFormValues) => {
     createMutation.mutate(data, {
       onSuccess: () => {
-        toast.success("Category created successfully!", {
+        toast.success("Brand created successfully!", {
           position: "top-right",
         });
-        router.push("/admin/categories");
+        router.push("/admin/brands");
       },
       onError: (error) => {
         const axiosError = error as AxiosError<ApiError>;
-        console.error("Create category failed:", error);
+        console.error("Create brand failed:", error);
         toast.error(
-          axiosError.response?.data?.message || "Failed to create category",
+          axiosError.response?.data?.message || "Failed to create brand",
           {
             position: "top-right",
           },
@@ -42,16 +42,16 @@ export default function NewCategoryPage() {
     <div className="max-w-230">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <PageHeading className="mb-3">New category</PageHeading>
+          <PageHeading className="mb-3">New brand</PageHeading>
           <p className="text-muted-foreground text-sm mb-3">
-            Add a new segment to your product hierarchy
+            Establish a new brand identity in your catalog
           </p>
         </div>
 
         <Button
           size="lg"
           type="submit"
-          form="category-form"
+          form="brand-form"
           disabled={isSubmitting}
         >
           {isSubmitting ? (
@@ -68,7 +68,7 @@ export default function NewCategoryPage() {
         </Button>
       </div>
 
-      <CategoryForm onSubmit={handleCreateCategory} />
+      <BrandForm onSubmit={handleCreateBrand} />
     </div>
   );
 }
