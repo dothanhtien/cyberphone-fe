@@ -1,4 +1,4 @@
-import { User } from "@/features//users/types";
+import { User } from "@/features/users/types";
 
 export interface LoginRequest {
   identifier: string;
