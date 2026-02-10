@@ -5,10 +5,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { SquarePen, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Category } from "@/features/categories/types";
+import { Brand } from "@/features/brands/types";
 import { formatDateTime } from "@/utils";
 
-export const categoriesColumns: ColumnDef<Category>[] = [
+export const brandsColumns: ColumnDef<Brand>[] = [
   {
     accessorKey: "logo",
     header: () => <div className="text-center">Logo</div>,

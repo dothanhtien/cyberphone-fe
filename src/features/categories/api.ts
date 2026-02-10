@@ -1,13 +1,9 @@
 import { apiClient } from "@/lib/axios/client";
-import {
-  Category,
-  CreateCategoryRequest,
-  PaginatedResponse,
-  PaginationParams,
-} from "@/types";
+import { PaginatedResponse, PaginationParams } from "@/types";
+import { Category, CreateCategoryRequest } from "./types";
 
 export const categoriesApi = {
-  getAll: async (
+  findAll: async (
     params?: PaginationParams,
   ): Promise<PaginatedResponse<Category>> => {
     return apiClient.get("/categories", { params });

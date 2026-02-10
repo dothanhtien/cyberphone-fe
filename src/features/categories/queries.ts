@@ -7,6 +7,6 @@ import { categoriesApi } from "./api";
 export const useCategories = (params?: PaginationParams) => {
   return useQuery({
     queryKey: queryKeys.categories.list(params),
-    queryFn: () => categoriesApi.getAll(params),
+    queryFn: () => categoriesApi.findAll(params),
   });
 };
