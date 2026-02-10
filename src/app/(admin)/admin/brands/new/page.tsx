@@ -62,7 +62,7 @@ export default function NewBrandPage() {
           ) : (
             <>
               <Save />
-              Save change
+              Save changes
             </>
           )}
         </Button>

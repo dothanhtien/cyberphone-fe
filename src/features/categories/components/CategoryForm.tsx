@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import { ImageIcon, Info } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,8 +36,6 @@ interface CategoryFormProps {
 }
 
 export function CategoryForm({ onSubmit, defaultValues }: CategoryFormProps) {
-  const slugTouched = useRef(false);
-
   const form = useForm<CreateCategoryFormValues>({
     resolver: zodResolver(createCategorySchema),
     defaultValues,

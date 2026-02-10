@@ -1,18 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { UseFormReturn } from "react-hook-form";
+import { FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
 import { UploadCloud } from "lucide-react";
 
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { CreateCategoryFormValues } from "@/features/categories/schemas";
 import { cn } from "@/lib/utils";
 
-interface LogoUploadFieldProps {
-  form: UseFormReturn<CreateCategoryFormValues>;
+interface LogoUploadFieldProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  fieldName?: Path<T>;
+  label?: string;
 }
 
-export function LogoUploadField({ form }: LogoUploadFieldProps) {
+export function LogoUploadField<T extends FieldValues>({
+  form,
+  fieldName = "logo" as Path<T>,
+  label = "Logo",
+}: LogoUploadFieldProps<T>) {
   const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +33,8 @@ export function LogoUploadField({ form }: LogoUploadFieldProps) {
   const handleFileChange = (file?: File) => {
     if (!file) return;
 
-    form.setValue("logo", file, {
+    const fileValue = file as PathValue<T, Path<T>>;
+    form.setValue(fieldName, fileValue, {
       shouldDirty: true,
       shouldValidate: true,
     });
@@ -68,10 +74,10 @@ export function LogoUploadField({ form }: LogoUploadFieldProps) {
 
   return (
     <Field>
-      <FieldLabel htmlFor="logo">Category thumbnail</FieldLabel>
+      <FieldLabel htmlFor={fieldName}>{label}</FieldLabel>
       <Input
         ref={fileInputRef}
-        id="logo"
+        id={fieldName}
         type="file"
         accept="image/*"
         className="hidden"

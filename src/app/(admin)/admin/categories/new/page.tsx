@@ -62,7 +62,7 @@ export default function NewCategoryPage() {
           ) : (
             <>
               <Save />
-              Save change
+              Save changes
             </>
           )}
         </Button>
