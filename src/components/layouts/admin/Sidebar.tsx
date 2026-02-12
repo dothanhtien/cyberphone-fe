@@ -43,18 +43,18 @@ const menuItems = [
     icon: LayoutDashboard,
   },
   {
-    name: "Categories",
-    url: "/admin/categories",
-    icon: Layers,
-  },
-  {
     name: "Brands",
     url: "/admin/brands",
     icon: BadgeCheck,
   },
   {
+    name: "Categories",
+    url: "/admin/categories",
+    icon: Layers,
+  },
+  {
     name: "Products",
-    url: "/admin/dashboard",
+    url: "/admin/products",
     icon: Package,
   },
   {
