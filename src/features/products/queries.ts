@@ -6,7 +6,7 @@ import { productsApi } from "./api";
 
 export const useProducts = (params?: PaginationParams) => {
   return useQuery({
-    queryKey: queryKeys.brands.list(params),
+    queryKey: queryKeys.products.list(params),
     queryFn: () => productsApi.findAll(params),
   });
 };

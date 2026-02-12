@@ -21,7 +21,7 @@ export const productsColumns: ColumnDef<Product>[] = [
         <div className="flex justify-start items-center">
           <Image
             src={src ?? "/images/default.png"}
-            alt={`${name} logo`}
+            alt={name}
             loading="eager"
             width={64}
             height={64}
