@@ -44,7 +44,7 @@ export default function ProductsPage() {
         <PageHeading>Products</PageHeading>
 
         <Button size="lg" asChild>
-          <Link href="/admin/products">
+          <Link href="/admin/products/new">
             <Plus /> New products
           </Link>
         </Button>
