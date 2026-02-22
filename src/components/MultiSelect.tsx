@@ -27,14 +27,14 @@ interface MultiSelectProps<T extends FieldValues> {
     label: string;
     value: string;
   }[];
-  value?: string[];
-  onChange?: (value: string[]) => void;
+  placeholder?: string;
 }
 
 export function MultiSelect<T extends FieldValues>({
   name,
   control,
   items,
+  placeholder = "items",
 }: MultiSelectProps<T>) {
   const {
     field,
@@ -58,7 +58,6 @@ export function MultiSelect<T extends FieldValues>({
   };
 
   const removeItem = (val: string) => {
-    console.log({ val });
     onChange(value.filter((v: string) => v !== val));
   };
 
@@ -73,15 +72,17 @@ export function MultiSelect<T extends FieldValues>({
             aria-invalid={!!error}
             className="w-full justify-between"
           >
-            {value.length > 0 ? `${value.length} selected` : `Select...`}
+            {value.length > 0
+              ? `${value.length} selected`
+              : `Select ${placeholder}...`}
             <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
 
         <PopoverContent className="w-full p-0">
           <Command>
-            <CommandInput placeholder={`Search ${name}...`} />
-            <CommandEmpty>No {name} found.</CommandEmpty>
+            <CommandInput placeholder={`Search ${placeholder}...`} />
+            <CommandEmpty>No {placeholder} found.</CommandEmpty>
 
             <CommandGroup>
               {items.map((item) => (

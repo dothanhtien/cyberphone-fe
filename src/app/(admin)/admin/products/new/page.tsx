@@ -3,9 +3,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
-import { Loader2, Save } from "lucide-react";
+import { AlertCircleIcon, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
 import { ProductForm } from "@/features/products/components/ProductForm";
@@ -54,6 +55,17 @@ export default function NewProductPage() {
 
   if (categoriesLoading || brandsLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (categoriesError || brandsError) {
+    return (
+      <Alert variant="destructive" className="max-w-md">
+        <AlertCircleIcon />
+        <AlertDescription>
+          Failed to load required data. Please try again.
+        </AlertDescription>
+      </Alert>
+    );
   }
 
   const isSubmitting = createMutation.isPending;
