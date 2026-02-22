@@ -4,3 +4,9 @@ export enum ProductStatus {
   INACTIVE = "inactive",
   DISCONTINUED = "discontinued",
 }
+
+export enum ProductImageType {
+  MAIN = "main",
+  THUMBNAIL = "thumbnail",
+  GALLERY = "gallery",
+}

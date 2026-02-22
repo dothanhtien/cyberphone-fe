@@ -1,2 +1,2 @@
 export * from "./datetime";
-export * from "./slugify";
+export * from "./string";
