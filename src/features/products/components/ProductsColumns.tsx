@@ -1,12 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   CheckCircle2,
   CircleDot,
+  Ellipsis,
   FileEdit,
   PauseCircle,
+  Settings,
   SquarePen,
   Trash,
   XCircle,
@@ -14,8 +17,15 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Product } from "@/features/products/types";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ProductImageType, ProductStatus } from "../enums";
+import { Product } from "@/features/products/types";
 
 export const productsColumns: ColumnDef<Product>[] = [
   {
@@ -168,18 +178,33 @@ export const productsColumns: ColumnDef<Product>[] = [
   },
   {
     id: "actions",
-    header: () => <div className="text-center">Actions</div>,
-    cell: () => {
-      return (
-        <div className="text-center">
-          <Button variant="ghost" size="icon" className="size-8">
-            <SquarePen />
-          </Button>
+    header: "Actions",
+    cell: ({ row }) => {
+      const productId = row.original.id;
 
-          <Button variant="ghost" size="icon" className="size-8 text-red-500">
-            <Trash />
-          </Button>
-        </div>
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="size-8">
+              <Ellipsis />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="min-w-40">
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <SquarePen /> Edit product
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Trash /> Delete product
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/admin/products/${productId}/variants`}>
+                  <Settings /> Manage variants
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },
