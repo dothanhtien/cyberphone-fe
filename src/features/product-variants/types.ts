@@ -20,7 +20,6 @@ export interface ProductVariant {
 }
 
 export interface CreateProductVariantRequest {
-  productId: string;
   name: string;
   sku: string;
   price: number;
@@ -30,3 +29,5 @@ export interface CreateProductVariantRequest {
   lowStockThreshold: number | null;
   isDefault: boolean;
 }
+
+export type UpdateProductVariantRequest = Partial<CreateProductVariantRequest>;

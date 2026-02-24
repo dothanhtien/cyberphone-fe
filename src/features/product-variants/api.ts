@@ -1,5 +1,9 @@
 import { apiClient } from "@/lib/axios/client";
-import { CreateProductVariantRequest, ProductVariant } from "./types";
+import {
+  CreateProductVariantRequest,
+  ProductVariant,
+  UpdateProductVariantRequest,
+} from "./types";
 
 export const productVariantsApi = {
   getVariantsByProductId: async (
@@ -9,8 +13,16 @@ export const productVariantsApi = {
   },
 
   create: async (
+    productId: string,
     data: CreateProductVariantRequest,
   ): Promise<ProductVariant> => {
-    return apiClient.post("/product-variants", data);
+    return apiClient.post(`/products/${productId}/variants`, data);
+  },
+
+  update: async (
+    variantId: string,
+    data: UpdateProductVariantRequest,
+  ): Promise<ProductVariant> => {
+    return apiClient.patch(`/product-variants/${variantId}`, data);
   },
 };

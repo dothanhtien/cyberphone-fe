@@ -8,22 +8,28 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CreateProductVariantFormValues } from "../schemas";
+
 import { ProductVariantForm } from "./ProductVariantForm";
+import { ProductVariantFormValues } from "../schemas";
+import { ProductVariant } from "../types";
 
 interface ProductVariantModalProps {
+  mode?: "create" | "update";
   open: boolean;
-  productId: string;
+  variant: ProductVariant | null;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (values: CreateProductVariantFormValues) => void;
+  onSubmit: (values: ProductVariantFormValues) => void;
 }
 
 export function ProductVariantModal({
+  mode = "create",
   open,
-  productId,
+  variant,
   onOpenChange,
   onSubmit,
 }: ProductVariantModalProps) {
+  const isCreate = mode === "create";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -32,18 +38,23 @@ export function ProductVariantModal({
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Create variant</DialogTitle>
+          <DialogTitle>
+            {isCreate ? "Create variant" : "Update variant"}
+          </DialogTitle>
           <DialogDescription>
-            Create a new product variant for this product.
+            {isCreate
+              ? "Create a new product variant"
+              : "Update this product variant"}
           </DialogDescription>
         </DialogHeader>
 
-        <ProductVariantForm productId={productId} onSubmit={onSubmit} />
+        <ProductVariantForm variant={variant} onSubmit={onSubmit} />
 
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
+
           <Button type="submit" form="product-variant-form">
             Save changes
           </Button>

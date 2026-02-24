@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -13,15 +14,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ProductVariant } from "../types";
-import { productVariantsColumns } from "./ProductVariantsColumns";
-import { useMemo } from "react";
+import { getProductVariantsColumns } from "./ProductVariantsColumns";
 
 interface ProductVariantsTableProps {
   data: ProductVariant[];
+  onEdit: (data: ProductVariant) => void;
 }
 
-export function ProductVariantsTable({ data }: ProductVariantsTableProps) {
-  const columns = useMemo(() => productVariantsColumns, []);
+export function ProductVariantsTable({
+  data,
+  onEdit,
+}: ProductVariantsTableProps) {
+  const columns = useMemo(
+    () =>
+      getProductVariantsColumns({
+        onEdit,
+      }),
+    [onEdit],
+  );
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({

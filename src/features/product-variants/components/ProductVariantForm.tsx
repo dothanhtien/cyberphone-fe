@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Star } from "lucide-react";
@@ -6,24 +7,21 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { RequiredFieldLabel } from "@/components/RequiredFieldLabel";
-import {
-  CreateProductVariantFormValues,
-  createProductVariantSchema,
-} from "../schemas";
+import { ProductVariantFormValues, productVariantSchema } from "../schemas";
+import { ProductVariant } from "../types";
 
 interface ProductVariantFormProps {
-  productId: string;
-  onSubmit: (values: CreateProductVariantFormValues) => void;
+  variant: ProductVariant | null;
+  onSubmit: (values: ProductVariantFormValues) => void;
 }
 
 export function ProductVariantForm({
-  productId,
+  variant,
   onSubmit,
 }: ProductVariantFormProps) {
-  const form = useForm<CreateProductVariantFormValues>({
-    resolver: zodResolver(createProductVariantSchema),
+  const form = useForm({
+    resolver: zodResolver(productVariantSchema),
     defaultValues: {
-      productId,
       name: "",
       sku: "",
       price: undefined,
@@ -38,14 +36,32 @@ export function ProductVariantForm({
 
   const {
     register,
+    control,
+    handleSubmit,
     formState: { errors },
+    reset,
   } = form;
+
+  useEffect(() => {
+    if (variant) {
+      reset({
+        name: variant.name,
+        sku: variant.sku,
+        price: variant.price,
+        salePrice: variant.salePrice ?? null,
+        costPrice: variant.costPrice ?? null,
+        stockQuantity: variant.stockQuantity,
+        lowStockThreshold: variant.lowStockThreshold,
+        isDefault: variant.isDefault,
+      });
+    }
+  }, [variant, reset]);
 
   return (
     <form
       id="product-variant-form"
       className="space-y-6"
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid grid-cols-2 gap-6">
         <Field>
@@ -66,7 +82,11 @@ export function ProductVariantForm({
           <RequiredFieldLabel htmlFor="price">Price</RequiredFieldLabel>
           <Input
             id="price"
-            {...register("price", { valueAsNumber: true })}
+            type="number"
+            {...register("price", {
+              valueAsNumber: true,
+              setValueAs: (v) => (v === "" ? undefined : Number(v)),
+            })}
             aria-invalid={!!errors.price}
           />
           <FieldError>{errors.price?.message}</FieldError>
@@ -78,7 +98,11 @@ export function ProductVariantForm({
           <FieldLabel htmlFor="salePrice">Sale price</FieldLabel>
           <Input
             id="salePrice"
-            {...register("salePrice", { valueAsNumber: true })}
+            type="number"
+            {...register("salePrice", {
+              valueAsNumber: true,
+              setValueAs: (v) => (v === "" ? undefined : Number(v)),
+            })}
             aria-invalid={!!errors.salePrice}
           />
           <FieldError>{errors.salePrice?.message}</FieldError>
@@ -88,7 +112,11 @@ export function ProductVariantForm({
           <FieldLabel htmlFor="costPrice">Cost price</FieldLabel>
           <Input
             id="costPrice"
-            {...register("costPrice", { valueAsNumber: true })}
+            type="number"
+            {...register("costPrice", {
+              valueAsNumber: true,
+              setValueAs: (v) => (v === "" ? undefined : Number(v)),
+            })}
             aria-invalid={!!errors.costPrice}
           />
           <FieldError>{errors.costPrice?.message}</FieldError>
@@ -102,7 +130,11 @@ export function ProductVariantForm({
           </RequiredFieldLabel>
           <Input
             id="stockQuantity"
-            {...register("stockQuantity", { valueAsNumber: true })}
+            type="number"
+            {...register("stockQuantity", {
+              valueAsNumber: true,
+              setValueAs: (v) => (v === "" ? undefined : Number(v)),
+            })}
             aria-invalid={!!errors.stockQuantity}
           />
           <FieldError>{errors.stockQuantity?.message}</FieldError>
@@ -114,7 +146,11 @@ export function ProductVariantForm({
           </RequiredFieldLabel>
           <Input
             id="lowStockThreshold"
-            {...register("lowStockThreshold", { valueAsNumber: true })}
+            type="number"
+            {...register("lowStockThreshold", {
+              valueAsNumber: true,
+              setValueAs: (v) => (v === "" ? undefined : Number(v)),
+            })}
             aria-invalid={!!errors.lowStockThreshold}
           />
           <FieldError>{errors.lowStockThreshold?.message}</FieldError>
@@ -130,7 +166,7 @@ export function ProductVariantForm({
           <Field orientation="horizontal">
             <FieldLabel htmlFor="isDefault">Default variant</FieldLabel>
             <Controller
-              control={form.control}
+              control={control}
               name="isDefault"
               render={({ field }) => (
                 <Switch
