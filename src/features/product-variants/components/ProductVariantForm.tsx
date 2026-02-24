@@ -24,11 +24,6 @@ export function ProductVariantForm({
     defaultValues: {
       name: "",
       sku: "",
-      price: undefined,
-      salePrice: null,
-      costPrice: null,
-      stockQuantity: undefined,
-      lowStockThreshold: undefined,
       isDefault: false,
     },
     mode: "all",
@@ -43,18 +38,24 @@ export function ProductVariantForm({
   } = form;
 
   useEffect(() => {
-    if (variant) {
-      reset({
-        name: variant.name,
-        sku: variant.sku,
-        price: variant.price,
-        salePrice: variant.salePrice ?? null,
-        costPrice: variant.costPrice ?? null,
-        stockQuantity: variant.stockQuantity,
-        lowStockThreshold: variant.lowStockThreshold,
-        isDefault: variant.isDefault,
-      });
-    }
+    reset(
+      variant
+        ? {
+            name: variant.name,
+            sku: variant.sku,
+            price: variant.price,
+            salePrice: variant.salePrice ?? null,
+            costPrice: variant.costPrice ?? null,
+            stockQuantity: variant.stockQuantity,
+            lowStockThreshold: variant.lowStockThreshold,
+            isDefault: variant.isDefault,
+          }
+        : {
+            name: "",
+            sku: "",
+            isDefault: false,
+          },
+    );
   }, [variant, reset]);
 
   return (
@@ -170,6 +171,7 @@ export function ProductVariantForm({
               name="isDefault"
               render={({ field }) => (
                 <Switch
+                  id="isDefault"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />

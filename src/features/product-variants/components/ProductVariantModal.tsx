@@ -35,7 +35,6 @@ export function ProductVariantModal({
       <DialogContent
         className="min-w-4xl"
         onPointerDownOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle>
