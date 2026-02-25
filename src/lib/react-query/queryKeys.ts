@@ -1,4 +1,4 @@
-import { PaginationParams } from "@/types";
+import { PaginationParams, StorefrontPaginationParams } from "@/types";
 
 export const queryKeys = {
   auth: {
@@ -25,5 +25,17 @@ export const queryKeys = {
     lists: () => [...queryKeys.productVariants.all, "list"] as const,
     list: (productId: string) =>
       [...queryKeys.productVariants.lists(), productId] as const,
+  },
+
+  storefront: {
+    all: ["storefront"] as const,
+    products: {
+      all: () => [...queryKeys.storefront.all, "products"] as const,
+      list: (params: StorefrontPaginationParams = {}) => [
+        ...queryKeys.storefront.products.all(),
+        "list",
+        params ?? {},
+      ],
+    },
   },
 };

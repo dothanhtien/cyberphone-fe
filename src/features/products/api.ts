@@ -6,7 +6,7 @@ export const productsApi = {
   findAll: async (
     params?: PaginationParams,
   ): Promise<PaginatedResponse<Product>> => {
-    return apiClient.get("/products", { params });
+    return apiClient.get("/admin/products", { params });
   },
 
   create: async (data: CreateProductRequest): Promise<Product> => {
@@ -53,7 +53,7 @@ export const productsApi = {
       formData.append("imageMetas", JSON.stringify(data.imageMetas));
     }
 
-    return apiClient.post("/products", formData, {
+    return apiClient.post("/admin/products", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

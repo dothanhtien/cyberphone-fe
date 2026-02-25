@@ -16,9 +16,7 @@ import {
 import { PRODUCT_VARIANT_STOCK_STATUS } from "../constants";
 import { ProductVariantStockStatus } from "../enums";
 import { ProductVariant } from "../types";
-
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("vi-VN").format(value);
+import { formatCurrency } from "@/utils/currency";
 
 const STOCK_STATUS_STYLES = {
   [ProductVariantStockStatus.IN_STOCK]: "bg-green-100 text-green-700",
