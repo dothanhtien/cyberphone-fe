@@ -5,6 +5,7 @@ import { Heart, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { StorefrontProduct } from "../types";
+import { formatCurrency } from "@/utils/currency";
 
 interface ProductItemProps {
   product: StorefrontProduct;
@@ -36,11 +37,15 @@ export function ProductItem({ product }: ProductItemProps) {
               : product.name}
           </h3>
           <p className="font-semibold text-base text-red-700">
-            {product.minSalePrice ?? product.minPrice}
+            {formatCurrency(product.salePrice ?? product.price)} VND
           </p>
-          <p className="font-semibold line-through text-muted-foreground">
-            {product.minPrice}
-          </p>
+          {product.salePrice != null && product.salePrice < product.price ? (
+            <p className="font-semibold line-through text-muted-foreground">
+              {formatCurrency(product.price)} VND
+            </p>
+          ) : (
+            <div className="h-5" aria-hidden></div>
+          )}
         </Link>
       </CardContent>
 

@@ -14,7 +14,7 @@ export function Navbar() {
         </div>
       </header>
 
-      <div className="header-offset h-20"></div>
+      <div className="header-offset h-20" aria-hidden="true"></div>
     </>
   );
 }

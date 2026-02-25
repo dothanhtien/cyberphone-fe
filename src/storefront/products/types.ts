@@ -3,8 +3,8 @@ export interface StorefrontProduct {
   name: string;
   slug: string;
   shortDescription: string | null;
-  minPrice: number;
-  minSalePrice: number | null;
+  price: number;
+  salePrice: number | null;
   inStock: boolean;
   mainImage: string | null;
 }

@@ -10,5 +10,6 @@ export const useStorefrontProducts = (
   return useQuery({
     queryKey: queryKeys.storefront.products.list(params),
     queryFn: () => storefrontProductsApi.findAll(params),
+    staleTime: 1000 * 60,
   });
 };
