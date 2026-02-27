@@ -11,11 +11,13 @@ import { RequiredFieldLabel } from "@/components/RequiredFieldLabel";
 import { ProductVariantFormValues, productVariantSchema } from "../schemas";
 import { ProductVariant } from "../types";
 import { ProductAttribute } from "@/features/products/types";
+import { formatCurrency, parseCurrency } from "@/utils/currency";
+import { getDirtyValues } from "@/utils/forms";
 
 interface ProductVariantFormProps {
   variant: ProductVariant | null;
   attributes: ProductAttribute[];
-  onSubmit: (values: ProductVariantFormValues) => void;
+  onSubmit: (values: Partial<ProductVariantFormValues>) => void;
 }
 
 export function ProductVariantForm({
@@ -38,7 +40,7 @@ export function ProductVariantForm({
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
     reset,
   } = form;
 
@@ -53,20 +55,26 @@ export function ProductVariantForm({
         ? {
             name: variant.name,
             sku: variant.sku,
-            price: variant.price,
-            salePrice: variant.salePrice ?? null,
-            costPrice: variant.costPrice ?? null,
+            price: Number(variant.price),
+            salePrice: variant.salePrice ? Number(variant.salePrice) : null,
+            costPrice: variant.costPrice ? Number(variant.salePrice) : null,
             stockQuantity: variant.stockQuantity,
             lowStockThreshold: variant.lowStockThreshold,
             isDefault: variant.isDefault,
             attributes: (attributes || [])
               .sort((a, b) => a.displayOrder - b.displayOrder)
-              .map((attr) => ({
-                id: attr.id,
-                attributeKey: attr.attributeKey,
-                attributeValue: "",
-                attributeValueDisplay: "",
-              })),
+              .map((attr) => {
+                const foundAttr = variant.attributes.find(
+                  (va) => va.productAttributeId === attr.id,
+                );
+
+                return {
+                  id: foundAttr?.id,
+                  productAttributeId: attr.id,
+                  attributeValue: foundAttr?.attributeValue ?? "",
+                  attributeValueDisplay: foundAttr?.attributeValueDisplay ?? "",
+                };
+              }),
           }
         : {
             name: "",
@@ -75,8 +83,7 @@ export function ProductVariantForm({
             attributes: attributes
               .sort((a, b) => a.displayOrder - b.displayOrder)
               .map((attr) => ({
-                id: attr.id,
-                attributeKey: attr.attributeKey,
+                productAttributeId: attr.id,
                 attributeValue: "",
                 attributeValueDisplay: "",
               })),
@@ -84,11 +91,23 @@ export function ProductVariantForm({
     );
   }, [variant, reset, attributes]);
 
+  const handleFormSubmit = (values: ProductVariantFormValues) => {
+    if (variant) {
+      const dirtyValues = getDirtyValues<ProductVariantFormValues>(
+        dirtyFields as Partial<Record<keyof ProductVariantFormValues, unknown>>,
+        values,
+      );
+      onSubmit(dirtyValues);
+    } else {
+      onSubmit(values);
+    }
+  };
+
   return (
     <form
       id="product-variant-form"
       className="space-y-6"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleFormSubmit)}
     >
       <div className="grid grid-cols-2 gap-6">
         <Field>
@@ -107,14 +126,25 @@ export function ProductVariantForm({
       <div className="grid grid-cols-2 gap-6">
         <Field>
           <RequiredFieldLabel htmlFor="price">Price</RequiredFieldLabel>
-          <Input
-            id="price"
-            type="number"
-            {...register("price", {
-              valueAsNumber: true,
-              setValueAs: (v) => (v === "" ? undefined : Number(v)),
-            })}
-            aria-invalid={!!errors.price}
+          <Controller
+            control={control}
+            name="price"
+            render={({ field }) => (
+              <Input
+                type="text"
+                value={formatCurrency(field.value ?? "")}
+                onChange={(e) => {
+                  const parsed = parseCurrency(e.target.value);
+                  field.onChange(parsed);
+                }}
+                onBlur={(e) => {
+                  const parsed = parseCurrency(e.target.value);
+                  field.onChange(parsed);
+                  field.onBlur();
+                }}
+                aria-invalid={!!errors.price}
+              />
+            )}
           />
           <FieldError>{errors.price?.message}</FieldError>
         </Field>
@@ -123,28 +153,50 @@ export function ProductVariantForm({
       <div className="grid grid-cols-2 gap-6">
         <Field>
           <FieldLabel htmlFor="salePrice">Sale price</FieldLabel>
-          <Input
-            id="salePrice"
-            type="number"
-            {...register("salePrice", {
-              valueAsNumber: true,
-              setValueAs: (v) => (v === "" ? undefined : Number(v)),
-            })}
-            aria-invalid={!!errors.salePrice}
+          <Controller
+            control={control}
+            name="salePrice"
+            render={({ field }) => (
+              <Input
+                type="text"
+                value={formatCurrency(field.value ?? "")}
+                onChange={(e) => {
+                  const parsed = parseCurrency(e.target.value);
+                  field.onChange(parsed);
+                }}
+                onBlur={(e) => {
+                  const parsed = parseCurrency(e.target.value);
+                  field.onChange(parsed);
+                  field.onBlur();
+                }}
+                aria-invalid={!!errors.salePrice}
+              />
+            )}
           />
           <FieldError>{errors.salePrice?.message}</FieldError>
         </Field>
 
         <Field>
           <FieldLabel htmlFor="costPrice">Cost price</FieldLabel>
-          <Input
-            id="costPrice"
-            type="number"
-            {...register("costPrice", {
-              valueAsNumber: true,
-              setValueAs: (v) => (v === "" ? undefined : Number(v)),
-            })}
-            aria-invalid={!!errors.costPrice}
+          <Controller
+            control={control}
+            name="costPrice"
+            render={({ field }) => (
+              <Input
+                type="text"
+                value={formatCurrency(field.value ?? "")}
+                onChange={(e) => {
+                  const parsed = parseCurrency(e.target.value);
+                  field.onChange(parsed);
+                }}
+                onBlur={(e) => {
+                  const parsed = parseCurrency(e.target.value);
+                  field.onChange(parsed);
+                  field.onBlur();
+                }}
+                aria-invalid={!!errors.costPrice}
+              />
+            )}
           />
           <FieldError>{errors.costPrice?.message}</FieldError>
         </Field>
@@ -219,7 +271,7 @@ export function ProductVariantForm({
             <div className="space-y-6">
               {attributeFields.map((field, index) => {
                 const attrMeta = attributes.find(
-                  (a) => a.attributeKey === field.attributeKey,
+                  (a) => a.id === field.productAttributeId,
                 );
 
                 return (
@@ -262,12 +314,7 @@ export function ProductVariantForm({
 
                     <Input
                       type="hidden"
-                      {...register(`attributes.${index}.attributeKey`)}
-                    />
-
-                    <Input
-                      type="hidden"
-                      {...register(`attributes.${index}.id`)}
+                      {...register(`attributes.${index}.productAttributeId`)}
                     />
                   </div>
                 );

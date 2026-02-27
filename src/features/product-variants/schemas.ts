@@ -12,16 +12,16 @@ export const productVariantSchema = z
       .max(100, "SKU must be less than 100 characters"),
     price: z
       .number("Price must be a number")
-      .min(0, "Price must be greater than or equal to 0"),
+      .min(1, "Price must be greater than 0"),
     salePrice: z
       .number("Sale price must be a number")
-      .min(0, "Sale price must be greater than or equal to 0")
+      .min(1, "Sale price must be greater than 0")
       .nullable()
       .optional()
       .or(z.literal(NaN).transform(() => null)),
     costPrice: z
       .number("Cost price must be a number")
-      .min(0, "Cost price must be greater than or equal to 0")
+      .min(1, "Cost price must be greater than 0")
       .nullable()
       .optional()
       .or(z.literal(NaN).transform(() => null)),
@@ -36,8 +36,8 @@ export const productVariantSchema = z
     isDefault: z.boolean(),
     attributes: z.array(
       z.object({
-        id: z.string(),
-        attributeKey: z.string(),
+        id: z.string().optional(),
+        productAttributeId: z.string(),
         attributeValue: z.string().min(1, "Attribute value is required"),
         attributeValueDisplay: z.string().optional(),
       }),
