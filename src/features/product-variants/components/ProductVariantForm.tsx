@@ -1,22 +1,26 @@
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Star } from "lucide-react";
+import { SlidersVertical, Star } from "lucide-react";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { RequiredFieldLabel } from "@/components/RequiredFieldLabel";
 import { ProductVariantFormValues, productVariantSchema } from "../schemas";
 import { ProductVariant } from "../types";
+import { ProductAttribute } from "@/features/products/types";
 
 interface ProductVariantFormProps {
   variant: ProductVariant | null;
+  attributes: ProductAttribute[];
   onSubmit: (values: ProductVariantFormValues) => void;
 }
 
 export function ProductVariantForm({
   variant,
+  attributes,
   onSubmit,
 }: ProductVariantFormProps) {
   const form = useForm({
@@ -25,6 +29,7 @@ export function ProductVariantForm({
       name: "",
       sku: "",
       isDefault: false,
+      attributes: [],
     },
     mode: "all",
   });
@@ -36,6 +41,11 @@ export function ProductVariantForm({
     formState: { errors },
     reset,
   } = form;
+
+  const { fields: attributeFields } = useFieldArray({
+    control,
+    name: "attributes",
+  });
 
   useEffect(() => {
     reset(
@@ -49,14 +59,30 @@ export function ProductVariantForm({
             stockQuantity: variant.stockQuantity,
             lowStockThreshold: variant.lowStockThreshold,
             isDefault: variant.isDefault,
+            attributes: (attributes || [])
+              .sort((a, b) => a.displayOrder - b.displayOrder)
+              .map((attr) => ({
+                id: attr.id,
+                attributeKey: attr.attributeKey,
+                attributeValue: "",
+                attributeValueDisplay: "",
+              })),
           }
         : {
             name: "",
             sku: "",
             isDefault: false,
+            attributes: attributes
+              .sort((a, b) => a.displayOrder - b.displayOrder)
+              .map((attr) => ({
+                id: attr.id,
+                attributeKey: attr.attributeKey,
+                attributeValue: "",
+                attributeValueDisplay: "",
+              })),
           },
     );
-  }, [variant, reset]);
+  }, [variant, reset, attributes]);
 
   return (
     <form
@@ -180,6 +206,76 @@ export function ProductVariantForm({
           </Field>
         </div>
       </div>
+
+      {!!attributes.length && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <SlidersVertical size={16} /> Attributes
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <div className="space-y-6">
+              {attributeFields.map((field, index) => {
+                const attrMeta = attributes.find(
+                  (a) => a.attributeKey === field.attributeKey,
+                );
+
+                return (
+                  <div key={field.id}>
+                    <div className="font-medium mb-3">
+                      <span className="mr-1">
+                        {attrMeta?.attributeKeyDisplay}
+                      </span>
+                      <span className="text-destructive">*</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6 bg-neutral-100 p-4 rounded-2xl">
+                      <Field>
+                        <RequiredFieldLabel>Value</RequiredFieldLabel>
+
+                        <Input
+                          {...register(`attributes.${index}.attributeValue`)}
+                          className="bg-white"
+                          aria-invalid={
+                            !!errors.attributes?.[index]?.attributeValue
+                          }
+                        />
+
+                        <FieldError>
+                          {errors.attributes?.[index]?.attributeValue?.message}
+                        </FieldError>
+                      </Field>
+
+                      <Field>
+                        <FieldLabel>Display value</FieldLabel>
+
+                        <Input
+                          {...register(
+                            `attributes.${index}.attributeValueDisplay`,
+                          )}
+                          className="bg-white"
+                        />
+                      </Field>
+                    </div>
+
+                    <Input
+                      type="hidden"
+                      {...register(`attributes.${index}.attributeKey`)}
+                    />
+
+                    <Input
+                      type="hidden"
+                      {...register(`attributes.${index}.id`)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </form>
   );
 }

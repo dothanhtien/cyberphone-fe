@@ -6,7 +6,7 @@ export const categoriesApi = {
   findAll: async (
     params?: PaginationParams,
   ): Promise<PaginatedResponse<Category>> => {
-    return apiClient.get("/categories", { params });
+    return apiClient.get("/admin/categories", { params });
   },
 
   create: async (data: CreateCategoryRequest): Promise<Category> => {
@@ -27,7 +27,7 @@ export const categoriesApi = {
       formData.append("logo", data.logo);
     }
 
-    return apiClient.post<Category>("/categories", formData, {
+    return apiClient.post<Category>("/admin/categories", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

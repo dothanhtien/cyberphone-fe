@@ -49,6 +49,49 @@ export const createProductSchema = z
     images: z.array(z.instanceof(File)).default([]),
     mainImage: z.instanceof(File).optional(),
     imageMetas: z.array(productImageMetaSchema).default([]),
+    attributes: z
+      .array(
+        z.object({
+          attributeKey: z
+            .string()
+            .min(1, "Attribute key is required")
+            .max(100, "Attribute key must be less than 100 characters")
+            .regex(
+              /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+              "Attribute key must contain only lowercase letters, numbers, and hyphens",
+            ),
+          attributeKeyDisplay: z
+            .string()
+            .min(1, "Attribute key display is required")
+            .max(100),
+          displayOrder: z.number().optional(),
+        }),
+      )
+      .superRefine((attributes, ctx) => {
+        const seen = new Map<string, number>();
+
+        attributes.forEach((attr, index) => {
+          const key = attr.attributeKey.toLowerCase();
+
+          if (seen.has(key)) {
+            const firstIndex = seen.get(key)!;
+
+            ctx.addIssue({
+              code: "custom",
+              message: "Attribute key must be unique",
+              path: [index, "attributeKey"],
+            });
+
+            ctx.addIssue({
+              code: "custom",
+              message: "Attribute key must be unique",
+              path: [firstIndex, "attributeKey"],
+            });
+          } else {
+            seen.set(key, index);
+          }
+        });
+      }),
   })
   .refine(
     (data) => {

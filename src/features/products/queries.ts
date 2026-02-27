@@ -10,3 +10,10 @@ export const useProducts = (params?: PaginationParams) => {
     queryFn: () => productsApi.findAll(params),
   });
 };
+
+export const useProductAttributes = (productId: string) => {
+  return useQuery({
+    queryKey: queryKeys.products.attributes.list(productId),
+    queryFn: () => productsApi.findAttributes(productId),
+  });
+};

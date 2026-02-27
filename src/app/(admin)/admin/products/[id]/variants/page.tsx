@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
 import { ProductVariantsTable } from "@/features/product-variants/components/ProductVariantsTable";
 import { useProductVariants } from "@/features/product-variants/queries";
+import { useProductAttributes } from "@/features/products/queries";
 import {
   useCreateProductVariant,
   useUpdateProductVariant,
@@ -30,9 +31,11 @@ export default function ProductVariantsPage() {
 
   const isCreateMode = !editingVariant;
 
-  const { data } = useProductVariants(productId);
+  const { data: variants } = useProductVariants(productId);
   const createProductVariantMutation = useCreateProductVariant();
   const updateProductVariantMutation = useUpdateProductVariant();
+
+  const { data: attributes } = useProductAttributes(productId);
 
   const handleOpenCreate = () => {
     setEditingVariant(null);
@@ -112,12 +115,13 @@ export default function ProductVariantsPage() {
         </Button>
       </div>
 
-      <ProductVariantsTable data={data ?? []} onEdit={handleEditVariant} />
+      <ProductVariantsTable data={variants ?? []} onEdit={handleEditVariant} />
 
       <ProductVariantModal
         mode={isCreateMode ? "create" : "update"}
         open={isModalOpen}
         variant={editingVariant}
+        attributes={attributes ?? []}
         onOpenChange={handleCloseModal}
         onSubmit={handleSubmit}
       />

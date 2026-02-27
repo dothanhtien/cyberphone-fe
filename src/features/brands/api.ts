@@ -6,7 +6,7 @@ export const brandsApi = {
   findAll: async (
     params?: PaginationParams,
   ): Promise<PaginatedResponse<Brand>> => {
-    return apiClient.get("/brands", { params });
+    return apiClient.get("/admin/brands", { params });
   },
 
   create: async (data: CreateBrandRequest): Promise<Brand> => {
@@ -23,7 +23,7 @@ export const brandsApi = {
       formData.append("logo", data.logo);
     }
 
-    return apiClient.post<Brand>("/brands", formData, {
+    return apiClient.post<Brand>("/admin/brands", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

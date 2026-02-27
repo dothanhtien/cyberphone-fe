@@ -1,6 +1,6 @@
 import { apiClient } from "@/lib/axios/client";
 import { PaginatedResponse, PaginationParams } from "@/types";
-import { CreateProductRequest, Product } from "./types";
+import { CreateProductRequest, Product, ProductAttribute } from "./types";
 
 export const productsApi = {
   findAll: async (
@@ -53,10 +53,18 @@ export const productsApi = {
       formData.append("imageMetas", JSON.stringify(data.imageMetas));
     }
 
+    if (data.attributes?.length) {
+      formData.append("attributes", JSON.stringify(data.attributes));
+    }
+
     return apiClient.post("/admin/products", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
+  },
+
+  findAttributes: async (productId: string): Promise<ProductAttribute[]> => {
+    return apiClient.get(`/admin/products/${productId}/attributes`);
   },
 };
