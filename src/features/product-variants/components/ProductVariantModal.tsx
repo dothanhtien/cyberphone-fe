@@ -12,11 +12,13 @@ import {
 import { ProductVariantForm } from "./ProductVariantForm";
 import { ProductVariantFormValues } from "../schemas";
 import { ProductVariant } from "../types";
+import { ProductAttribute } from "@/features/products/types";
 
 interface ProductVariantModalProps {
   mode?: "create" | "update";
   open: boolean;
   variant: ProductVariant | null;
+  attributes: ProductAttribute[];
   onOpenChange: (open: boolean) => void;
   onSubmit: (values: ProductVariantFormValues) => void;
 }
@@ -25,6 +27,7 @@ export function ProductVariantModal({
   mode = "create",
   open,
   variant,
+  attributes,
   onOpenChange,
   onSubmit,
 }: ProductVariantModalProps) {
@@ -47,7 +50,13 @@ export function ProductVariantModal({
           </DialogDescription>
         </DialogHeader>
 
-        <ProductVariantForm variant={variant} onSubmit={onSubmit} />
+        <div className="no-scrollbar max-h-[70vh] overflow-y-auto p-2">
+          <ProductVariantForm
+            variant={variant}
+            attributes={attributes}
+            onSubmit={onSubmit}
+          />
+        </div>
 
         <DialogFooter>
           <DialogClose asChild>

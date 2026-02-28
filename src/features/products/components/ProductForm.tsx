@@ -1,6 +1,16 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, Flame, ImageIcon, Info, LayoutGrid, Star } from "lucide-react";
+import {
+  Eye,
+  Flame,
+  ImageIcon,
+  Info,
+  LayoutGrid,
+  Plus,
+  SlidersVertical,
+  Star,
+  Trash2,
+} from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +40,7 @@ import { Brand } from "@/features/brands/types";
 import { capitalize } from "@/utils";
 import { CreateProductFormValues, createProductSchema } from "../schemas";
 import { ProductImageType, ProductStatus } from "../enums";
+import { Button } from "@/components/ui/button";
 
 interface ProductFormProps {
   onSubmit: (values: CreateProductFormValues) => void;
@@ -57,15 +68,22 @@ export function ProductForm({
       isBestseller: false,
       images: [],
       imageMetas: [],
+      attributes: [],
       ...defaultValues,
     },
     mode: "all",
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "attributes",
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    trigger,
   } = form;
 
   const handleFormSubmit = (values: CreateProductFormValues) => {
@@ -81,6 +99,11 @@ export function ProductForm({
       });
       delete values.mainImage;
     }
+
+    values.attributes = values.attributes.map((attr, index) => ({
+      ...attr,
+      displayOrder: index,
+    }));
 
     onSubmit(values);
   };
@@ -276,6 +299,99 @@ export function ProductForm({
             fieldName="mainImage"
             label="Main image"
           />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <SlidersVertical size={16} /> Product attributes
+          </CardTitle>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              append({
+                attributeKey: "",
+                attributeKeyDisplay: "",
+              })
+            }
+          >
+            <Plus size={14} className="mr-1" />
+            Add Attribute
+          </Button>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          {fields.length === 0 && (
+            <p className="text-sm text-center text-muted-foreground">
+              No attributes added yet.
+            </p>
+          )}
+
+          {fields.map((field, index) => (
+            <div
+              key={field.id}
+              className="bg-neutral-100 p-4 rounded-3xl flex gap-4 items-center relative"
+            >
+              <div className="flex-1 grid grid-cols-2 gap-4">
+                <Field>
+                  <RequiredFieldLabel>Attribute key</RequiredFieldLabel>
+
+                  <Input
+                    {...register(`attributes.${index}.attributeKey` as const, {
+                      onChange: () => {
+                        const indexes = fields.map((_, i) => i);
+                        indexes.forEach((i) =>
+                          trigger(`attributes.${i}.attributeKey`),
+                        );
+                      },
+                    })}
+                    placeholder="color"
+                    aria-invalid={!!errors.attributes?.[index]?.attributeKey}
+                    className="bg-white"
+                  />
+
+                  <FieldError>
+                    {errors.attributes?.[index]?.attributeKey?.message}
+                  </FieldError>
+                </Field>
+
+                <Field>
+                  <RequiredFieldLabel>Attribute key display</RequiredFieldLabel>
+
+                  <Input
+                    {...register(
+                      `attributes.${index}.attributeKeyDisplay` as const,
+                    )}
+                    placeholder="Color"
+                    aria-invalid={
+                      !!errors.attributes?.[index]?.attributeKeyDisplay
+                    }
+                    className="bg-white"
+                  />
+
+                  <FieldError>
+                    {errors.attributes?.[index]?.attributeKeyDisplay?.message}
+                  </FieldError>
+                </Field>
+              </div>
+
+              <div className="w-6">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => remove(index)}
+                  className="text-muted-foreground absolute top-11 right-3"
+                >
+                  <Trash2 size={16} />
+                </Button>
+              </div>
+            </div>
+          ))}
         </CardContent>
       </Card>
     </form>

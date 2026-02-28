@@ -9,20 +9,20 @@ export const productVariantsApi = {
   getVariantsByProductId: async (
     productId: string,
   ): Promise<ProductVariant[]> => {
-    return apiClient.get(`/products/${productId}/variants`);
+    return apiClient.get(`/admin/products/${productId}/variants`);
   },
 
   create: async (
     productId: string,
     data: CreateProductVariantRequest,
   ): Promise<ProductVariant> => {
-    return apiClient.post(`/products/${productId}/variants`, data);
+    return apiClient.post(`/admin/products/${productId}/variants`, data);
   },
 
   update: async (
     variantId: string,
     data: UpdateProductVariantRequest,
   ): Promise<ProductVariant> => {
-    return apiClient.patch(`/product-variants/${variantId}`, data);
+    return apiClient.patch(`/admin/product-variants/${variantId}`, data);
   },
 };

@@ -19,6 +19,11 @@ export const queryKeys = {
     all: ["products"] as const,
     list: (params?: PaginationParams) =>
       [...queryKeys.products.all, "list", params] as const,
+    attributes: {
+      all: () => [...queryKeys.products.all, "attributes"] as const,
+      list: (productId: string) =>
+        [...queryKeys.products.attributes.all(), productId] as const,
+    },
   },
   productVariants: {
     all: ["productVariants"] as const,

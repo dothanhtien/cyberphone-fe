@@ -1,5 +1,18 @@
 import { ProductVariantStockStatus } from "./enums";
 
+export interface VariantAttribute {
+  id: string;
+  variantId: string;
+  productAttributeId: string;
+  attributeValue: string;
+  attributeValueDisplay: string | null;
+  isActive: true;
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string | null;
+  updatedBy: string | null;
+}
+
 export interface ProductVariant {
   id: string;
   productId: string;
@@ -17,6 +30,7 @@ export interface ProductVariant {
   createdBy: string;
   updatedAt: string | null;
   updatedBy: string | null;
+  attributes: VariantAttribute[];
 }
 
 export interface CreateProductVariantRequest {

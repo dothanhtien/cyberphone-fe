@@ -9,6 +9,19 @@ export interface ProductImage {
   url: string;
 }
 
+export interface ProductAttribute {
+  id: string;
+  productId: string;
+  attributeKey: string;
+  attributeKeyDisplay: string;
+  displayOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string | null;
+  updatedBy: string | null;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -43,5 +56,10 @@ export interface CreateProductRequest {
     imageType: ProductImageType;
     altText?: string | null;
     title?: string | null;
+  }[];
+  attributes?: {
+    attributeKey: string;
+    attributeKeyDisplay: string;
+    displayOrder: number;
   }[];
 }

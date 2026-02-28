@@ -34,6 +34,14 @@ export const productVariantSchema = z
       .int("Low stock threshold must be an integer")
       .min(0, "Low stock threshold must be greater than or equal to 0"),
     isDefault: z.boolean(),
+    attributes: z.array(
+      z.object({
+        id: z.string().optional(),
+        productAttributeId: z.string(),
+        attributeValue: z.string().min(1, "Attribute value is required"),
+        attributeValueDisplay: z.string().optional(),
+      }),
+    ),
   })
   .refine(
     (data) => {
