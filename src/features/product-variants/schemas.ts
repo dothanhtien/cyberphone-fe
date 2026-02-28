@@ -12,16 +12,16 @@ export const productVariantSchema = z
       .max(100, "SKU must be less than 100 characters"),
     price: z
       .number("Price must be a number")
-      .min(1, "Price must be greater than 0"),
+      .min(0, "Price must be greater than or equal to 0"),
     salePrice: z
       .number("Sale price must be a number")
-      .min(1, "Sale price must be greater than 0")
+      .min(0, "Sale price must be greater than or equal to 0")
       .nullable()
       .optional()
       .or(z.literal(NaN).transform(() => null)),
     costPrice: z
       .number("Cost price must be a number")
-      .min(1, "Cost price must be greater than 0")
+      .min(0, "Cost price must be greater than or equal to 0")
       .nullable()
       .optional()
       .or(z.literal(NaN).transform(() => null)),

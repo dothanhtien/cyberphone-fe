@@ -83,6 +83,7 @@ export function ProductForm({
     register,
     handleSubmit,
     formState: { errors },
+    trigger,
   } = form;
 
   const handleFormSubmit = (values: CreateProductFormValues) => {
@@ -340,7 +341,14 @@ export function ProductForm({
                   <RequiredFieldLabel>Attribute key</RequiredFieldLabel>
 
                   <Input
-                    {...register(`attributes.${index}.attributeKey` as const)}
+                    {...register(`attributes.${index}.attributeKey` as const, {
+                      onChange: () => {
+                        const indexes = fields.map((_, i) => i);
+                        indexes.forEach((i) =>
+                          trigger(`attributes.${i}.attributeKey`),
+                        );
+                      },
+                    })}
                     placeholder="color"
                     aria-invalid={!!errors.attributes?.[index]?.attributeKey}
                     className="bg-white"

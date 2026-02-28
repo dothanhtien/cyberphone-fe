@@ -10,7 +10,7 @@ export interface VariantAttribute {
   createdAt: string;
   createdBy: string;
   updatedAt: string | null;
-  updatedBy: null | null;
+  updatedBy: string | null;
 }
 
 export interface ProductVariant {

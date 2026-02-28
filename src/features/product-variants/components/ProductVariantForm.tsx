@@ -57,7 +57,7 @@ export function ProductVariantForm({
             sku: variant.sku,
             price: Number(variant.price),
             salePrice: variant.salePrice ? Number(variant.salePrice) : null,
-            costPrice: variant.costPrice ? Number(variant.salePrice) : null,
+            costPrice: variant.costPrice ? Number(variant.costPrice) : null,
             stockQuantity: variant.stockQuantity,
             lowStockThreshold: variant.lowStockThreshold,
             isDefault: variant.isDefault,
