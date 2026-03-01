@@ -1,14 +1,14 @@
+import { ProductVariantStockStatus } from "@/features/product-variants/enums";
+
 export interface CartItem {
   id: string;
-  cartId: string;
   variantId: string;
+  variantName: string;
   quantity: number;
   price: number;
-  isActive: boolean;
-  createdAt: string;
-  createdBy: string;
-  updatedAt: string | null;
-  updatedBy: string | null;
+  salePrice: number | null;
+  stockStatus: ProductVariantStockStatus;
+  imageUrl: string | null;
 }
 
 export interface Cart {
@@ -17,11 +17,6 @@ export interface Cart {
   sessionId: string;
   expiresAt: string;
   items: CartItem[];
-  isActive: boolean;
-  createdAt: string;
-  createdBy: string;
-  updatedAt: string | null;
-  updatedBy: string | null;
 }
 
 export interface ResolveCartRequest {

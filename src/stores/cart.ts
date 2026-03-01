@@ -12,6 +12,8 @@ interface CartStore {
 
   totalItems: () => number;
 
+  subtotal: () => number;
+
   setHasHydrated: (state: boolean) => void;
 }
 
@@ -42,7 +44,13 @@ export const useCartStore = create<CartStore>()(
           }),
 
         totalItems: () =>
-          get().cart?.items.reduce((sum, i) => sum + i.quantity, 0) ?? 0,
+          get().cart?.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0,
+
+        subtotal: () =>
+          get().cart?.items?.reduce(
+            (sum, item) => sum + (item.salePrice ?? item.price) * item.quantity,
+            0,
+          ) ?? 0,
 
         setHasHydrated: (state) => set({ hasHydrated: state }),
       }),

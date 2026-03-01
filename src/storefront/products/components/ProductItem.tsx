@@ -34,7 +34,10 @@ export function ProductItem({ product }: ProductItemProps) {
       },
       {
         onSuccess: (data) => {
-          toast.success("Add to cart successfully", { position: "top-right" });
+          toast.success("Add to cart successfully", {
+            position: "top-right",
+            closeButton: true,
+          });
           addItem(data);
         },
       },
