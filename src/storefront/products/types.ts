@@ -7,4 +7,5 @@ export interface StorefrontProduct {
   salePrice: number | null;
   inStock: boolean;
   mainImage: string | null;
+  variantId: string;
 }
