@@ -1,4 +1,5 @@
 import { PaginationParams, StorefrontPaginationParams } from "@/types";
+import { ResolveCartRequest } from "@/storefront/cart/types";
 
 export const queryKeys = {
   auth: {
@@ -41,6 +42,11 @@ export const queryKeys = {
         "list",
         params ?? {},
       ],
+    },
+    cart: {
+      all: () => [...queryKeys.storefront.all, "cart"] as const,
+      details: (params: ResolveCartRequest = {}) =>
+        [...queryKeys.storefront.cart.all(), "detail", params] as const,
     },
   },
 };

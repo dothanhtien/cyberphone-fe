@@ -1,17 +1,54 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Heart, ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { StorefrontProduct } from "../types";
 import { formatCurrency } from "@/utils/currency";
+import { useCartStore } from "@/stores/cart";
+import { useAddToCart } from "@/storefront/cart/mutations";
 
 interface ProductItemProps {
   product: StorefrontProduct;
 }
 
 export function ProductItem({ product }: ProductItemProps) {
+  const addToCartMutation = useAddToCart();
+  const { addItem } = useCartStore((state) => state);
+  const { cart } = useCartStore((state) => state);
+
+  const handleClickAddToCart = () => {
+    if (!cart) {
+      toast.error("Cart is loading. Please try again.");
+      return;
+    }
+
+    addToCartMutation.mutate(
+      {
+        cartId: cart.id,
+        data: {
+          variantId: product.variantId,
+          quantity: 1,
+        },
+      },
+      {
+        onSuccess: (data) => {
+          toast.success("Add to cart successfully", {
+            position: "bottom-right",
+          });
+          addItem(data);
+        },
+        onError: () => {
+          toast.error("Unable to add item to cart. Please try again.");
+        },
+      },
+    );
+  };
+
   return (
     <Card>
       <CardContent>
@@ -56,7 +93,13 @@ export function ProductItem({ product }: ProductItemProps) {
           </Button>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="icon" aria-label="Add to cart">
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label="Add to cart"
+            onClick={handleClickAddToCart}
+            disabled={!cart || addToCartMutation.isPending}
+          >
             <ShoppingCart />
           </Button>
           <Button
