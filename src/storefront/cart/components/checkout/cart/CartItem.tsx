@@ -36,7 +36,7 @@ export function CartItem({ item }: CartItemProps) {
       { cartId: cart.id, itemId: item.id },
       {
         onSuccess(data) {
-          increaseItemQuantity(data.id);
+          increaseItemQuantity(data.id, data.quantity);
         },
       },
     );
@@ -49,7 +49,7 @@ export function CartItem({ item }: CartItemProps) {
       { cartId: cart.id, itemId: item.id },
       {
         onSuccess(data) {
-          decreaseItemQuantity(data.id);
+          decreaseItemQuantity(data.id, data.quantity);
         },
       },
     );
@@ -95,6 +95,7 @@ export function CartItem({ item }: CartItemProps) {
                 size="xs"
                 onClick={handleDecreaseQuantity}
                 disabled={decreaseCartItemQuantityMutation.isPending}
+                aria-label={`Decrease quantity of ${item.variantName}`}
               >
                 <Minus />
               </Button>
@@ -106,6 +107,7 @@ export function CartItem({ item }: CartItemProps) {
                 size="xs"
                 onClick={handleIncreaseQuantity}
                 disabled={increaseCartItemQuantityMutation.isPending}
+                aria-label={`Increase quantity of ${item.variantName}`}
               >
                 <Plus />
               </Button>
@@ -118,6 +120,7 @@ export function CartItem({ item }: CartItemProps) {
               size="xs"
               onClick={handleRemovecartItem}
               disabled={removeCartItemMutation.isPending}
+              aria-label={`Remove ${item.variantName} from cart`}
             >
               <Trash />
             </Button>

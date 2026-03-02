@@ -10,8 +10,8 @@ interface CartStore {
 
   addItem: (item: CartItem) => void;
 
-  increaseItemQuantity: (id: string) => void;
-  decreaseItemQuantity: (id: string) => void;
+  increaseItemQuantity: (id: string, quantity?: number) => void;
+  decreaseItemQuantity: (id: string, quantity?: number) => void;
   removeItem: (id: string) => void;
 
   totalItems: () => number;
@@ -37,16 +37,18 @@ export const useCartStore = create<CartStore>()(
 
             const newItems = existing
               ? state.cart.items.map((i) =>
-                  i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i,
+                  i.id === item.id
+                    ? { ...i, ...item, quantity: item.quantity }
+                    : i,
                 )
-              : [...state.cart.items, { ...item, quantity: 1 }];
+              : [...state.cart.items, item];
 
             return {
               cart: { ...state.cart, items: newItems },
             };
           }),
 
-        increaseItemQuantity: (id) =>
+        increaseItemQuantity: (id, quantity) =>
           set((state) => {
             if (!state.cart) return state;
 
@@ -54,23 +56,24 @@ export const useCartStore = create<CartStore>()(
             if (!existing) return state;
 
             const newItems = state.cart.items.map((i) =>
-              i.id === id ? { ...i, quantity: i.quantity + 1 } : i,
+              i.id === id ? { ...i, quantity: quantity ?? i.quantity + 1 } : i,
             );
 
             return { cart: { ...state.cart, items: newItems } };
           }),
 
-        decreaseItemQuantity: (id) =>
+        decreaseItemQuantity: (id, quantity) =>
           set((state) => {
             if (!state.cart) return state;
 
             const existing = state.cart.items.find((i) => i.id === id);
             if (!existing) return state;
 
+            const nextQuantity = quantity ?? existing.quantity - 1;
             let newItems: CartItem[];
-            if (existing.quantity > 1) {
+            if (nextQuantity > 0) {
               newItems = state.cart.items.map((i) =>
-                i.id === id ? { ...i, quantity: i.quantity - 1 } : i,
+                i.id === id ? { ...i, quantity: nextQuantity } : i,
               );
             } else {
               newItems = state.cart.items.filter((i) => i.id !== id);

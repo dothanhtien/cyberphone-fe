@@ -32,13 +32,13 @@ export function MiniCart() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost">
+        <Button variant="ghost" aria-label={`Open cart (${itemCount} items)`}>
           <div className="relative">
             <ShoppingCart />
             {!!itemCount && (
               <div
                 className={`
-                    absolute top-[-12] right-[-12] text-[9px] rounded-full bg-red-500 px-1 text-white 
+                    absolute -top-3 -right-3 text-[9px] rounded-full bg-red-500 px-1 text-white
                     w-4.5 h-4.5 flex justify-center items-center
                   `}
               >

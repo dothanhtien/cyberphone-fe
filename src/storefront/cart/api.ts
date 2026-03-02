@@ -32,6 +32,6 @@ export const storefrontCartApi = {
     cartId: string,
     itemId: string,
   ): Promise<CartItemResponse> => {
-    return apiClient.delete(`carts/${cartId}/items/${itemId}`);
+    return apiClient.delete(`/carts/${cartId}/items/${itemId}`);
   },
 };

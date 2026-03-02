@@ -22,7 +22,10 @@ export function ProductItem({ product }: ProductItemProps) {
   const { cart } = useCartStore((state) => state);
 
   const handleClickAddToCart = () => {
-    if (!cart) return;
+    if (!cart) {
+      toast.error("Cart is loading. Please try again.");
+      return;
+    }
 
     addToCartMutation.mutate(
       {
@@ -38,6 +41,9 @@ export function ProductItem({ product }: ProductItemProps) {
             position: "bottom-right",
           });
           addItem(data);
+        },
+        onError: () => {
+          toast.error("Unable to add item to cart. Please try again.");
         },
       },
     );
@@ -92,6 +98,7 @@ export function ProductItem({ product }: ProductItemProps) {
             size="icon"
             aria-label="Add to cart"
             onClick={handleClickAddToCart}
+            disabled={!cart || addToCartMutation.isPending}
           >
             <ShoppingCart />
           </Button>

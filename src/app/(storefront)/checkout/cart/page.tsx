@@ -30,13 +30,17 @@ export default function CheckoutCartPage() {
     <div className="grid grid-cols-5 gap-6">
       <div className="col-span-3">
         <h2 className="font-bold mb-3">Cart items</h2>
-        {cart?.items.map((item) => (
-          <CartItem key={item.id} item={item} />
-        ))}
+        {(cart?.items?.length ?? 0) === 0 ? (
+          <Card className="mb-3">
+            <CardContent>Your cart is empty.</CardContent>
+          </Card>
+        ) : (
+          cart?.items.map((item) => <CartItem key={item.id} item={item} />)
+        )}
 
         <Button
           onClick={handlePlaceOrder}
-          disabled={loading}
+          disabled={loading || (cart?.items?.length ?? 0) === 0}
           className="w-full mt-1"
         >
           {loading ? (
