@@ -1,4 +1,6 @@
+import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +17,8 @@ import { formatCurrency } from "@/utils/currency";
 import { useStorefrontCart } from "../queries";
 
 export function MiniCart() {
+  const [open, setOpen] = useState(false);
+
   useStorefrontCart();
 
   const { cart, hasHydrated } = useCartStore((state) => state);
@@ -26,7 +30,7 @@ export function MiniCart() {
   if (!hasHydrated) return null;
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost">
           <div className="relative">
@@ -88,8 +92,11 @@ export function MiniCart() {
           <div className="text-red-700">{formatCurrency(subtotal())} VND</div>
         </div>
 
-        <Button>Checkout now</Button>
-        <Button variant="outline">View shoping cart</Button>
+        <Button asChild>
+          <Link href="/checkout/cart" onClick={() => setOpen(false)}>
+            Checkout
+          </Link>
+        </Button>
       </PopoverContent>
     </Popover>
   );

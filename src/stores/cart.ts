@@ -10,8 +10,11 @@ interface CartStore {
 
   addItem: (item: CartItem) => void;
 
-  totalItems: () => number;
+  increaseItemQuantity: (id: string) => void;
+  decreaseItemQuantity: (id: string) => void;
+  removeItem: (id: string) => void;
 
+  totalItems: () => number;
   subtotal: () => number;
 
   setHasHydrated: (state: boolean) => void;
@@ -41,6 +44,51 @@ export const useCartStore = create<CartStore>()(
             return {
               cart: { ...state.cart, items: newItems },
             };
+          }),
+
+        increaseItemQuantity: (id) =>
+          set((state) => {
+            if (!state.cart) return state;
+
+            const existing = state.cart.items.find((i) => i.id === id);
+            if (!existing) return state;
+
+            const newItems = state.cart.items.map((i) =>
+              i.id === id ? { ...i, quantity: i.quantity + 1 } : i,
+            );
+
+            return { cart: { ...state.cart, items: newItems } };
+          }),
+
+        decreaseItemQuantity: (id) =>
+          set((state) => {
+            if (!state.cart) return state;
+
+            const existing = state.cart.items.find((i) => i.id === id);
+            if (!existing) return state;
+
+            let newItems: CartItem[];
+            if (existing.quantity > 1) {
+              newItems = state.cart.items.map((i) =>
+                i.id === id ? { ...i, quantity: i.quantity - 1 } : i,
+              );
+            } else {
+              newItems = state.cart.items.filter((i) => i.id !== id);
+            }
+
+            return { cart: { ...state.cart, items: newItems } };
+          }),
+
+        removeItem: (id) =>
+          set((state) => {
+            if (!state.cart) return state;
+
+            const existing = state.cart.items.find((i) => i.id === id);
+            if (!existing) return state;
+
+            const newItems = state.cart.items.filter((i) => i.id !== id);
+
+            return { cart: { ...state.cart, items: newItems } };
           }),
 
         totalItems: () =>

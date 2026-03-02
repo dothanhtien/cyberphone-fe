@@ -11,6 +11,18 @@ export interface CartItem {
   imageUrl: string | null;
 }
 
+export interface CartItemResponse {
+  cartId: string;
+  createdAt: string;
+  createdBy: string;
+  id: string;
+  isActive: boolean;
+  quantity: number;
+  updatedAt: string | null;
+  updatedBy: string | null;
+  variantId: string;
+}
+
 export interface Cart {
   id: string;
   userId: string | null;
