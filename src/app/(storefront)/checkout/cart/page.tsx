@@ -1,28 +1,17 @@
 "use client";
 
-import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cart";
 import { formatCurrency } from "@/utils/currency";
-import { CartItem } from "@/storefront/cart/components/checkout/cart/CartItem";
+import { ReviewCartItem } from "@/storefront/checkout/components/ReviewCartItem";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutCartPage() {
+  const router = useRouter();
   const { cart, hasHydrated } = useCartStore((state) => state);
   const subtotal = useCartStore((state) => state.subtotal);
-
-  const [loading, setLoading] = useState(false);
-
-  const handlePlaceOrder = () => {
-    setLoading(true);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-  };
 
   if (!hasHydrated) return null;
 
@@ -35,22 +24,17 @@ export default function CheckoutCartPage() {
             <CardContent>Your cart is empty.</CardContent>
           </Card>
         ) : (
-          cart?.items.map((item) => <CartItem key={item.id} item={item} />)
+          cart?.items.map((item) => (
+            <ReviewCartItem key={item.id} item={item} />
+          ))
         )}
 
         <Button
-          onClick={handlePlaceOrder}
-          disabled={loading || (cart?.items?.length ?? 0) === 0}
+          onClick={() => router.push("/checkout/shipping")}
+          disabled={(cart?.items?.length ?? 0) === 0}
           className="w-full mt-1"
         >
-          {loading ? (
-            <>
-              <Spinner data-icon="inline-start" />
-              Processing...
-            </>
-          ) : (
-            <>Place order</>
-          )}
+          Continue
         </Button>
       </div>
 

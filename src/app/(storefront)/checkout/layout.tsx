@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { CheckoutStepIndicator } from "@/storefront/cart/components/checkout/CheckoutStepIndicator";
+import { CheckoutStepIndicator } from "@/storefront/checkout/components/CheckoutStepIndicator";
 
 export const metadata: Metadata = {
   title: "Cyberphone | Checkout",

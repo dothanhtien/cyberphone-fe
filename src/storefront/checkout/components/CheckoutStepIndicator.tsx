@@ -51,8 +51,8 @@ const checkoutSteps = [
   },
   {
     stepNumber: 2,
-    title: "Customer information",
-    pathname: "/checkout/address",
+    title: "Shipping",
+    pathname: "/checkout/shipping",
   },
   {
     stepNumber: 3,

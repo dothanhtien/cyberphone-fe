@@ -12,11 +12,11 @@ import {
 } from "@/storefront/cart/mutations";
 import { useCartStore } from "@/stores/cart";
 
-interface CartItemProps {
+interface ReviewCartItemProps {
   item: CartItemType;
 }
 
-export function CartItem({ item }: CartItemProps) {
+export function ReviewCartItem({ item }: ReviewCartItemProps) {
   const { cart } = useCartStore((state) => state);
   const increaseItemQuantity = useCartStore(
     (state) => state.increaseItemQuantity,
