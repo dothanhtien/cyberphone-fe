@@ -56,13 +56,14 @@ export default function CheckoutPaymentPage() {
 
     if (!redirectUrl) {
       toast.error("Redirect URL has not been set up");
+      return;
     }
 
     createPaymentMutation.mutate(
       {
         orderId: data.id,
         provider: paymentMethod,
-        redirectUrl: redirectUrl!,
+        redirectUrl: redirectUrl,
       },
       {
         onSuccess: (data) => {
@@ -76,7 +77,18 @@ export default function CheckoutPaymentPage() {
   };
 
   const handleCreateOrder = () => {
-    if (!cart || !shippingAddress || !paymentMethod) return;
+    if (!cart) {
+      toast.error("Your cart is empty");
+      router.replace("/cart");
+      return;
+    }
+
+    if (!shippingAddress) {
+      toast.error("Please enter a shipping address first");
+      router.replace("/checkout/shipping");
+      return;
+    }
+    if (!paymentMethod) return;
 
     createOrderMutation.mutate(
       {

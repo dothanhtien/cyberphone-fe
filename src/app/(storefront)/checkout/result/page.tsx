@@ -24,24 +24,17 @@ export default function CheckoutResultPage() {
   const { provider, params } = useMemo(() => {
     if (!searchParams) return { provider: undefined, params: undefined };
 
-    const query: Record<string, string> = {};
-
-    searchParams.forEach((value, key) => {
-      query[key] = value;
-    });
+    const params = new URLSearchParams(searchParams.toString());
 
     let provider: PaymentProvider | undefined;
 
-    if ("partnerCode" in query && "orderId" in query) {
+    if (params.has("partnerCode") && params.has("orderId")) {
       provider = PaymentProvider.MOMO;
-    } else if ("apptransid" in query || "zptransid" in query) {
+    } else if (params.has("apptransid") || params.has("zptransid")) {
       provider = PaymentProvider.ZALOPAY;
     }
 
-    return {
-      provider,
-      params: new URLSearchParams(query),
-    };
+    return { provider, params };
   }, [searchParams]);
 
   const { data, isLoading, isError } = useStorefrontPayment(provider, params);
@@ -49,22 +42,24 @@ export default function CheckoutResultPage() {
   const isSuccess = data?.status === "success";
 
   useEffect(() => {
-    if (data?.status) {
-      setCanQueryCart(true);
+    setCanQueryCart(!isLoading);
 
-      if (data.status === "success") {
-        resetCart();
-        resetShippingAddress();
-      }
-    } else {
-      setCanQueryCart(false);
+    if (data?.status === "success") {
+      resetCart();
+      resetShippingAddress();
     }
-  }, [data, resetCart, resetShippingAddress, setCanQueryCart]);
+  }, [
+    data?.status,
+    isLoading,
+    resetCart,
+    resetShippingAddress,
+    setCanQueryCart,
+  ]);
 
   return (
     <Card>
       <CardContent className="text-center p-6">
-        {(searchParams.size === 0 || isError) && (
+        {(!provider || isError || (!isLoading && !data)) && (
           <h1 className="font-bold text-2xl mb-6">Something went wrong!</h1>
         )}
 
@@ -101,7 +96,7 @@ function PaymentSuccessful({ data }: { data: StorefrontPayment }) {
         </div>
       </div>
 
-      <Button>
+      <Button asChild>
         <Link href="/">Continue shopping</Link>
       </Button>
     </>
@@ -125,7 +120,7 @@ function PaymentUnsuccessful({ data }: { data: StorefrontPayment }) {
         </div>
       </div>
 
-      <Button>
+      <Button asChild>
         <Link href="/checkout/payment">Checkout again</Link>
       </Button>
     </>
