@@ -20,9 +20,7 @@ export default function NewBrandPage() {
   const handleCreateBrand = (data: CreateBrandFormValues) => {
     createMutation.mutate(data, {
       onSuccess: () => {
-        toast.success("Brand created successfully!", {
-          position: "top-right",
-        });
+        toast.success("Brand created successfully!");
         router.push("/admin/brands");
       },
       onError: (error) => {
@@ -30,9 +28,6 @@ export default function NewBrandPage() {
         console.error("Create brand failed:", error);
         toast.error(
           axiosError.response?.data?.message || "Failed to create brand",
-          {
-            position: "top-right",
-          },
         );
       },
     });

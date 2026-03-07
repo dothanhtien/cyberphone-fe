@@ -1,12 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cart";
-import { formatCurrency } from "@/utils/currency";
 import { ReviewCartItem } from "@/storefront/checkout/components/ReviewCartItem";
-import { useRouter } from "next/navigation";
+import { formatCurrency } from "@/utils/currency";
 
 export default function CheckoutCartPage() {
   const router = useRouter();

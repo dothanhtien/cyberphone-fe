@@ -7,7 +7,7 @@ export interface Address {
   line2?: string;
   city: string;
   district: string;
-  ward?: string;
+  ward: string;
   postalCode?: string;
-  country: string;
+  country?: string;
 }

@@ -1,65 +1,133 @@
 "use client";
 
-import { useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { CircleCheckBig } from "lucide-react";
+import { useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
+import { CircleCheckBig, CircleX } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { PaymentProvider } from "@/enums";
+import { useStorefrontPayment } from "@/storefront/payment/queries";
+import { StorefrontPayment } from "@/storefront/payment/types";
+import { useCheckoutStore } from "@/stores/checkout";
+import { useCartStore } from "@/stores/cart";
 
 export default function CheckoutResultPage() {
   const searchParams = useSearchParams();
+  const resetShippingAddress = useCheckoutStore(
+    (state) => state.resetShippingAddress,
+  );
+  const resetCart = useCartStore((state) => state.resetCart);
+  const setCanQueryCart = useCartStore((state) => state.setCanQueryCart);
 
-  useEffect(() => {
-    if (!searchParams) return;
+  const { provider, params } = useMemo(() => {
+    if (!searchParams) return { provider: undefined, params: undefined };
 
     const query: Record<string, string> = {};
+
     searchParams.forEach((value, key) => {
       query[key] = value;
     });
 
-    let provider = "";
+    let provider: PaymentProvider | undefined;
+
     if ("partnerCode" in query && "orderId" in query) {
-      provider = "momo";
+      provider = PaymentProvider.MOMO;
     } else if ("apptransid" in query || "zptransid" in query) {
-      provider = "zalopay";
+      provider = PaymentProvider.ZALOPAY;
     }
 
-    if (provider) {
-      const params = new URLSearchParams(query).toString();
-
-      fetch(`http://localhost:8080/api/payment/${provider}/return?${params}`, {
-        method: "GET",
-      }).catch((err) => console.error("Payment verify failed", err));
-    }
+    return {
+      provider,
+      params: new URLSearchParams(query),
+    };
   }, [searchParams]);
+
+  const { data, isLoading, isError } = useStorefrontPayment(provider, params);
+
+  const isSuccess = data?.status === "success";
+
+  useEffect(() => {
+    if (data?.status) {
+      setCanQueryCart(true);
+
+      if (data.status === "success") {
+        resetCart();
+        resetShippingAddress();
+      }
+    } else {
+      setCanQueryCart(false);
+    }
+  }, [data, resetCart, resetShippingAddress, setCanQueryCart]);
 
   return (
     <Card>
-      <CardContent className="text-center">
-        <CircleCheckBig
-          size={64}
-          className="text-green-500 mx-auto mt-4 mb-8"
-        />
+      <CardContent className="text-center p-6">
+        {(searchParams.size === 0 || isError) && (
+          <h1 className="font-bold text-2xl mb-6">Something went wrong!</h1>
+        )}
 
-        <div className="mb-4">
-          <h1 className="font-bold text-2xl mb-3">Payment successful!</h1>
-          <p>Thank you for shopping at CyberPhone</p>
-        </div>
+        {isLoading && (
+          <h1 className="font-bold text-2xl mb-6">Verifying payment...</h1>
+        )}
 
-        <div className="mb-4">
-          <div className="p-4 bg-gray-200 w-75 mx-auto rounded-lg">
-            <div className="mb-1">Order number</div>
-            <div className="font-bold text-lg">
-              {searchParams.get("orderId") || "CP-XXXX-XXXX"}
-            </div>
-          </div>
-        </div>
-
-        <Button>
-          <Link href="/">Continue shopping</Link>
-        </Button>
+        {!isLoading &&
+          data &&
+          (isSuccess ? (
+            <PaymentSuccessful data={data} />
+          ) : (
+            <PaymentUnsuccessful data={data} />
+          ))}
       </CardContent>
     </Card>
+  );
+}
+
+function PaymentSuccessful({ data }: { data: StorefrontPayment }) {
+  return (
+    <>
+      <CircleCheckBig size={64} className="text-green-500 mx-auto mt-4 mb-8" />
+
+      <div className="mb-6">
+        <h1 className="font-bold text-2xl mb-3">Payment successful!</h1>
+        <p>Thank you for shopping at CyberPhone</p>
+      </div>
+
+      <div className="mb-6">
+        <div className="p-4 bg-gray-200 w-75 mx-auto rounded-lg">
+          <div className="mb-1">Order number</div>
+          <div className="font-bold text-lg">{data.orderCode}</div>
+        </div>
+      </div>
+
+      <Button>
+        <Link href="/">Continue shopping</Link>
+      </Button>
+    </>
+  );
+}
+
+function PaymentUnsuccessful({ data }: { data: StorefrontPayment }) {
+  return (
+    <>
+      <CircleX size={64} className="text-red-500 mx-auto mt-4 mb-8" />
+
+      <div className="mb-6">
+        <h1 className="font-bold text-2xl mb-3">Payment unsuccessful!</h1>
+        <p>Please contact the administrator for assistance</p>
+      </div>
+
+      <div className="mb-6">
+        <div className="p-4 bg-gray-200 w-75 mx-auto rounded-lg">
+          <div className="mb-1">Order number</div>
+          <div className="font-bold text-lg">{data.orderCode}</div>
+        </div>
+      </div>
+
+      <Button>
+        <Link href="/checkout/payment">Checkout again</Link>
+      </Button>
+    </>
   );
 }

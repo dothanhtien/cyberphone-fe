@@ -20,9 +20,7 @@ export default function NewCategoryPage() {
   const handleCreateCategory = (data: CreateCategoryFormValues) => {
     createMutation.mutate(data, {
       onSuccess: () => {
-        toast.success("Category created successfully!", {
-          position: "top-right",
-        });
+        toast.success("Category created successfully!");
         router.push("/admin/categories");
       },
       onError: (error) => {
@@ -30,9 +28,6 @@ export default function NewCategoryPage() {
         console.error("Create category failed:", error);
         toast.error(
           axiosError.response?.data?.message || "Failed to create category",
-          {
-            position: "top-right",
-          },
         );
       },
     });

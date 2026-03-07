@@ -1,10 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { OrderSummary } from "@/storefront/cart/components/OrderSummary";
 import { ShippingForm } from "@/storefront/checkout/components/ShippingForm";
 import { AddressFormValues } from "@/storefront/checkout/schemas";
 import { useCheckoutStore } from "@/stores/checkout";
-import { useRouter } from "next/navigation";
 
 export default function CheckoutShippngPage() {
   const router = useRouter();
@@ -17,8 +18,6 @@ export default function CheckoutShippngPage() {
     setShippingAddress(values);
     router.push("/checkout/payment");
   };
-
-  console.log({ shippingAddress });
 
   if (!hasHydrated) return;
 

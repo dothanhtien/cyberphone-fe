@@ -63,9 +63,7 @@ export default function ProductVariantsPage() {
         },
         {
           onSuccess: () => {
-            toast.success("Product variant created successfully!", {
-              position: "top-right",
-            });
+            toast.success("Product variant created successfully!");
             setIsModalOpen(false);
           },
           onError: (error) => {
@@ -73,7 +71,6 @@ export default function ProductVariantsPage() {
             toast.error(
               axiosError.response?.data?.message ||
                 "Failed to create product variant",
-              { position: "top-right" },
             );
           },
         },
@@ -87,9 +84,7 @@ export default function ProductVariantsPage() {
         },
         {
           onSuccess: () => {
-            toast.success("Product variant updated successfully!", {
-              position: "top-right",
-            });
+            toast.success("Product variant updated successfully!");
             setIsModalOpen(false);
           },
           onError: (error) => {
@@ -97,7 +92,6 @@ export default function ProductVariantsPage() {
             toast.error(
               axiosError.response?.data?.message ||
                 "Failed to update product variant",
-              { position: "top-right" },
             );
           },
         },

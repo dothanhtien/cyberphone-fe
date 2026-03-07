@@ -1,48 +1,82 @@
 "use client";
 
-import { CircleDollarSign, CreditCard, Landmark, Wallet } from "lucide-react";
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { CreditCard, Wallet } from "lucide-react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { OrderSummary } from "@/storefront/cart/components/OrderSummary";
-import Link from "next/link";
-import { useState } from "react";
 import { useCreatePayment } from "@/storefront/payment/mutations";
 import { useCreateOrder } from "@/storefront/order/mutations";
 import { useCartStore } from "@/stores/cart";
 import { useCheckoutStore } from "@/stores/checkout";
-import { useRouter } from "next/navigation";
+import { PaymentProvider } from "@/enums";
+
+const paymentMethods = [
+  // {
+  //   id: PaymentProvider.COD,
+  //   label: "Cash on Delivery (COD)",
+  //   icon: CircleDollarSign,
+  // },
+  // {
+  //   id: PaymentProvider.BANK_TRANSFER,
+  //   label: "Bank transfer",
+  //   icon: Landmark,
+  // },
+  {
+    id: PaymentProvider.MOMO,
+    label: "Momo",
+    icon: Wallet,
+  },
+];
 
 export default function CheckoutPaymentPage() {
-  const [paymentMethod, setPaymentMethod] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const router = useRouter();
+
+  const [paymentMethod, setPaymentMethod] = useState<PaymentProvider | null>(
+    null,
+  );
+
   const { cart, hasHydrated: hasCartHydrated } = useCartStore((state) => state);
   const { shippingAddress, hasHydrated: hasCheckoutHydrated } =
     useCheckoutStore((state) => state);
 
-  const createPaymentMutation = useCreatePayment();
   const createOrderMutation = useCreateOrder();
-
-  const router = useRouter();
+  const createPaymentMutation = useCreatePayment();
 
   const handleCreatePayment = (data: { id: string }) => {
+    if (!paymentMethod) return;
+
+    const redirectUrl = process.env.NEXT_PUBLIC_PAYMENT_REDIRECT_URL;
+
+    if (!redirectUrl) {
+      toast.error("Redirect URL has not been set up");
+    }
+
     createPaymentMutation.mutate(
       {
         orderId: data.id,
         provider: paymentMethod,
-        redirectUrl: "http://localhost:3000/checkout/result",
+        redirectUrl: redirectUrl!,
       },
       {
         onSuccess: (data) => {
           router.push(data.payUrl);
+        },
+        onError: () => {
+          toast.error("Cannot create payment");
         },
       },
     );
   };
 
   const handleCreateOrder = () => {
-    if (!cart || !shippingAddress) return;
+    if (!cart || !shippingAddress || !paymentMethod) return;
 
     createOrderMutation.mutate(
       {
@@ -52,16 +86,26 @@ export default function CheckoutPaymentPage() {
         shippingAddressLine1: shippingAddress.line1,
         shippingCity: shippingAddress.city,
         shippingDistrict: shippingAddress.district,
-        shippingWard: shippingAddress.ward ?? "Test Ward",
+        shippingWard: shippingAddress.ward,
         paymentMethod: paymentMethod,
-        shippingMethod: "Standard",
+        shippingMethod: "standard",
       },
       {
-        onSuccess: (data) => {
-          handleCreatePayment(data);
+        onSuccess: handleCreatePayment,
+        onError: () => {
+          toast.error("An error occured when proceeding checkout");
         },
       },
     );
+  };
+
+  const handleProceedCheckout = () => {
+    if (!paymentMethod) {
+      toast.error("Please select a payment method");
+      return;
+    }
+
+    handleCreateOrder();
   };
 
   if (!hasCartHydrated || !hasCheckoutHydrated) return null;
@@ -78,63 +122,46 @@ export default function CheckoutPaymentPage() {
           <RadioGroup
             className="mt-3"
             value={paymentMethod}
-            onValueChange={(value) => {
-              setPaymentMethod(value);
-              setError("");
-            }}
+            onValueChange={(value: PaymentProvider) => setPaymentMethod(value)}
           >
-            <Card>
-              <CardContent className="flex gap-4">
-                <RadioGroupItem value="cod" id="cod" />
-                <Label htmlFor="cod">
-                  <CircleDollarSign size={16} />
-                  <span>Cash on Delivery (COD)</span>
-                </Label>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="flex gap-4">
-                <RadioGroupItem value="bankTransfer" id="bankTransfer" />
-                <Label htmlFor="bankTransfer">
-                  <Landmark size={16} />
-                  <span>Bank transfer</span>
-                </Label>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="flex gap-4">
-                <RadioGroupItem value="momo" id="momo" />
-                <Label htmlFor="momo">
-                  <Wallet size={16} />
-                  <span>Momo</span>
-                </Label>
-              </CardContent>
-            </Card>
+            {paymentMethods.map((method) => (
+              <Card
+                key={method.id}
+                onClick={() => setPaymentMethod(method.id)}
+                className={`cursor-pointer transition ${
+                  paymentMethod === method.id
+                    ? "border-orange-400 ring-1 ring-orange-400"
+                    : "hover:border-gray-400"
+                }`}
+              >
+                <CardContent className="flex gap-4 items-center">
+                  <RadioGroupItem value={method.id} id={method.id} />
+                  <Label
+                    htmlFor={method.id}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <method.icon size={16} />
+                    <span>{method.label}</span>
+                  </Label>
+                </CardContent>
+              </Card>
+            ))}
           </RadioGroup>
-
-          {error && <p className="text-sm text-red-700 mt-3">{error}</p>}
 
           <div className="grid grid-cols-2 gap-4 pt-3">
             <Button variant="outline" asChild>
               <Link href="/checkout/shipping">Back</Link>
             </Button>
+
             <Button
-              onClick={() => {
-                if (!paymentMethod) {
-                  setError("Please select a payment method.");
-                  return;
-                }
-
-                console.log("paymentMethod: ", paymentMethod);
-
-                if (paymentMethod === "momo") {
-                  handleCreateOrder();
-                }
-              }}
+              onClick={handleProceedCheckout}
+              disabled={
+                createOrderMutation.isPending || createPaymentMutation.isPending
+              }
             >
-              Proceed payment
+              {createOrderMutation.isPending || createPaymentMutation.isPending
+                ? "Processing..."
+                : "Checkout"}
             </Button>
           </div>
         </CardContent>

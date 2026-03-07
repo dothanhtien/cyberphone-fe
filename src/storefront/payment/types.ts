@@ -3,3 +3,9 @@ export interface CreatePaymentRequest {
   provider: string;
   redirectUrl: string;
 }
+
+export interface StorefrontPayment {
+  id: string;
+  status: string;
+  orderCode: string;
+}

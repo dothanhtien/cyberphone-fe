@@ -78,7 +78,7 @@ export function ShippingForm({ address, onSubmit }: ShippingFormProps) {
 
             <Field>
               <FieldLabel>Email address</FieldLabel>
-              <Input {...register("email")} />
+              <Input {...register("email")} aria-invalid={!!errors.email} />
               {errors.email && (
                 <p className="text-sm text-red-500">{errors.email.message}</p>
               )}
@@ -95,15 +95,15 @@ export function ShippingForm({ address, onSubmit }: ShippingFormProps) {
 
           <div className="grid grid-cols-3 gap-4 mb-3">
             <Field>
-              <RequiredFieldLabel>City</RequiredFieldLabel>
-              <Input {...register("city")} aria-invalid={!!errors.city} />
-              {errors.city && (
-                <p className="text-sm text-red-500">{errors.city.message}</p>
+              <RequiredFieldLabel>Ward</RequiredFieldLabel>
+              <Input {...register("ward")} aria-invalid={!!errors.ward} />
+              {errors.ward && (
+                <p className="text-sm text-red-500">{errors.ward.message}</p>
               )}
             </Field>
 
             <Field>
-              <FieldLabel>State</FieldLabel>
+              <RequiredFieldLabel>District</RequiredFieldLabel>
               <Input
                 {...register("district")}
                 aria-invalid={!!errors.district}
@@ -116,18 +116,18 @@ export function ShippingForm({ address, onSubmit }: ShippingFormProps) {
             </Field>
 
             <Field>
+              <RequiredFieldLabel>City</RequiredFieldLabel>
+              <Input {...register("city")} aria-invalid={!!errors.city} />
+              {errors.city && (
+                <p className="text-sm text-red-500">{errors.city.message}</p>
+              )}
+            </Field>
+
+            <Field>
               <FieldLabel>Postcode</FieldLabel>
               <Input {...register("postalCode")} />
             </Field>
           </div>
-
-          <Field className="mb-3">
-            <RequiredFieldLabel>Country</RequiredFieldLabel>
-            <Input {...register("country")} aria-invalid={!!errors.country} />
-            {errors.country && (
-              <p className="text-sm text-red-500">{errors.country.message}</p>
-            )}
-          </Field>
 
           <div className="grid grid-cols-2 gap-4 pt-3">
             <Button variant="outline" asChild>

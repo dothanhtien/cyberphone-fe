@@ -27,9 +27,7 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     if (isError) {
-      toast.error("An error occurred when fetching categories", {
-        position: "top-right",
-      });
+      toast.error("An error occurred when fetching categories");
     }
 
     if (data) {

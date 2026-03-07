@@ -3,13 +3,13 @@ import { devtools, persist } from "zustand/middleware";
 
 import { Address } from "@/storefront/checkout/types";
 
-export type PaymentProvider = "STRIPE" | "MOMO" | "VNPAY";
-
 interface CheckoutState {
   shippingAddress?: Address;
   hasHydrated: boolean;
 
   setShippingAddress: (address: Address) => void;
+
+  resetShippingAddress: () => void;
 
   setHasHydrated: (state: boolean) => void;
 }
@@ -23,7 +23,7 @@ export const useCheckoutStore = create<CheckoutState>()(
 
         setShippingAddress: (address) => set({ shippingAddress: address }),
 
-        reset: () =>
+        resetShippingAddress: () =>
           set({
             shippingAddress: undefined,
           }),

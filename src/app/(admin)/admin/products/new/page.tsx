@@ -41,15 +41,11 @@ export default function NewProductPage() {
 
   useEffect(() => {
     if (categoriesError) {
-      toast.error("Failed to fetch categories", {
-        position: "top-right",
-      });
+      toast.error("Failed to fetch categories");
     }
 
     if (brandsError) {
-      toast.error("Failed to fetch brands", {
-        position: "top-right",
-      });
+      toast.error("Failed to fetch brands");
     }
   }, [categoriesError, brandsError]);
 
@@ -73,9 +69,7 @@ export default function NewProductPage() {
   const handleCreateProduct = (data: CreateProductFormValues) => {
     createMutation.mutate(data, {
       onSuccess: () => {
-        toast.success("Product created successfully!", {
-          position: "top-right",
-        });
+        toast.success("Product created successfully!");
         router.push("/admin/products");
       },
       onError: (error) => {
@@ -83,9 +77,6 @@ export default function NewProductPage() {
         console.error("Create product failed:", error);
         toast.error(
           axiosError.response?.data?.message || "Failed to create product",
-          {
-            position: "top-right",
-          },
         );
       },
     });

@@ -5,6 +5,7 @@ import { devtools, persist } from "zustand/middleware";
 interface CartStore {
   cart?: Cart;
   hasHydrated: boolean;
+  canQueryCart: boolean;
 
   setCart: (cart: Cart) => void;
 
@@ -17,6 +18,10 @@ interface CartStore {
   totalItems: () => number;
   subtotal: () => number;
 
+  setCanQueryCart: (state: boolean) => void;
+
+  resetCart: () => void;
+
   setHasHydrated: (state: boolean) => void;
 }
 
@@ -26,6 +31,7 @@ export const useCartStore = create<CartStore>()(
       (set, get) => ({
         cart: undefined,
         hasHydrated: false,
+        canQueryCart: true,
 
         setCart: (cart) => set({ cart }),
 
@@ -102,6 +108,10 @@ export const useCartStore = create<CartStore>()(
             (sum, item) => sum + (item.salePrice ?? item.price) * item.quantity,
             0,
           ) ?? 0,
+
+        setCanQueryCart: (state) => set({ canQueryCart: state }),
+
+        resetCart: () => set({ cart: undefined }),
 
         setHasHydrated: (state) => set({ hasHydrated: state }),
       }),
