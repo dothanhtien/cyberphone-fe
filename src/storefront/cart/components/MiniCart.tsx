@@ -18,12 +18,13 @@ import { useStorefrontCart } from "../queries";
 
 export function MiniCart() {
   const [open, setOpen] = useState(false);
-
-  useStorefrontCart();
-
+  const canQueryCart = useCartStore((state) => state.canQueryCart);
   const { cart, hasHydrated } = useCartStore((state) => state);
+
   const totalItems = useCartStore((state) => state.totalItems);
   const subtotal = useCartStore((state) => state.subtotal);
+
+  useStorefrontCart({ enabled: hasHydrated && canQueryCart });
 
   const itemCount = totalItems();
 

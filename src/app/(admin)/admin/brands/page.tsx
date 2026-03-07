@@ -27,9 +27,7 @@ export default function BrandsPage() {
 
   useEffect(() => {
     if (isError) {
-      toast.error("An error occurred when fetching brands", {
-        position: "top-right",
-      });
+      toast.error("An error occurred when fetching brands");
     }
 
     if (data) {

@@ -52,9 +52,7 @@ export default function LoginPage() {
       },
       onError: (error) => {
         console.log("Login failed: ", error);
-        toast.error("Username/Phone or password is invalid", {
-          position: "top-right",
-        });
+        toast.error("Username/Phone or password is invalid");
       },
       onSettled: () => {
         setCredentials({ identifier: "", password: "" });

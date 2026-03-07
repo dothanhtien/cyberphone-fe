@@ -60,6 +60,6 @@ export interface CreateProductRequest {
   attributes?: {
     attributeKey: string;
     attributeKeyDisplay: string;
-    displayOrder: number;
+    displayOrder?: number | undefined;
   }[];
 }

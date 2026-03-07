@@ -1,5 +1,6 @@
 import { PaginationParams, StorefrontPaginationParams } from "@/types";
 import { ResolveCartRequest } from "@/storefront/cart/types";
+import { PaymentProvider } from "@/enums";
 
 export const queryKeys = {
   auth: {
@@ -47,6 +48,16 @@ export const queryKeys = {
       all: () => [...queryKeys.storefront.all, "cart"] as const,
       details: (params: ResolveCartRequest = {}) =>
         [...queryKeys.storefront.cart.all(), "detail", params] as const,
+    },
+    payment: {
+      all: () => [...queryKeys.storefront.all, "payment"] as const,
+      return: (provider: PaymentProvider, params: string) =>
+        [
+          ...queryKeys.storefront.payment.all(),
+          "return",
+          provider,
+          params,
+        ] as const,
     },
   },
 };
