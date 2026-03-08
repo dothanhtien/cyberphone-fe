@@ -26,11 +26,14 @@ function LinkDialogContent({
   selectedLinkText = "",
   onOpenChange,
 }: Omit<LinkDialogProps, "open">) {
-  const existingUrl = editor.getAttributes("link").href ?? "";
+  const existingLinkAttrs = editor.getAttributes("link");
+  const existingUrl = existingLinkAttrs.href ?? "";
   const isLinkActive = editor.isActive("link");
 
   const [linkUrl, setLinkUrl] = useState(existingUrl);
-  const [linkNewTab, setLinkNewTab] = useState(true);
+  const [linkNewTab, setLinkNewTab] = useState(
+    isLinkActive ? existingLinkAttrs.target === "_blank" : true,
+  );
   const [linkText, setLinkText] = useState(selectedLinkText);
 
   const insertLink = useCallback(() => {
@@ -51,9 +54,20 @@ function LinkDialogContent({
       editor
         .chain()
         .focus()
-        .insertContent(
-          `<a href="${linkUrl.trim()}" target="${target}" rel="noopener noreferrer">${linkText.trim()}</a>`,
-        )
+        .insertContent({
+          type: "text",
+          text: linkText.trim(),
+          marks: [
+            {
+              type: "link",
+              attrs: {
+                href: linkUrl.trim(),
+                target,
+                rel: "noopener noreferrer",
+              },
+            },
+          ],
+        })
         .run();
     } else {
       editor.chain().focus().setLink({ href: linkUrl.trim(), target }).run();
@@ -146,7 +160,10 @@ export function LinkDialog({
 }: LinkDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-sm" aria-describedby="">
+      <DialogContent
+        className="sm:max-w-sm"
+        aria-describedby="link-dialog-description"
+      >
         <LinkDialogContent
           key={String(open)}
           editor={editor}

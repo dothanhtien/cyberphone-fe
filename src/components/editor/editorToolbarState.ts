@@ -24,10 +24,10 @@ export function editorToolbarStateSelector(ctx: EditorStateSnapshot<Editor>) {
     canCode: ctx.editor.can().chain().toggleCode().run() ?? false,
 
     // Alignment
-    isAlignLeft: ctx.editor.isActive("left") ?? false,
-    isAlignCenter: ctx.editor.isActive("center") ?? false,
-    isAlignRight: ctx.editor.isActive("right") ?? false,
-    isAlignJustify: ctx.editor.isActive("justify") ?? false,
+    isAlignLeft: ctx.editor.isActive({ textAlign: "left" }) ?? false,
+    isAlignCenter: ctx.editor.isActive({ textAlign: "center" }) ?? false,
+    isAlignRight: ctx.editor.isActive({ textAlign: "right" }) ?? false,
+    isAlignJustify: ctx.editor.isActive({ textAlign: "justify" }) ?? false,
 
     // Lists and blocks
     isBulletList: ctx.editor.isActive("bulletList") ?? false,
