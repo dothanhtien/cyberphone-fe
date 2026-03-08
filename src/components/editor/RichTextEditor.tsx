@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import CharacterCount from "@tiptap/extension-character-count";
@@ -7,6 +8,7 @@ import Underline from "@tiptap/extension-underline";
 
 import { cn } from "@/lib/utils";
 import { EditorToolbar } from "./EditorToolbar";
+import { LinkDialog } from "./LinkDialog";
 
 interface RichTextEditorProps {
   value?: string;
@@ -19,6 +21,9 @@ export function RichTextEditor({
   minHeight = "200px",
   onChange,
 }: RichTextEditorProps) {
+  const [linkDialogOpen, setLinkDialogOpen] = useState(false);
+  const [selectedLinkText, setSelectedLinkText] = useState("");
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -28,6 +33,7 @@ export function RichTextEditor({
       Underline,
       Link.configure({
         openOnClick: false,
+        autolink: true,
         HTMLAttributes: {
           class:
             "text-primary underline underline-offset-4 cursor-pointer hover:text-primary/80",
@@ -43,6 +49,17 @@ export function RichTextEditor({
 
   const characterCount = editor?.storage.characterCount;
 
+  const openLinkDialog = () => {
+    if (!editor) return;
+    editor.chain().focus().run();
+    const { from, to } = editor.state.selection;
+    const text = editor.state.doc.textBetween(from, to, "");
+    setSelectedLinkText(text);
+    setLinkDialogOpen(true);
+  };
+
+  if (!editor) return null;
+
   return (
     <div
       className={cn(
@@ -50,7 +67,12 @@ export function RichTextEditor({
         "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
       )}
     >
-      {editor && <EditorToolbar editor={editor} />}
+      {editor && (
+        <EditorToolbar
+          editor={editor}
+          onOpenChangeLinkDialog={openLinkDialog}
+        />
+      )}
 
       <EditorContent
         editor={editor}
@@ -63,6 +85,13 @@ export function RichTextEditor({
           {characterCount?.characters() ?? 0} characters
         </span>
       </div>
+
+      <LinkDialog
+        open={linkDialogOpen}
+        onOpenChange={setLinkDialogOpen}
+        editor={editor}
+        selectedLinkText={selectedLinkText}
+      />
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { Editor, useEditorState } from "@tiptap/react";
 import {
   AlignCenter,
@@ -78,24 +77,17 @@ function ToolbarButton({
 
 interface EditorToolbarProps {
   editor: Editor;
+  onOpenChangeLinkDialog?: () => void;
 }
 
-export function EditorToolbar({ editor }: EditorToolbarProps) {
+export function EditorToolbar({
+  editor,
+  onOpenChangeLinkDialog,
+}: EditorToolbarProps) {
   const editorState = useEditorState({
     editor,
     selector: editorToolbarStateSelector,
   });
-
-  const setLink = useCallback(() => {
-    const previousUrl = editor.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
-    if (url === null) return;
-    if (url === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-      return;
-    }
-    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
-  }, [editor]);
 
   return (
     <div className="flex flex-wrap items-center gap-0.5 border-b border-input bg-muted/40 px-2 py-1.5">
@@ -295,7 +287,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       {/* Link */}
       <ToolbarButton
-        onClick={setLink}
+        onClick={() => onOpenChangeLinkDialog?.()}
         isActive={editorState.isLink}
         tooltip="Add Link"
       >
