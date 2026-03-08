@@ -20,7 +20,9 @@ export default function AdminLayout({
     <ProtectedRoute>
       <SidebarProvider>
         <AppSidebar />
-        <AppSidebarInset>{children}</AppSidebarInset>
+        <AppSidebarInset>
+          <main className="max-w-420">{children}</main>
+        </AppSidebarInset>
       </SidebarProvider>
     </ProtectedRoute>
   );
