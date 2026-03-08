@@ -1,0 +1,85 @@
+@layer components {
+  .ProseMirror {
+    outline: none;
+    min-height: inherit;
+  }
+
+  /* Typography */
+  .ProseMirror h1 {
+    @apply text-3xl font-bold mt-6 mb-4 leading-tight;
+  }
+
+  .ProseMirror h2 {
+    @apply text-2xl font-semibold mt-5 mb-3 leading-tight;
+  }
+
+  .ProseMirror h3 {
+    @apply text-xl font-semibold mt-4 mb-2 leading-tight;
+  }
+
+  .ProseMirror p {
+    @apply leading-relaxed mb-3;
+  }
+
+  .ProseMirror p:last-child {
+    @apply mb-0;
+  }
+
+  /* Lists */
+  .ProseMirror ul {
+    @apply list-disc pl-6 mb-3 space-y-1;
+  }
+
+  .ProseMirror ol {
+    @apply list-decimal pl-6 mb-3 space-y-1;
+  }
+
+  .ProseMirror li p {
+    @apply mb-0;
+  }
+
+  /* Blockquote */
+  .ProseMirror blockquote {
+    @apply border-l-4 border-border pl-4 italic text-muted-foreground my-4;
+  }
+
+  /* Inline code */
+  .ProseMirror code {
+    @apply bg-muted text-foreground rounded px-1.5 py-0.5 text-sm font-mono;
+  }
+
+  /* Code block */
+  .ProseMirror pre {
+    @apply bg-muted rounded-lg p-4 my-4 overflow-x-auto;
+  }
+
+  .ProseMirror pre code {
+    @apply bg-transparent p-0 text-sm;
+  }
+
+  /* Horizontal rule */
+  .ProseMirror hr {
+    @apply border-border my-6;
+  }
+
+  /* Links */
+  .ProseMirror a {
+    @apply text-primary underline underline-offset-4 cursor-pointer hover:text-primary/80 transition-colors;
+  }
+
+  /* Text alignment */
+  .ProseMirror [style*="text-align: center"] {
+    text-align: center;
+  }
+  .ProseMirror [style*="text-align: right"] {
+    text-align: right;
+  }
+  .ProseMirror [style*="text-align: justify"] {
+    text-align: justify;
+  }
+
+  /* Selection */
+  .ProseMirror ::selection {
+    @apply bg-primary/20;
+  }
+}

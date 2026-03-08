@@ -1,7 +1,7 @@
 "use client";
 
 import { ImageIcon, Info } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -11,7 +11,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -28,6 +27,7 @@ import {
   CreateCategoryFormValues,
   createCategorySchema,
 } from "@/features/categories/schemas";
+import { RichTextEditor } from "@/components/editor/RichTextEditor";
 
 interface CategoryFormProps {
   onSubmit: (values: CreateCategoryFormValues) => void;
@@ -107,10 +107,15 @@ export function CategoryForm({ onSubmit, defaultValues }: CategoryFormProps) {
 
             <Field>
               <FieldLabel htmlFor="description">Description</FieldLabel>
-              <Textarea
-                id="description"
-                className="min-h-30"
-                {...register("description")}
+              <Controller
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
             </Field>
           </FieldGroup>

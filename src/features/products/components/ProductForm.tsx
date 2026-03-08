@@ -41,6 +41,7 @@ import { capitalize } from "@/utils";
 import { CreateProductFormValues, createProductSchema } from "../schemas";
 import { ProductImageType, ProductStatus } from "../enums";
 import { Button } from "@/components/ui/button";
+import { RichTextEditor } from "@/components/editor/RichTextEditor";
 
 interface ProductFormProps {
   onSubmit: (values: CreateProductFormValues) => void;
@@ -145,10 +146,15 @@ export function ProductForm({
               <FieldLabel htmlFor="longDescription">
                 Long description
               </FieldLabel>
-              <Textarea
-                id="longDescription"
-                className="min-h-30"
-                {...register("longDescription")}
+              <Controller
+                control={form.control}
+                name="longDescription"
+                render={({ field }) => (
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
             </Field>
           </FieldGroup>
