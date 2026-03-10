@@ -33,6 +33,11 @@ export const queryKeys = {
     list: (productId: string) =>
       [...queryKeys.productVariants.lists(), productId] as const,
   },
+  dashboard: {
+    all: ["dashboard"] as const,
+    summary: () => [...queryKeys.dashboard.all, "summary"] as const,
+    revuenue: () => [...queryKeys.dashboard.all, "revenue"] as const,
+  },
 
   storefront: {
     all: ["storefront"] as const,
