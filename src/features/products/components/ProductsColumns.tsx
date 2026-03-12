@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ProductImageType, ProductStatus } from "../enums";
 import { Product } from "@/features/products/types";
+import { DEFAULT_IMAGE } from "@/constants";
 
 export const productsColumns: ColumnDef<Product>[] = [
   {
@@ -42,7 +43,7 @@ export const productsColumns: ColumnDef<Product>[] = [
       return (
         <div className="flex justify-start items-center gap-4 px-4">
           <Image
-            src={mainImage?.url ?? "/images/default.png"}
+            src={mainImage?.url ?? DEFAULT_IMAGE}
             alt={name}
             loading="eager"
             width={64}

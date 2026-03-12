@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cart";
 import { formatCurrency } from "@/utils/currency";
 import { useStorefrontCart } from "../queries";
+import { DEFAULT_IMAGE } from "@/constants";
 
 export function MiniCart() {
   const [open, setOpen] = useState(false);
@@ -62,7 +63,7 @@ export function MiniCart() {
             >
               <div className="flex">
                 <Image
-                  src={item.imageUrl ?? "/images/default.png"}
+                  src={item.imageUrl ?? DEFAULT_IMAGE}
                   alt=""
                   loading="eager"
                   width={64}

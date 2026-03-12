@@ -11,6 +11,7 @@ import {
   useRemoveCartItem,
 } from "@/storefront/cart/mutations";
 import { useCartStore } from "@/stores/cart";
+import { DEFAULT_IMAGE } from "@/constants";
 
 interface ReviewCartItemProps {
   item: CartItemType;
@@ -74,7 +75,7 @@ export function ReviewCartItem({ item }: ReviewCartItemProps) {
         <div className="grid grid-cols-5 gap-4">
           <div className="col-span-1">
             <Image
-              src={item.imageUrl ?? "/images/default.png"}
+              src={item.imageUrl ?? DEFAULT_IMAGE}
               loading="eager"
               width={100}
               height={100}

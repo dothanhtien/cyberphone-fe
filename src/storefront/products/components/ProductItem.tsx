@@ -11,6 +11,7 @@ import { StorefrontProduct } from "../types";
 import { formatCurrency } from "@/utils/currency";
 import { useCartStore } from "@/stores/cart";
 import { useAddToCart } from "@/storefront/cart/mutations";
+import { DEFAULT_IMAGE } from "@/constants";
 
 interface ProductItemProps {
   product: StorefrontProduct;
@@ -59,7 +60,7 @@ export function ProductItem({ product }: ProductItemProps) {
         >
           <div>
             <Image
-              src={product.mainImage ?? "/images/default.png"}
+              src={product.mainImage ?? DEFAULT_IMAGE}
               width={300}
               height={300}
               alt={product.name}

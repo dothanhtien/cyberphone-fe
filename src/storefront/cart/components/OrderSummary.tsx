@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cart";
 import { formatCurrency } from "@/utils/currency";
+import { DEFAULT_IMAGE } from "@/constants";
 
 export function OrderSummary() {
   const { cart, hasHydrated } = useCartStore((state) => state);
@@ -19,7 +20,7 @@ export function OrderSummary() {
         {cart?.items.map((item) => (
           <div key={item.id} className="flex text-sm mb-3">
             <Image
-              src={item.imageUrl ?? "/images/default.png"}
+              src={item.imageUrl ?? DEFAULT_IMAGE}
               loading="eager"
               width={100}
               height={100}

@@ -7,6 +7,7 @@ import { SquarePen, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Category } from "@/features/categories/types";
 import { formatDateTime } from "@/utils";
+import { DEFAULT_IMAGE } from "@/constants";
 
 export const categoriesColumns: ColumnDef<Category>[] = [
   {
@@ -19,7 +20,7 @@ export const categoriesColumns: ColumnDef<Category>[] = [
       return (
         <div className="flex justify-center items-center">
           <Image
-            src={src ?? "/images/default.png"}
+            src={src ?? DEFAULT_IMAGE}
             alt={`${name} logo`}
             loading="eager"
             width={64}
