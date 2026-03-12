@@ -21,7 +21,7 @@ export default function StorefrontLayout({
       <Navbar />
 
       <main
-        className="max-w-5xl container p-4 mx-auto"
+        className="max-w-300 container p-4 mx-auto"
         style={{
           minHeight: `calc(100vh - ${HEADER_HEIGHT}px - ${FOOTER_HEIGHT}px)`,
         }}
