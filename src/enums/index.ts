@@ -4,3 +4,12 @@ export enum PaymentProvider {
   MOMO = "momo",
   ZALOPAY = "zalopay",
 }
+
+export enum OrderStatus {
+  PENDING = "pending",
+  CONFIRMED = "confirmed",
+  PROCESSING = "processing",
+  SHIPPING = "shipping",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+}

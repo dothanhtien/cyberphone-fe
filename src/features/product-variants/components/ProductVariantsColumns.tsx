@@ -17,6 +17,7 @@ import { PRODUCT_VARIANT_STOCK_STATUS } from "../constants";
 import { ProductVariantStockStatus } from "../enums";
 import { ProductVariant } from "../types";
 import { formatCurrency } from "@/utils/currency";
+import { DEFAULT_IMAGE } from "@/constants";
 
 const STOCK_STATUS_STYLES = {
   [ProductVariantStockStatus.IN_STOCK]: "bg-green-100 text-green-700",
@@ -59,7 +60,7 @@ export function getProductVariantsColumns({
         return (
           <div className="flex items-center gap-4">
             <Image
-              src={"/images/default.png"}
+              src={DEFAULT_IMAGE}
               className="rounded bg-muted object-contain"
               width={64}
               height={64}

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useMemo } from "react";
 import { Label, Pie, PieChart } from "recharts";
 
 import {
@@ -14,42 +14,56 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  type ChartConfig,
 } from "@/components/ui/chart";
+import { SalesByCategory } from "../types";
 
-const chartData = [
-  { category: "smartphone", totalItems: 5, fill: "var(--color-smartphone)" },
-  { category: "tablet", totalItems: 3, fill: "var(--color-tablet)" },
-  { category: "laptop", totalItems: 4, fill: "var(--color-laptop)" },
+const CATEGORY_COLORS = [
+  "var(--muted-foreground)",
+  "var(--ring)",
+  "var(--secondary)",
 ];
 
-const chartConfig = {
-  totalItems: {
-    label: "Total items",
-  },
-  smartphone: {
-    label: "Smartphone",
-    color: "var(--muted-foreground)",
-  },
-  tablet: {
-    label: "Tablet",
-    color: "var(--ring)",
-  },
-  laptop: {
-    label: "Laptop",
-    color: "var(--secondary)",
-  },
-} satisfies ChartConfig;
+interface SalesByCategoryChartProps {
+  data: SalesByCategory[];
+}
 
-export function SaleByCategoryChart() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.totalItems, 0);
-  }, []);
+export function SalesByCategoryChart({ data }: SalesByCategoryChartProps) {
+  const { chartData, totalItems, chartConfig } = useMemo(() => {
+    const chartData = data.map((item) => ({
+      category: item.category.toLowerCase(),
+      totalItems: item.total,
+      fill: `var(--color-${item.category.toLowerCase()})`,
+    }));
+
+    const totalItems = data.reduce((acc, cur) => acc + cur.total, 0);
+
+    const chartConfig = {
+      totalItems: {
+        label: "Total items",
+      },
+      ...chartData.reduce((acc, cur, index) => {
+        const item = {
+          [cur.category]: {
+            label: cur.category,
+            color: CATEGORY_COLORS[index],
+          },
+        };
+
+        return { ...acc, ...item };
+      }, {}),
+    };
+
+    return {
+      chartData,
+      totalItems,
+      chartConfig,
+    };
+  }, [data]);
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Sale by category</CardTitle>
+        <CardTitle>Sales by category</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -83,7 +97,7 @@ export function SaleByCategoryChart() {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {totalItems.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -102,25 +116,18 @@ export function SaleByCategoryChart() {
         </ChartContainer>
       </CardContent>
 
-      <CardFooter className="text-sm bg-white">
+      <CardFooter className="text-sm bg-white border-0 min-h-23">
         <div className="m-auto">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-foreground"></div>
-            <div>Smartphone</div>
-            <div>5</div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-foreground"></div>
-            <div>Tablet</div>
-            <div>3</div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-foreground"></div>
-            <div>Laptop</div>
-            <div>4</div>
-          </div>
+          {data.map((item, index) => (
+            <div key={item.category} className="flex items-center gap-2">
+              <div
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: CATEGORY_COLORS[index] }}
+              ></div>
+              <div>{item.category}</div>
+              <div>{item.total}</div>
+            </div>
+          ))}
         </div>
       </CardFooter>
     </Card>

@@ -1,6 +1,7 @@
 import { PaginationParams, StorefrontPaginationParams } from "@/types";
 import { ResolveCartRequest } from "@/storefront/cart/types";
 import { PaymentProvider } from "@/enums";
+import { FilterParams } from "@/features/dashboard/types";
 
 export const queryKeys = {
   auth: {
@@ -35,8 +36,15 @@ export const queryKeys = {
   },
   dashboard: {
     all: ["dashboard"] as const,
-    summary: () => [...queryKeys.dashboard.all, "summary"] as const,
-    revuenue: () => [...queryKeys.dashboard.all, "revenue"] as const,
+    summary: (filter?: FilterParams) =>
+      [...queryKeys.dashboard.all, "summary", filter] as const,
+    revuenue: (filter?: FilterParams) =>
+      [...queryKeys.dashboard.all, "revenue", filter] as const,
+    topSalesCategory: (filter?: FilterParams) =>
+      [...queryKeys.dashboard.all, "topSalesCategory", filter] as const,
+    topProducts: (filter?: FilterParams) =>
+      [...queryKeys.dashboard.all, "topProducts", filter] as const,
+    recentOrders: () => [...queryKeys.dashboard.all, "recentOrders"] as const,
   },
 
   storefront: {

@@ -27,7 +27,7 @@ interface RevenueOverviewChartProps {
 
 export function RevenueOverviewChart({ data }: RevenueOverviewChartProps) {
   return (
-    <Card className="@container/card">
+    <Card>
       <CardHeader>
         <CardTitle>Revenue overview</CardTitle>
       </CardHeader>
