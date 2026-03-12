@@ -13,7 +13,7 @@ export const useDashboardSummary = (filter?: FilterParams) => {
 
 export const useDashboardRevenue = (filter?: FilterParams) => {
   return useQuery({
-    queryKey: queryKeys.dashboard.revuenue(filter),
+    queryKey: queryKeys.dashboard.revenue(filter),
     queryFn: () => dashboardApi.getRevenue(filter),
   });
 };

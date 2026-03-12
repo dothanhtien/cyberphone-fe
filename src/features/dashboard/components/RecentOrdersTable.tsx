@@ -18,7 +18,7 @@ import {
 import { recentOrdersColumns } from "./RecentOrdersColumns";
 import { RecentOrder } from "../types";
 
-interface ProductVariantsTableProps {
+interface RecentOrdersTableProps {
   data: RecentOrder[];
   loading?: boolean;
 }
@@ -26,7 +26,7 @@ interface ProductVariantsTableProps {
 export function RecentOrdersTable({
   data,
   loading = false,
-}: ProductVariantsTableProps) {
+}: RecentOrdersTableProps) {
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,

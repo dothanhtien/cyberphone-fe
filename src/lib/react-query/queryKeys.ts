@@ -38,7 +38,7 @@ export const queryKeys = {
     all: ["dashboard"] as const,
     summary: (filter?: FilterParams) =>
       [...queryKeys.dashboard.all, "summary", filter] as const,
-    revuenue: (filter?: FilterParams) =>
+    revenue: (filter?: FilterParams) =>
       [...queryKeys.dashboard.all, "revenue", filter] as const,
     topSalesCategory: (filter?: FilterParams) =>
       [...queryKeys.dashboard.all, "topSalesCategory", filter] as const,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Banknote, ShoppingCart, TriangleAlert } from "lucide-react";
 import dayjs from "dayjs";
 import { type DateRange } from "react-day-picker";
@@ -30,6 +30,7 @@ const DEFAULT_FILTER: FilterParams = {
 
 export default function AdminDashboardPage() {
   const [filter, setFilter] = useState<FilterParams>(DEFAULT_FILTER);
+  const hasShownErrorToast = useRef(false);
 
   const summary = useDashboardSummary(filter);
   const revenue = useDashboardRevenue(filter);
@@ -38,14 +39,18 @@ export default function AdminDashboardPage() {
   const recentOrders = useDashboardRecentOrders();
 
   useEffect(() => {
-    if (
+    const hasError =
       summary.isError ||
       revenue.isError ||
       topSalesCategory.isError ||
       topProducts.isError ||
-      recentOrders.isError
-    ) {
+      recentOrders.isError;
+
+    if (hasError && !hasShownErrorToast.current) {
       toast.error("Failed to load dashboard data");
+      hasShownErrorToast.current = true;
+    } else if (!hasError) {
+      hasShownErrorToast.current = false;
     }
   }, [
     summary.isError,
