@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import CharacterCount from "@tiptap/extension-character-count";
@@ -29,6 +29,8 @@ export function RichTextEditor({
       StarterKit.configure({
         bulletList: { keepMarks: true, keepAttributes: false },
         orderedList: { keepMarks: true, keepAttributes: false },
+        link: false,
+        underline: false,
       }),
       Underline,
       Link.configure({
@@ -46,6 +48,19 @@ export function RichTextEditor({
     content: value,
     onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
   });
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const current = editor.getHTML();
+    const next = value ?? "";
+
+    if (current !== next) {
+      editor.commands.setContent(next, {
+        emitUpdate: false,
+      });
+    }
+  }, [value, editor]);
 
   const characterCount = editor?.storage.characterCount;
 

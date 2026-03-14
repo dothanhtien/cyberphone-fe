@@ -1,0 +1,91 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import { AxiosError } from "axios";
+import { AlertCircleIcon, Loader2, Save } from "lucide-react";
+import { toast } from "sonner";
+
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { PageHeading } from "@/components/PageHeading";
+import { BrandForm } from "@/features/brands/components/BrandForm";
+import { CreateBrandFormValues } from "@/features/brands/schemas";
+import { ApiError } from "@/types";
+import { useUpdateBrand } from "@/features/brands/mutations";
+import { useBrandDetails } from "@/features/brands/queries";
+
+export default function EditBrandPage() {
+  const params = useParams<{ id: string }>();
+  const brandId = params.id;
+  const updateBrandMutation = useUpdateBrand();
+  const isUpdating = updateBrandMutation.isPending;
+
+  const { data: brand, isLoading, isError } = useBrandDetails(brandId);
+
+  const handleUpdateBrand = (data: Partial<CreateBrandFormValues>) => {
+    console.log(data);
+    updateBrandMutation.mutate(
+      { id: brandId, data },
+      {
+        onSuccess: () => {
+          toast.success("Brand updated successfully!");
+        },
+        onError: (error) => {
+          const axiosError = error as AxiosError<ApiError>;
+          console.error("Update brand failed:", error);
+          toast.error(
+            axiosError.response?.data?.message || "Failed to update brand",
+          );
+        },
+      },
+    );
+  };
+
+  if (isLoading) {
+    <div className="h-full flex justify-center items-center">
+      <div className="flex items-center gap-2">
+        <Spinner className="size-6" />
+        <span>Loading...</span>
+      </div>
+    </div>;
+  }
+
+  if (!isLoading && (isError || !brand)) {
+    return (
+      <Alert variant="destructive" className="max-w-md py-4">
+        <AlertCircleIcon className="h-4 w-4" />
+        <AlertTitle>Brand not found. Please try again.</AlertTitle>
+      </Alert>
+    );
+  }
+
+  return (
+    <div className="max-w-230">
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <PageHeading className="mb-3">Edit brand</PageHeading>
+          <p className="text-muted-foreground text-sm mb-3">
+            Update the brand information in your catalog
+          </p>
+        </div>
+
+        <Button size="lg" type="submit" form="brand-form" disabled={isUpdating}>
+          {isUpdating ? (
+            <>
+              <Loader2 className="animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save />
+              Save changes
+            </>
+          )}
+        </Button>
+      </div>
+
+      <BrandForm brand={brand} onSubmit={handleUpdateBrand} />
+    </div>
+  );
+}

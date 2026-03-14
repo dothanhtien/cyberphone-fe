@@ -29,6 +29,7 @@ interface DataTableProps<TData, TValue> {
   onPaginationChange: (
     updater: PaginationState | ((old: PaginationState) => PaginationState),
   ) => void;
+  onRowClick?: (row: TData) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,7 +39,9 @@ export function DataTable<TData, TValue>({
   pagination,
   pageCount,
   onPaginationChange,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
@@ -92,6 +95,10 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={
+                    onRowClick ? "cursor-pointer hover:bg-muted/50" : ""
+                  }
+                  onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

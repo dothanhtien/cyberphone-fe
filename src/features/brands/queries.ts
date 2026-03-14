@@ -10,3 +10,10 @@ export const useBrands = (params?: PaginationParams) => {
     queryFn: () => brandsApi.findAll(params),
   });
 };
+
+export const useBrandDetails = (id: string) => {
+  return useQuery({
+    queryKey: queryKeys.brands.details(id),
+    queryFn: () => brandsApi.findOne(id),
+  });
+};
