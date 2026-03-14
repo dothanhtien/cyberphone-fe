@@ -2,16 +2,20 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
-import { usePagination } from "@/hooks";
-import { useBrands } from "@/features/brands/queries";
 import { BrandsTable } from "@/features/brands/components/BrandsTable";
+import { useBrands } from "@/features/brands/queries";
+import { useDeleteBrand } from "@/features/brands/mutations";
+import { usePagination } from "@/hooks";
 
 export default function BrandsPage() {
+  const router = useRouter();
+
   const {
     pagination,
     setPagination,
@@ -36,6 +40,15 @@ export default function BrandsPage() {
     }
   }, [data, isError, updatePagination, updatePageCount]);
 
+  const deleteBrandMutation = useDeleteBrand();
+
+  const handleDeleteBrand = (id: string) => {
+    deleteBrandMutation.mutate(id, {
+      onSuccess: () => toast.success("Brand deleted successfully"),
+      onError: () => toast.error("An error occurred when deleting brand"),
+    });
+  };
+
   return (
     <>
       <div className="flex justify-between items-center mb-6">
@@ -54,6 +67,8 @@ export default function BrandsPage() {
         pagination={pagination}
         pageCount={pageCount}
         onPaginationChange={setPagination}
+        onDelete={handleDeleteBrand}
+        onRowClick={(brand) => router.push(`/admin/brands/${brand.id}/edit`)}
       />
     </>
   );
