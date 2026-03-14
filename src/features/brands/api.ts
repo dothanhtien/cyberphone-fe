@@ -37,16 +37,16 @@ export const brandsApi = {
   update: async (id: string, data: UpdateBrandRequest): Promise<Brand> => {
     const formData = new FormData();
 
-    if (data.name) {
+    if (data.name !== undefined) {
       formData.append("name", data.name);
     }
 
-    if (data.slug) {
+    if (data.slug !== undefined) {
       formData.append("slug", data.slug);
     }
 
-    if (data.description) {
-      formData.append("description", data.description);
+    if ("description" in data) {
+      formData.append("description", data.description ?? "");
     }
 
     if (data.logo) {

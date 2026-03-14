@@ -43,12 +43,14 @@ export default function EditBrandPage() {
   };
 
   if (isLoading) {
-    <div className="h-full flex justify-center items-center">
-      <div className="flex items-center gap-2">
-        <Spinner className="size-6" />
-        <span>Loading...</span>
+    return (
+      <div className="h-full flex justify-center items-center">
+        <div className="flex items-center gap-2">
+          <Spinner className="size-6" />
+          <span>Loading...</span>
+        </div>
       </div>
-    </div>;
+    );
   }
 
   if (!isLoading && (isError || !brand)) {
