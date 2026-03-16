@@ -9,20 +9,38 @@ import Underline from "@tiptap/extension-underline";
 import { cn } from "@/lib/utils";
 import { EditorToolbar } from "./EditorToolbar";
 import { LinkDialog } from "./LinkDialog";
+import { ImagesDialog } from "./ImagesDialog";
+import { CustomImage } from "./extensions/CustomImage";
+import { Media } from "@/features/media/types";
 
 interface RichTextEditorProps {
   value?: string;
   onChange: (value: string) => void;
   minHeight?: string;
+  mediaItems?: Media[];
+  isLoadingMediaItems?: boolean;
+  onFetchMediaItems?: () => void;
+  onUploadMediaItems?: (files: File[]) => void;
+  isUploadingMediaItems?: boolean;
+  onDeleteMediaItem?: (id: string) => void;
+  isDeletingMediaItem?: boolean;
 }
 
 export function RichTextEditor({
   value,
   minHeight = "200px",
   onChange,
+  mediaItems,
+  isLoadingMediaItems,
+  onFetchMediaItems,
+  onUploadMediaItems,
+  isUploadingMediaItems,
+  onDeleteMediaItem,
+  isDeletingMediaItem,
 }: RichTextEditorProps) {
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedLinkText, setSelectedLinkText] = useState("");
+  const [imagesDialogOpen, setImagesDialogOpen] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -42,6 +60,7 @@ export function RichTextEditor({
         },
       }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      CustomImage,
       CharacterCount,
     ],
     immediatelyRender: false,
@@ -73,6 +92,11 @@ export function RichTextEditor({
     setLinkDialogOpen(true);
   };
 
+  const openImagesDialog = () => {
+    setImagesDialogOpen(true);
+    onFetchMediaItems?.();
+  };
+
   if (!editor) return null;
 
   return (
@@ -86,6 +110,7 @@ export function RichTextEditor({
         <EditorToolbar
           editor={editor}
           onOpenChangeLinkDialog={openLinkDialog}
+          onOpenChangeImagesDialog={openImagesDialog}
         />
       )}
 
@@ -106,6 +131,18 @@ export function RichTextEditor({
         onOpenChange={setLinkDialogOpen}
         editor={editor}
         selectedLinkText={selectedLinkText}
+      />
+
+      <ImagesDialog
+        open={imagesDialogOpen}
+        onOpenChange={setImagesDialogOpen}
+        editor={editor}
+        mediaItems={mediaItems}
+        isLoadingMediaItems={isLoadingMediaItems}
+        onUploadMediaItems={onUploadMediaItems}
+        isUploadingMediaItems={isUploadingMediaItems}
+        onDeleteMediaItem={onDeleteMediaItem}
+        isDeletingMediaItem={isDeletingMediaItem}
       />
     </div>
   );

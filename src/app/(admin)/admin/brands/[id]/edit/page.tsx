@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AxiosError } from "axios";
 import { AlertCircleIcon, Loader2, Save } from "lucide-react";
@@ -14,6 +15,11 @@ import { CreateBrandFormValues } from "@/features/brands/schemas";
 import { ApiError } from "@/types";
 import { useUpdateBrand } from "@/features/brands/mutations";
 import { useBrandDetails } from "@/features/brands/queries";
+import { useMediaItems } from "@/features/media/queries";
+import {
+  useDeleteMediaItem,
+  useUploadMediaItems,
+} from "@/features/media/mutations";
 
 export default function EditBrandPage() {
   const params = useParams<{ id: string }>();
@@ -23,8 +29,31 @@ export default function EditBrandPage() {
 
   const { data: brand, isLoading, isError } = useBrandDetails(brandId);
 
+  const [shouldFetch, setShouldFetch] = useState(false);
+
+  const {
+    data: mediaItems,
+    isLoading: isLoadingMediaItems,
+    isError: isFetchMediaItemsError,
+  } = useMediaItems(
+    { refType: "brand", refId: brandId },
+    { enabled: shouldFetch },
+  );
+
+  const uploadMediaItemsMutate = useUploadMediaItems();
+
+  const deleteMediaItemMutate = useDeleteMediaItem({
+    refType: "brand",
+    refId: brandId,
+  });
+
+  useEffect(() => {
+    if (isFetchMediaItemsError) {
+      toast.error("An error occured when fetching media items");
+    }
+  }, [isFetchMediaItemsError]);
+
   const handleUpdateBrand = (data: Partial<CreateBrandFormValues>) => {
-    console.log(data);
     updateBrandMutation.mutate(
       { id: brandId, data },
       {
@@ -40,6 +69,32 @@ export default function EditBrandPage() {
         },
       },
     );
+  };
+
+  const handleUploadMediaItems = async (files: File[]) => {
+    uploadMediaItemsMutate.mutate(
+      {
+        refType: "brand",
+        refId: brandId,
+        usageType: "description",
+        files,
+      },
+      {
+        onSuccess: () =>
+          toast.success(
+            `Upload media item${!!files.length && "s"} successfully`,
+          ),
+        onError: () =>
+          toast.error("An error occurred when uploading media items"),
+      },
+    );
+  };
+
+  const handleDeleteMediaItem = async (id: string) => {
+    deleteMediaItemMutate.mutate(id, {
+      onSuccess: () => toast.success("Delete media item successfully"),
+      onError: () => toast.error("An error occurred when deleting media item"),
+    });
   };
 
   if (isLoading) {
@@ -87,7 +142,17 @@ export default function EditBrandPage() {
         </Button>
       </div>
 
-      <BrandForm brand={brand} onSubmit={handleUpdateBrand} />
+      <BrandForm
+        brand={brand}
+        onSubmit={handleUpdateBrand}
+        mediaItems={mediaItems ?? []}
+        isLoadingMediaItems={isLoadingMediaItems}
+        onFetchMediaItems={() => setShouldFetch(true)}
+        onUploadMediaItems={handleUploadMediaItems}
+        isUploadingMediaItems={uploadMediaItemsMutate.isPending}
+        onDeleteMediaItem={handleDeleteMediaItem}
+        isDeletingMediaItem={deleteMediaItemMutate.isPending}
+      />
     </div>
   );
 }

@@ -21,6 +21,7 @@ import {
   CreateBrandFormValues,
   createBrandSchema,
 } from "@/features/brands/schemas";
+import { Media } from "@/features/media/types";
 import { Brand } from "../types";
 import { getDirtyValues } from "@/utils/forms";
 
@@ -28,6 +29,13 @@ interface BrandFormProps {
   brand?: Brand;
   isSubmitting?: boolean;
   onSubmit: (values: Partial<CreateBrandFormValues>) => void;
+  mediaItems?: Media[];
+  isLoadingMediaItems?: boolean;
+  onFetchMediaItems?: () => void;
+  onUploadMediaItems?: (files: File[]) => void;
+  isUploadingMediaItems?: boolean;
+  onDeleteMediaItem?: (id: string) => void;
+  isDeletingMediaItem?: boolean;
 }
 
 const DEFAULT_VALUES: CreateBrandFormValues = {
@@ -38,7 +46,17 @@ const DEFAULT_VALUES: CreateBrandFormValues = {
   removeLogo: undefined,
 };
 
-export function BrandForm({ onSubmit, brand }: BrandFormProps) {
+export function BrandForm({
+  onSubmit,
+  brand,
+  onFetchMediaItems,
+  mediaItems,
+  isLoadingMediaItems,
+  onUploadMediaItems,
+  isUploadingMediaItems,
+  onDeleteMediaItem,
+  isDeletingMediaItem,
+}: BrandFormProps) {
   const form = useForm<CreateBrandFormValues>({
     resolver: zodResolver(createBrandSchema),
     defaultValues: DEFAULT_VALUES,
@@ -126,6 +144,13 @@ export function BrandForm({ onSubmit, brand }: BrandFormProps) {
                   <RichTextEditor
                     value={field.value ?? ""}
                     onChange={(value) => field.onChange(value ?? "")}
+                    mediaItems={mediaItems}
+                    isLoadingMediaItems={isLoadingMediaItems}
+                    onFetchMediaItems={onFetchMediaItems}
+                    onUploadMediaItems={onUploadMediaItems}
+                    isUploadingMediaItems={isUploadingMediaItems}
+                    onDeleteMediaItem={onDeleteMediaItem}
+                    isDeletingMediaItem={isDeletingMediaItem}
                   />
                 )}
               />

@@ -2,6 +2,7 @@ import { PaginationParams, StorefrontPaginationParams } from "@/types";
 import { ResolveCartRequest } from "@/storefront/cart/types";
 import { PaymentProvider } from "@/enums";
 import { FilterParams } from "@/features/dashboard/types";
+import { GetMediaItemsParams } from "@/features/media/types";
 
 export const queryKeys = {
   auth: {
@@ -46,6 +47,11 @@ export const queryKeys = {
     topProducts: (filter?: FilterParams) =>
       [...queryKeys.dashboard.all, "topProducts", filter] as const,
     recentOrders: () => [...queryKeys.dashboard.all, "recentOrders"] as const,
+  },
+  media: {
+    all: ["media"] as const,
+    getMediaItems: (params: GetMediaItemsParams) =>
+      [...queryKeys.media.all, "getMediaItems", params] as const,
   },
 
   storefront: {

@@ -37,6 +37,10 @@ export function editorToolbarStateSelector(ctx: EditorStateSnapshot<Editor>) {
 
     // Link
     isLink: ctx.editor.isActive("link") ?? false,
+
+    // Image
+    isImage: ctx.editor.isActive("image"),
+    imageAlign: ctx.editor.getAttributes("image").align as string | undefined,
   };
 }
 
