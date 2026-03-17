@@ -9,11 +9,11 @@ export const useUploadMediaItems = () => {
 
   return useMutation<Media[], Error, UploadMediaItemsParams>({
     mutationFn: (data) => mediaApi.uploadMediaItems(data),
-
     onSuccess: (newMedia, variables) => {
       const queryKey = queryKeys.media.getMediaItems({
         refType: variables.refType,
         refId: variables.refId,
+        isTemporary: variables.isTemporary,
       });
 
       queryClient.setQueryData<Media[]>(queryKey, (old) => {
@@ -28,19 +28,21 @@ export const useUploadMediaItems = () => {
 export const useDeleteMediaItem = ({
   refType,
   refId,
+  isTemporary,
 }: {
   refType: string;
   refId: string;
+  isTemporary?: boolean;
 }) => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, string>({
+  return useMutation<boolean, Error, string>({
     mutationFn: (id) => mediaApi.deleteMediaItem(id),
-
     onSuccess: (_, id) => {
       const queryKey = queryKeys.media.getMediaItems({
         refType,
         refId,
+        isTemporary,
       });
 
       queryClient.setQueryData<Media[]>(queryKey, (old) => {

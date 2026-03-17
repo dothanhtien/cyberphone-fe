@@ -16,6 +16,10 @@ export const brandsApi = {
   create: async (data: CreateBrandRequest): Promise<Brand> => {
     const formData = new FormData();
 
+    if (data.id) {
+      formData.append("id", data.id);
+    }
+
     formData.append("name", data.name);
     formData.append("slug", data.slug);
 

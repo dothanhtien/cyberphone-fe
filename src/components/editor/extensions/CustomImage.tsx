@@ -65,11 +65,8 @@ export const CustomImage = Image.extend({
           img.src = updatedNode.attrs.src;
 
           const align = updatedNode.attrs.align || "center";
-
           img.setAttribute("data-align", align);
-
           img.classList.remove("image-left", "image-center", "image-right");
-
           img.classList.add(`image-${align}`);
 
           const container = img.closest("[data-resize-container]");

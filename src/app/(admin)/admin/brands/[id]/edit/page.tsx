@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { AxiosError } from "axios";
 import { AlertCircleIcon, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 
@@ -12,7 +11,6 @@ import { Spinner } from "@/components/ui/spinner";
 import { PageHeading } from "@/components/PageHeading";
 import { BrandForm } from "@/features/brands/components/BrandForm";
 import { CreateBrandFormValues } from "@/features/brands/schemas";
-import { ApiError } from "@/types";
 import { useUpdateBrand } from "@/features/brands/mutations";
 import { useBrandDetails } from "@/features/brands/queries";
 import { useMediaItems } from "@/features/media/queries";
@@ -20,6 +18,8 @@ import {
   useDeleteMediaItem,
   useUploadMediaItems,
 } from "@/features/media/mutations";
+import { MediaRefType, MediaUsageType } from "@/features/media/enums";
+import { handleApiError } from "@/utils";
 
 export default function EditBrandPage() {
   const params = useParams<{ id: string }>();
@@ -36,14 +36,14 @@ export default function EditBrandPage() {
     isLoading: isLoadingMediaItems,
     isError: isFetchMediaItemsError,
   } = useMediaItems(
-    { refType: "brand", refId: brandId },
+    { refType: MediaRefType.BRAND, refId: brandId },
     { enabled: shouldFetch },
   );
 
-  const uploadMediaItemsMutate = useUploadMediaItems();
+  const uploadMediaItemsMutation = useUploadMediaItems();
 
-  const deleteMediaItemMutate = useDeleteMediaItem({
-    refType: "brand",
+  const deleteMediaItemMutation = useDeleteMediaItem({
+    refType: MediaRefType.BRAND,
     refId: brandId,
   });
 
@@ -57,26 +57,19 @@ export default function EditBrandPage() {
     updateBrandMutation.mutate(
       { id: brandId, data },
       {
-        onSuccess: () => {
-          toast.success("Brand updated successfully!");
-        },
-        onError: (error) => {
-          const axiosError = error as AxiosError<ApiError>;
-          console.error("Update brand failed:", error);
-          toast.error(
-            axiosError.response?.data?.message || "Failed to update brand",
-          );
-        },
+        onSuccess: () => toast.success("Brand updated successfully!"),
+        onError: (error) =>
+          handleApiError(error, "An error occurred when updating brand"),
       },
     );
   };
 
-  const handleUploadMediaItems = async (files: File[]) => {
-    uploadMediaItemsMutate.mutate(
+  const handleUploadMediaItems = (files: File[]) => {
+    uploadMediaItemsMutation.mutate(
       {
-        refType: "brand",
+        refType: MediaRefType.BRAND,
         refId: brandId,
-        usageType: "description",
+        usageType: MediaUsageType.DESCRIPTION,
         files,
       },
       {
@@ -84,16 +77,17 @@ export default function EditBrandPage() {
           toast.success(
             `Upload media item${!!files.length && "s"} successfully`,
           ),
-        onError: () =>
-          toast.error("An error occurred when uploading media items"),
+        onError: (error) =>
+          handleApiError(error, "An error occurred when uploading media items"),
       },
     );
   };
 
-  const handleDeleteMediaItem = async (id: string) => {
-    deleteMediaItemMutate.mutate(id, {
+  const handleDeleteMediaItem = (id: string) => {
+    deleteMediaItemMutation.mutate(id, {
       onSuccess: () => toast.success("Delete media item successfully"),
-      onError: () => toast.error("An error occurred when deleting media item"),
+      onError: (error) =>
+        handleApiError(error, "An error occurred when deleting media item"),
     });
   };
 
@@ -149,9 +143,9 @@ export default function EditBrandPage() {
         isLoadingMediaItems={isLoadingMediaItems}
         onFetchMediaItems={() => setShouldFetch(true)}
         onUploadMediaItems={handleUploadMediaItems}
-        isUploadingMediaItems={uploadMediaItemsMutate.isPending}
+        isUploadingMediaItems={uploadMediaItemsMutation.isPending}
         onDeleteMediaItem={handleDeleteMediaItem}
-        isDeletingMediaItem={deleteMediaItemMutate.isPending}
+        isDeletingMediaItem={deleteMediaItemMutation.isPending}
       />
     </div>
   );

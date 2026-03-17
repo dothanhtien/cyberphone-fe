@@ -11,10 +11,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Spinner } from "../ui/spinner";
 import { cn } from "@/lib/utils";
 import { Media } from "@/features/media/types";
-import { Spinner } from "../ui/spinner";
-import { Input } from "@base-ui/react";
 
 interface ImagesDialogProps {
   editor: Editor;
@@ -83,7 +83,7 @@ export function ImagesDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="min-w-4xl" aria-describedby="">
         <DialogHeader>
-          <DialogTitle>Select image to insert</DialogTitle>
+          <DialogTitle>Select an image to insert</DialogTitle>
         </DialogHeader>
 
         <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
@@ -99,22 +99,25 @@ export function ImagesDialog({
           {!isLoadingMediaItems && !!mediaItems.length && (
             <div className="grid grid-cols-4 gap-6">
               {mediaItems.map((item) => (
-                <div key={item.id} className="relative">
+                <div
+                  key={item.id}
+                  className={cn(
+                    "relative flex justify-center items-center",
+                    "border-2 border-transparent rounded-lg cursor-pointer p-3",
+                    selectedImage?.id === item.id && "border-orange-400",
+                  )}
+                  onClick={() =>
+                    setSelectedImage((prev) =>
+                      prev?.id === item.id ? null : item,
+                    )
+                  }
+                >
                   <Image
                     src={item.url}
                     width={300}
                     height={300}
                     alt=""
-                    className={cn(
-                      "mx-auto border-2 border-transparent rounded-lg cursor-pointer p-3",
-                      selectedImage?.id === item.id && "border-orange-400",
-                    )}
                     loading="eager"
-                    onClick={() =>
-                      setSelectedImage((prev) =>
-                        prev?.id === item.id ? null : item,
-                      )
-                    }
                   />
 
                   <Button

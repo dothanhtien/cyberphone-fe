@@ -15,6 +15,10 @@ export const mediaApi = {
     formData.append("refType", params.refType);
     formData.append("usageType", params.usageType);
 
+    if (params.isTemporary) {
+      formData.append("isTemporary", "true");
+    }
+
     params.files.forEach((file) => {
       formData.append("files", file);
     });
@@ -26,7 +30,7 @@ export const mediaApi = {
     });
   },
 
-  deleteMediaItem: async (id: string): Promise<void> => {
+  deleteMediaItem: async (id: string): Promise<boolean> => {
     return apiClient.delete(`/media/${id}`);
   },
 };
