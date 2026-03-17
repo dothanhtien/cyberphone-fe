@@ -14,6 +14,7 @@ export interface Brand {
 }
 
 export interface CreateBrandRequest {
+  id?: string;
   name: string;
   slug: string;
   description?: string | null;

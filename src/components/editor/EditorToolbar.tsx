@@ -1,6 +1,9 @@
 import { Editor, useEditorState } from "@tiptap/react";
 import {
   AlignCenter,
+  AlignHorizontalJustifyCenter,
+  AlignHorizontalJustifyEnd,
+  AlignHorizontalJustifyStart,
   AlignJustify,
   AlignLeft,
   AlignRight,
@@ -10,6 +13,7 @@ import {
   Heading1,
   Heading2,
   Heading3,
+  Image as ImageIcon,
   Italic,
   Link,
   Link2Off,
@@ -78,16 +82,22 @@ function ToolbarButton({
 interface EditorToolbarProps {
   editor: Editor;
   onOpenChangeLinkDialog?: () => void;
+  onOpenChangeImagesDialog?: () => void;
 }
 
 export function EditorToolbar({
   editor,
   onOpenChangeLinkDialog,
+  onOpenChangeImagesDialog,
 }: EditorToolbarProps) {
   const editorState = useEditorState({
     editor,
     selector: editorToolbarStateSelector,
   });
+
+  const setImageAlign = (align: "left" | "center" | "right") => {
+    editor.chain().focus().updateAttributes("image", { align }).run();
+  };
 
   return (
     <div className="flex flex-wrap items-center gap-0.5 border-b border-input bg-muted/40 px-2 py-1.5">
@@ -300,6 +310,41 @@ export function EditorToolbar({
         >
           <Link2Off className="h-4 w-4" />
         </ToolbarButton>
+      )}
+
+      {/* Image */}
+      <ToolbarButton
+        onClick={() => onOpenChangeImagesDialog?.()}
+        isActive={editorState.isImage}
+        tooltip="Insert Image"
+      >
+        <ImageIcon className="h-4 w-4" />
+      </ToolbarButton>
+
+      {editorState.isImage && (
+        <div className="flex items-center gap-0.5 border-l pl-1">
+          <ToolbarButton
+            onClick={() => setImageAlign("left")}
+            isActive={editorState.imageAlign === "left"}
+            tooltip="Align Image Left"
+          >
+            <AlignHorizontalJustifyStart className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton
+            onClick={() => setImageAlign("center")}
+            isActive={editorState.imageAlign === "center"}
+            tooltip="Align Image Center"
+          >
+            <AlignHorizontalJustifyCenter className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton
+            onClick={() => setImageAlign("right")}
+            isActive={editorState.imageAlign === "right"}
+            tooltip="Align Image Right"
+          >
+            <AlignHorizontalJustifyEnd className="h-4 w-4" />
+          </ToolbarButton>
+        </div>
       )}
     </div>
   );
