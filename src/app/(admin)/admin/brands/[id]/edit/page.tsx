@@ -49,7 +49,7 @@ export default function EditBrandPage() {
 
   useEffect(() => {
     if (isFetchMediaItemsError) {
-      toast.error("An error occured when fetching media items");
+      toast.error("An error occurred when fetching media items");
     }
   }, [isFetchMediaItemsError]);
 
@@ -75,7 +75,7 @@ export default function EditBrandPage() {
       {
         onSuccess: () =>
           toast.success(
-            `Upload media item${!!files.length && "s"} successfully`,
+            `Upload media item${files.length > 1 && "s"} successfully`,
           ),
         onError: (error) =>
           handleApiError(error, "An error occurred when uploading media items"),

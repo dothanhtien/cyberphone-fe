@@ -51,7 +51,7 @@ export default function NewBrandPage() {
 
   useEffect(() => {
     if (isFetchError) {
-      toast.error("Failed to fetch media items");
+      toast.error("An error occurred when fetching items");
     }
   }, [isFetchError]);
 
@@ -80,7 +80,7 @@ export default function NewBrandPage() {
       {
         onSuccess: () =>
           toast.success(
-            `Upload media item${!!files.length && "s"} successfully`,
+            `Upload media item${files.length > 1 && "s"} successfully`,
           ),
         onError: (error) =>
           handleApiError(error, "An error occurred when uploading media items"),

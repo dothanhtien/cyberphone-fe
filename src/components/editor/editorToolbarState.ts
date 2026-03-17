@@ -39,7 +39,7 @@ export function editorToolbarStateSelector(ctx: EditorStateSnapshot<Editor>) {
     isLink: ctx.editor.isActive("link") ?? false,
 
     // Image
-    isImage: ctx.editor.isActive("image"),
+    isImage: ctx.editor.isActive("image") ?? false,
     imageAlign: ctx.editor.getAttributes("image").align as string | undefined,
   };
 }

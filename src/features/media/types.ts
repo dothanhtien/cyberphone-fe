@@ -1,5 +1,7 @@
+import { MediaRefType, MediaUsageType } from "./enums";
+
 export interface GetMediaItemsParams {
-  refType: string;
+  refType: MediaRefType;
   refId: string;
   isTemporary?: boolean;
 }
@@ -15,9 +17,9 @@ export interface UploadMediaItemsParams {
 export interface Media {
   id: string;
   url: string;
-  refType: string;
+  refType: MediaRefType;
   refId: string;
-  usageType: string;
+  usageType: MediaUsageType;
   metaData: string | null;
   isActive: boolean;
   createdAt: string;

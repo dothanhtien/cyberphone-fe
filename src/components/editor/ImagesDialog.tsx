@@ -116,7 +116,7 @@ export function ImagesDialog({
                     src={item.url}
                     width={300}
                     height={300}
-                    alt=""
+                    alt={`${item.refType}-${item.id}`}
                     loading="eager"
                   />
 
@@ -124,7 +124,10 @@ export function ImagesDialog({
                     variant="destructive"
                     size="icon-xs"
                     className="absolute top-0 right-0 text-red-500"
-                    onClick={() => onDeleteMediaItem?.(item.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteMediaItem?.(item.id);
+                    }}
                     disabled={isDeletingMediaItem}
                   >
                     <Trash2 />

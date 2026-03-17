@@ -33,13 +33,6 @@ export const CustomImage = Image.extend({
 
         img.setAttribute(key, String(value));
       });
-      const initialAlign = node.attrs.align || "center";
-      const container = img.closest("[data-resize-container]");
-
-      if (container instanceof HTMLElement) {
-        container.setAttribute("data-align", initialAlign);
-        container.classList.add(`align-${initialAlign}`);
-      }
 
       const nodeView = new ResizableNodeView({
         editor,
@@ -84,10 +77,13 @@ export const CustomImage = Image.extend({
         },
       });
 
-      const test = img.closest("[data-resize-container]");
-      if (test instanceof HTMLElement) {
-        test.setAttribute("data-align", initialAlign);
-        test.classList.add(`align-${initialAlign}`);
+      const initialAlign = node.attrs.align || "center";
+
+      const resizeContainer = img.closest("[data-resize-container]");
+
+      if (resizeContainer instanceof HTMLElement) {
+        resizeContainer.setAttribute("data-align", initialAlign);
+        resizeContainer.classList.add(`align-${initialAlign}`);
       }
 
       return nodeView;
