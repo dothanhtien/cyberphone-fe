@@ -1,119 +1,64 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { AlertCircleIcon, Loader2, Save } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { ErrorCard } from "@/components/ErrorCard";
 import { PageHeading } from "@/components/PageHeading";
+import { PageLoading } from "@/components/PageLoading";
 import { BrandForm } from "@/features/brands/components/BrandForm";
-import { CreateBrandFormValues } from "@/features/brands/schemas";
 import { useUpdateBrand } from "@/features/brands/mutations";
 import { useBrandDetails } from "@/features/brands/queries";
-import { useMediaItems } from "@/features/media/queries";
-import {
-  useDeleteMediaItem,
-  useUploadMediaItems,
-} from "@/features/media/mutations";
-import { MediaRefType, MediaUsageType } from "@/features/media/enums";
+import { CreateBrandFormValues } from "@/features/brands/schemas";
+import { MediaRefType } from "@/features/media/enums";
+import { useMedia } from "@/features/media/hooks/useMedia";
 import { handleApiError } from "@/utils";
 
 export default function EditBrandPage() {
-  const params = useParams<{ id: string }>();
-  const brandId = params.id;
+  const { id: brandId } = useParams<{ id: string }>();
+
+  const brandQuery = useBrandDetails(brandId);
+
+  const brand = brandQuery.data;
+
   const updateBrandMutation = useUpdateBrand();
-  const isUpdating = updateBrandMutation.isPending;
-
-  const { data: brand, isLoading, isError } = useBrandDetails(brandId);
-
-  const [shouldFetch, setShouldFetch] = useState(false);
 
   const {
-    data: mediaItems,
-    isLoading: isLoadingMediaItems,
-    isError: isFetchMediaItemsError,
-  } = useMediaItems(
-    { refType: MediaRefType.BRAND, refId: brandId },
-    { enabled: shouldFetch },
-  );
+    mediaItems,
+    isLoadingMediaItems,
+    fetchMediaItems,
+    uploadMediaItems,
+    isUploadingMediaItems,
+    deleteMediaItem,
+    isDeletingMediaItem,
+  } = useMedia({ refType: MediaRefType.BRAND, refId: brandId });
 
-  const uploadMediaItemsMutation = useUploadMediaItems();
-
-  const deleteMediaItemMutation = useDeleteMediaItem({
-    refType: MediaRefType.BRAND,
-    refId: brandId,
-  });
-
-  useEffect(() => {
-    if (isFetchMediaItemsError) {
-      toast.error("An error occurred when fetching media items");
-    }
-  }, [isFetchMediaItemsError]);
+  const isUpdating = updateBrandMutation.isPending;
 
   const handleUpdateBrand = (data: Partial<CreateBrandFormValues>) => {
     updateBrandMutation.mutate(
       { id: brandId, data },
       {
-        onSuccess: () => toast.success("Brand updated successfully!"),
+        onSuccess: () => toast.success("Brand updated successfully"),
         onError: (error) =>
           handleApiError(error, "An error occurred when updating brand"),
       },
     );
   };
 
-  const handleUploadMediaItems = (files: File[]) => {
-    uploadMediaItemsMutation.mutate(
-      {
-        refType: MediaRefType.BRAND,
-        refId: brandId,
-        usageType: MediaUsageType.DESCRIPTION,
-        files,
-      },
-      {
-        onSuccess: () =>
-          toast.success(
-            `Upload media item${files.length > 1 && "s"} successfully`,
-          ),
-        onError: (error) =>
-          handleApiError(error, "An error occurred when uploading media items"),
-      },
-    );
-  };
-
-  const handleDeleteMediaItem = (id: string) => {
-    deleteMediaItemMutation.mutate(id, {
-      onSuccess: () => toast.success("Delete media item successfully"),
-      onError: (error) =>
-        handleApiError(error, "An error occurred when deleting media item"),
-    });
-  };
-
-  if (isLoading) {
-    return (
-      <div className="h-full flex justify-center items-center">
-        <div className="flex items-center gap-2">
-          <Spinner className="size-6" />
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
+  if (brandQuery.isLoading) {
+    return <PageLoading />;
   }
 
-  if (!isLoading && (isError || !brand)) {
-    return (
-      <Alert variant="destructive" className="max-w-md py-4">
-        <AlertCircleIcon className="h-4 w-4" />
-        <AlertTitle>Brand not found. Please try again.</AlertTitle>
-      </Alert>
-    );
+  if (!brandQuery.isLoading && brandQuery.isError) {
+    return <ErrorCard title="Brand not found. Please try again." />;
   }
 
   return (
     <div className="max-w-230">
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex flex-col gap-4 mb-4 md:flex-row md:justify-between md:items-start">
         <div>
           <PageHeading className="mb-3">Edit brand</PageHeading>
           <p className="text-muted-foreground text-sm mb-3">
@@ -121,7 +66,13 @@ export default function EditBrandPage() {
           </p>
         </div>
 
-        <Button size="lg" type="submit" form="brand-form" disabled={isUpdating}>
+        <Button
+          size="lg"
+          type="submit"
+          form="brand-form"
+          disabled={isUpdating}
+          className="w-full sm:w-auto"
+        >
           {isUpdating ? (
             <>
               <Loader2 className="animate-spin" />
@@ -139,13 +90,13 @@ export default function EditBrandPage() {
       <BrandForm
         brand={brand}
         onSubmit={handleUpdateBrand}
-        mediaItems={mediaItems ?? []}
+        mediaItems={mediaItems}
         isLoadingMediaItems={isLoadingMediaItems}
-        onFetchMediaItems={() => setShouldFetch(true)}
-        onUploadMediaItems={handleUploadMediaItems}
-        isUploadingMediaItems={uploadMediaItemsMutation.isPending}
-        onDeleteMediaItem={handleDeleteMediaItem}
-        isDeletingMediaItem={deleteMediaItemMutation.isPending}
+        onFetchMediaItems={fetchMediaItems}
+        onUploadMediaItems={uploadMediaItems}
+        isUploadingMediaItems={isUploadingMediaItems}
+        onDeleteMediaItem={deleteMediaItem}
+        isDeletingMediaItem={isDeletingMediaItem}
       />
     </div>
   );
