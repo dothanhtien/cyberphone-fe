@@ -23,7 +23,7 @@ import {
 } from "@/features/brands/schemas";
 import { Media } from "@/features/media/types";
 import { Brand } from "../types";
-import { getDirtyValues } from "@/utils/forms";
+import { getDirtyValues } from "@/utils";
 
 interface BrandFormProps {
   brand?: Brand;

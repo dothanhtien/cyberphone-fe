@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
@@ -10,8 +11,11 @@ import { PageHeading } from "@/components/PageHeading";
 import { usePagination } from "@/hooks";
 import { useProducts } from "@/features/products/queries";
 import { ProductsTable } from "@/features/products/components/ProductsTable";
+import { useDeleteProduct } from "@/features/products/mutations";
 
 export default function ProductsPage() {
+  const router = useRouter();
+
   const {
     pagination,
     setPagination,
@@ -25,16 +29,25 @@ export default function ProductsPage() {
     limit: pagination.pageSize,
   });
 
-  useEffect(() => {
-    if (isError) {
-      toast.error("An error occurred when fetching products");
-    }
+  const deleteProductMutation = useDeleteProduct();
 
+  const handleDeleteProduct = (id: string) => {
+    deleteProductMutation.mutate(id, {
+      onSuccess: () => toast.success("Product deleted successfully"),
+      onError: () => toast.error("An error occurred when deleting product"),
+    });
+  };
+
+  useEffect(() => {
     if (data) {
       updatePagination(data.currentPage, data.itemsPerPage);
       updatePageCount(data.totalCount, data.itemsPerPage);
     }
-  }, [data, isError, updatePagination, updatePageCount]);
+  }, [data, updatePagination, updatePageCount]);
+
+  if (isError) {
+    toast.error("An error occurred when fetching products");
+  }
 
   return (
     <>
@@ -54,6 +67,10 @@ export default function ProductsPage() {
         pagination={pagination}
         pageCount={pageCount}
         onPaginationChange={setPagination}
+        onRowClick={(product) =>
+          router.push(`/admin/products/${product.id}/edit`)
+        }
+        onDelete={handleDeleteProduct}
       />
     </>
   );

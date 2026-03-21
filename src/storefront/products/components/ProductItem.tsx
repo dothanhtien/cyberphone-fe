@@ -8,9 +8,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { StorefrontProduct } from "../types";
-import { formatCurrency } from "@/utils/currency";
-import { useCartStore } from "@/stores/cart";
+import { formatCurrency } from "@/utils";
 import { useAddToCart } from "@/storefront/cart/mutations";
+import { useCartStore } from "@/stores/cart";
 import { DEFAULT_IMAGE } from "@/constants";
 
 interface ProductItemProps {

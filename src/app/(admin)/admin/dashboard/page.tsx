@@ -20,7 +20,7 @@ import {
   useDashboardTopProducts,
   useDashboardTopSalesCategory,
 } from "@/features/dashboard/queries";
-import { formatCurrency } from "@/utils/currency";
+import { formatCurrency } from "@/utils";
 import { FilterParams } from "@/features/dashboard/types";
 
 const DEFAULT_FILTER: FilterParams = {

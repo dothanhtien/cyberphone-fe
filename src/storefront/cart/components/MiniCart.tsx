@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cart";
-import { formatCurrency } from "@/utils/currency";
+import { formatCurrency } from "@/utils";
 import { useStorefrontCart } from "../queries";
 import { DEFAULT_IMAGE } from "@/constants";
 
