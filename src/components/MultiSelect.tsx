@@ -43,6 +43,8 @@ export function MultiSelect<T extends FieldValues>({
 
   const value = (field.value ?? []) as string[];
 
+  const itemLabelByValue = new Map(items.map((i) => [i.value, i.label]));
+
   return (
     <div className="space-y-2">
       <Combobox
@@ -56,11 +58,11 @@ export function MultiSelect<T extends FieldValues>({
           <ComboboxValue>
             {(values: string[]) => (
               <>
-                {values.map((val) => {
-                  const item = items.find((i) => i.value === val);
-
-                  return <ComboboxChip key={val}>{item?.label}</ComboboxChip>;
-                })}
+                {values.map((val) => (
+                  <ComboboxChip key={val}>
+                    {itemLabelByValue.get(val) ?? val}
+                  </ComboboxChip>
+                ))}
                 <ComboboxChipsInput aria-invalid={!!error} />
               </>
             )}
@@ -71,15 +73,11 @@ export function MultiSelect<T extends FieldValues>({
           <ComboboxEmpty>No {placeholder} found.</ComboboxEmpty>
 
           <ComboboxList>
-            {(val: string) => {
-              const item = items.find((i) => i.value === val);
-
-              return (
-                <ComboboxItem key={val} value={val}>
-                  {item?.label}
-                </ComboboxItem>
-              );
-            }}
+            {(val: string) => (
+              <ComboboxItem key={val} value={val}>
+                {itemLabelByValue.get(val) ?? val}
+              </ComboboxItem>
+            )}
           </ComboboxList>
         </ComboboxContent>
       </Combobox>

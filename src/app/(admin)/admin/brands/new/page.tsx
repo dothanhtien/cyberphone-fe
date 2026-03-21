@@ -9,12 +9,12 @@ import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
 import { BrandForm } from "@/features/brands/components/BrandForm";
-import { CreateBrandFormValues } from "@/features/brands/schemas";
 import { useCreateBrand } from "@/features/brands/mutations";
-import { handleApiError } from "@/utils";
-import { MediaRefType } from "@/features/media/enums";
+import { CreateBrandFormValues } from "@/features/brands/schemas";
 import { CreateBrandRequest } from "@/features/brands/types";
+import { MediaRefType } from "@/features/media/enums";
 import { useMedia } from "@/features/media/hooks/useMedia";
+import { handleApiError } from "@/utils";
 
 export default function NewBrandPage() {
   const tempId = useMemo(() => uuidv4(), []);

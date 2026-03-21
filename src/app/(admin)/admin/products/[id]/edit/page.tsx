@@ -1,7 +1,7 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
 import { Loader2, Save, Settings } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -53,7 +53,7 @@ export default function EditProductPage() {
     updateProductMutation.mutate(
       { id: productId, data: values },
       {
-        onSuccess: () => toast.success("Update product successfully"),
+        onSuccess: () => toast.success("Product updated successfully"),
         onError: (error) =>
           handleApiError(error, "An error occurred when updating product"),
       },
@@ -64,7 +64,7 @@ export default function EditProductPage() {
     return <PageLoading />;
   }
 
-  if (!isLoading && productQuery.isError) {
+  if (!isLoading && (productQuery.isError || !productQuery.data)) {
     return <ErrorCard title="Product not found. Please try again." />;
   }
 

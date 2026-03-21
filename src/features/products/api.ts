@@ -14,7 +14,7 @@ export const productsApi = {
     return apiClient.get("/admin/products", { params });
   },
 
-  findOne: async (id: string): Promise<Product | null> => {
+  findOne: async (id: string): Promise<Product> => {
     return apiClient.get(`/admin/products/${id}`);
   },
 

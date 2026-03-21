@@ -26,9 +26,12 @@ export const useUpdateProduct = () => {
   return useMutation({
     mutationFn: ({ id, data }: UpdateProductVariables) =>
       productsApi.update(id, data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.products.all,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.products.details(variables.id),
       });
     },
   });

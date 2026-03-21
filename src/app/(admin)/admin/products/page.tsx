@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
-import { usePagination } from "@/hooks";
-import { useProducts } from "@/features/products/queries";
 import { ProductsTable } from "@/features/products/components/ProductsTable";
+import { useProducts } from "@/features/products/queries";
 import { useDeleteProduct } from "@/features/products/mutations";
+import { usePagination } from "@/hooks";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -45,9 +45,11 @@ export default function ProductsPage() {
     }
   }, [data, updatePagination, updatePageCount]);
 
-  if (isError) {
-    toast.error("An error occurred when fetching products");
-  }
+  useEffect(() => {
+    if (isError) {
+      toast.error("An error occurred when fetching products");
+    }
+  }, [isError]);
 
   return (
     <>

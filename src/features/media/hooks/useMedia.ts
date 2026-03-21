@@ -46,6 +46,8 @@ export function useMedia({
 
   const uploadMediaItems = useCallback(
     (files: File[]) => {
+      if (!files.length) return;
+
       uploadMediaItemsMutation.mutate(
         {
           refType,

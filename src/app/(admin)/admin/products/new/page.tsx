@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
@@ -18,6 +18,7 @@ import { ProductForm } from "@/features/products/components/ProductForm";
 import { useCreateProduct } from "@/features/products/mutations";
 import { CreateProductFormValues } from "@/features/products/schemas";
 import { handleApiError } from "@/utils";
+import { CreateProductRequest } from "@/features/products/types";
 
 export default function NewProductPage() {
   const tempId = useMemo(() => uuidv4(), []);
@@ -50,8 +51,8 @@ export default function NewProductPage() {
   const isCreating = createProductMutation.isPending;
 
   const handleCreateProduct = (data: Partial<CreateProductFormValues>) => {
-    const dataToCreate = { ...data, id: tempId } as CreateProductFormValues;
-    
+    const dataToCreate = { ...data, id: tempId } as CreateProductRequest;
+
     createProductMutation.mutate(dataToCreate, {
       onSuccess: (data) => {
         toast.success("Product created successfully!");
@@ -68,7 +69,7 @@ export default function NewProductPage() {
 
   if (!isLoading && (brandsQuery.isError || categoriesQuery.isError)) {
     return (
-      <ErrorCard title="An error occurred when fetcing brands or categories. Please try again." />
+      <ErrorCard title="An error occurred when fetching brands or categories. Please try again." />
     );
   }
 

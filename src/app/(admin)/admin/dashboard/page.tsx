@@ -1,17 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Banknote, ShoppingCart, TriangleAlert } from "lucide-react";
 import dayjs from "dayjs";
+import { Banknote, ShoppingCart, TriangleAlert } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { type DateRange } from "react-day-picker";
 import { toast } from "sonner";
 
 import { PageHeading } from "@/components/PageHeading";
 import { DateRangePicker } from "@/components/pickers/DateRangePicker";
-import { SummaryCard } from "@/features/dashboard/components/SummaryCard";
+import { RecentOrdersTable } from "@/features/dashboard/components/RecentOrdersTable";
 import { RevenueOverviewChart } from "@/features/dashboard/components/RevenueOverviewChart";
 import { SalesByCategoryChart } from "@/features/dashboard/components/SalesByCategoryChart";
-import { RecentOrdersTable } from "@/features/dashboard/components/RecentOrdersTable";
+import { SummaryCard } from "@/features/dashboard/components/SummaryCard";
 import { TopProducts } from "@/features/dashboard/components/TopProducts";
 import {
   useDashboardRecentOrders,
@@ -20,8 +20,8 @@ import {
   useDashboardTopProducts,
   useDashboardTopSalesCategory,
 } from "@/features/dashboard/queries";
-import { formatCurrency } from "@/utils";
 import { FilterParams } from "@/features/dashboard/types";
+import { formatCurrency } from "@/utils";
 
 const DEFAULT_FILTER: FilterParams = {
   from: dayjs().startOf("month").format("YYYY-MM-DD"),
