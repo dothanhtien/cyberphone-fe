@@ -11,6 +11,13 @@ export const useProducts = (params?: PaginationParams) => {
   });
 };
 
+export const useProductDetails = (id: string) => {
+  return useQuery({
+    queryKey: queryKeys.products.details(id),
+    queryFn: () => productsApi.findOne(id),
+  });
+};
+
 export const useProductAttributes = (productId: string) => {
   return useQuery({
     queryKey: queryKeys.products.attributes.list(productId),

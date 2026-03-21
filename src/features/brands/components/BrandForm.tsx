@@ -23,7 +23,7 @@ import {
 } from "@/features/brands/schemas";
 import { Media } from "@/features/media/types";
 import { Brand } from "../types";
-import { getDirtyValues } from "@/utils/forms";
+import { getDirtyValues } from "@/utils";
 
 interface BrandFormProps {
   brand?: Brand;
@@ -116,7 +116,7 @@ export function BrandForm({
 
         <CardContent>
           <FieldGroup>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Field>
                 <RequiredFieldLabel htmlFor="name">
                   Brand name

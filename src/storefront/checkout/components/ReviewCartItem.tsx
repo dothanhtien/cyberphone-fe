@@ -4,7 +4,7 @@ import { Minus, Plus, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CartItem as CartItemType } from "@/storefront/cart/types";
-import { formatCurrency } from "@/utils/currency";
+import { formatCurrency } from "@/utils";
 import {
   useDecreaseCartItemQuantity,
   useIncreaseCartItemQuantity,

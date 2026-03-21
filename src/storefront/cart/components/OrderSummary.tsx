@@ -1,8 +1,9 @@
 import Image from "next/image";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cart";
-import { formatCurrency } from "@/utils/currency";
+import { formatCurrency } from "@/utils";
 import { DEFAULT_IMAGE } from "@/constants";
 
 export function OrderSummary() {

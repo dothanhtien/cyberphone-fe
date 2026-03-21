@@ -52,6 +52,7 @@ export const createProductSchema = z
     attributes: z
       .array(
         z.object({
+          id: z.uuid().optional(),
           attributeKey: z
             .string()
             .min(1, "Attribute key is required")

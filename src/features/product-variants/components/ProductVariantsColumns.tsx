@@ -16,7 +16,7 @@ import {
 import { PRODUCT_VARIANT_STOCK_STATUS } from "../constants";
 import { ProductVariantStockStatus } from "../enums";
 import { ProductVariant } from "../types";
-import { formatCurrency } from "@/utils/currency";
+import { formatCurrency } from "@/utils";
 import { DEFAULT_IMAGE } from "@/constants";
 
 const STOCK_STATUS_STYLES = {

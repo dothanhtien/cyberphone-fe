@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cart";
 import { ReviewCartItem } from "@/storefront/checkout/components/ReviewCartItem";
-import { formatCurrency } from "@/utils/currency";
+import { formatCurrency } from "@/utils";
 
 export default function CheckoutCartPage() {
   const router = useRouter();

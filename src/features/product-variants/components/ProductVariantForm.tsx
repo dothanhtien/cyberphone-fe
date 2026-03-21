@@ -11,8 +11,7 @@ import { RequiredFieldLabel } from "@/components/RequiredFieldLabel";
 import { ProductVariantFormValues, productVariantSchema } from "../schemas";
 import { ProductVariant } from "../types";
 import { ProductAttribute } from "@/features/products/types";
-import { formatCurrency, parseCurrency } from "@/utils/currency";
-import { getDirtyValues } from "@/utils/forms";
+import { getDirtyValues, formatCurrency, parseCurrency } from "@/utils";
 
 interface ProductVariantFormProps {
   variant: ProductVariant | null;

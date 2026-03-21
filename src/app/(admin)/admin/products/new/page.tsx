@@ -1,86 +1,77 @@
 "use client";
 
-import { useEffect } from "react";
+import { Loader2, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { AxiosError } from "axios";
-import { AlertCircleIcon, Loader2, Save } from "lucide-react";
+import { useMemo } from "react";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { ErrorCard } from "@/components/ErrorCard";
 import { PageHeading } from "@/components/PageHeading";
-import { ProductForm } from "@/features/products/components/ProductForm";
+import { PageLoading } from "@/components/PageLoading";
 import { useBrands } from "@/features/brands/queries";
 import { useCategories } from "@/features/categories/queries";
+import { MediaRefType } from "@/features/media/enums";
+import { useMedia } from "@/features/media/hooks/useMedia";
+import { ProductForm } from "@/features/products/components/ProductForm";
 import { useCreateProduct } from "@/features/products/mutations";
 import { CreateProductFormValues } from "@/features/products/schemas";
-import { ApiError } from "@/types";
+import { handleApiError } from "@/utils";
+import { CreateProductRequest } from "@/features/products/types";
 
 export default function NewProductPage() {
+  const tempId = useMemo(() => uuidv4(), []);
   const router = useRouter();
 
-  const {
-    data: brandsData,
-    isLoading: brandsLoading,
-    isError: brandsError,
-  } = useBrands({
-    page: 1,
-    limit: 100,
-  });
+  const brandsQuery = useBrands({ page: 1, limit: 1000 });
+  const categoriesQuery = useCategories({ page: 1, limit: 1000 });
+
+  const createProductMutation = useCreateProduct();
 
   const {
-    data: categoriesData,
-    isLoading: categoriesLoading,
-    isError: categoriesError,
-  } = useCategories({
-    page: 1,
-    limit: 100,
+    mediaItems,
+    isLoadingMediaItems,
+    fetchMediaItems,
+    uploadMediaItems,
+    isUploadingMediaItems,
+    deleteMediaItem,
+    isDeletingMediaItem,
+  } = useMedia({
+    refType: MediaRefType.PRODUCT,
+    refId: tempId,
+    isTemporary: true,
   });
 
-  const createMutation = useCreateProduct();
+  const isLoading = brandsQuery.isLoading || categoriesQuery.isLoading;
 
-  useEffect(() => {
-    if (categoriesError) {
-      toast.error("Failed to fetch categories");
-    }
+  const brands = brandsQuery.data?.items ?? [];
+  const categories = categoriesQuery.data?.items ?? [];
 
-    if (brandsError) {
-      toast.error("Failed to fetch brands");
-    }
-  }, [categoriesError, brandsError]);
+  const isCreating = createProductMutation.isPending;
 
-  if (categoriesLoading || brandsLoading) {
-    return <div>Loading...</div>;
-  }
+  const handleCreateProduct = (data: Partial<CreateProductFormValues>) => {
+    const dataToCreate = { ...data, id: tempId } as CreateProductRequest;
 
-  if (categoriesError || brandsError) {
-    return (
-      <Alert variant="destructive" className="max-w-md">
-        <AlertCircleIcon />
-        <AlertDescription>
-          Failed to load required data. Please try again.
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
-  const isSubmitting = createMutation.isPending;
-
-  const handleCreateProduct = (data: CreateProductFormValues) => {
-    createMutation.mutate(data, {
-      onSuccess: () => {
+    createProductMutation.mutate(dataToCreate, {
+      onSuccess: (data) => {
         toast.success("Product created successfully!");
-        router.push("/admin/products");
+        router.push(`/admin/products/${data.id}/edit`);
       },
-      onError: (error) => {
-        const axiosError = error as AxiosError<ApiError>;
-        console.error("Create product failed:", error);
-        toast.error(
-          axiosError.response?.data?.message || "Failed to create product",
-        );
-      },
+      onError: (error) =>
+        handleApiError(error, "An error occurred when creating product"),
     });
   };
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
+  if (!isLoading && (brandsQuery.isError || categoriesQuery.isError)) {
+    return (
+      <ErrorCard title="An error occurred when fetching brands or categories. Please try again." />
+    );
+  }
 
   return (
     <div className="max-w-230">
@@ -96,9 +87,9 @@ export default function NewProductPage() {
           size="lg"
           type="submit"
           form="product-form"
-          disabled={isSubmitting}
+          disabled={isCreating}
         >
-          {isSubmitting ? (
+          {isCreating ? (
             <>
               <Loader2 className="animate-spin" />
               Saving...
@@ -113,9 +104,16 @@ export default function NewProductPage() {
       </div>
 
       <ProductForm
-        categories={categoriesData?.items ?? []}
-        brands={brandsData?.items ?? []}
+        categories={categories}
+        brands={brands}
         onSubmit={handleCreateProduct}
+        mediaItems={mediaItems}
+        isLoadingMediaItems={isLoadingMediaItems}
+        onFetchMediaItems={fetchMediaItems}
+        onUploadMediaItems={uploadMediaItems}
+        isUploadingMediaItems={isUploadingMediaItems}
+        onDeleteMediaItem={deleteMediaItem}
+        isDeletingMediaItem={isDeletingMediaItem}
       />
     </div>
   );

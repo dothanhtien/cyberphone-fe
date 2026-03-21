@@ -11,10 +11,10 @@ import {
   LucideProps,
 } from "lucide-react";
 
-import { RecentOrder } from "../types";
-import { formatCurrency } from "@/utils/currency";
-import { OrderStatus } from "@/enums";
 import { Badge } from "@/components/ui/badge";
+import { RecentOrder } from "../types";
+import { formatCurrency } from "@/utils";
+import { OrderStatus } from "@/enums";
 
 const STATUS_CONFIG: Record<
   OrderStatus,
