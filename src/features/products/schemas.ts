@@ -2,6 +2,7 @@ import * as z from "zod";
 import { ProductImageType, ProductStatus } from "./enums";
 
 export const productImageMetaSchema = z.object({
+  id: z.uuid().optional(),
   imageType: z.enum(ProductImageType),
   altText: z
     .string("altText must be a string")
@@ -24,6 +25,7 @@ export const productImageMetaSchema = z.object({
       message: "displayOrder must be greater than or equal to 0",
     })
     .optional(),
+  isDeleted: z.boolean().optional(),
 });
 
 export const createProductSchema = z
@@ -48,6 +50,19 @@ export const createProductSchema = z
     isBestseller: z.boolean(),
     images: z.array(z.instanceof(File)).default([]),
     mainImage: z.instanceof(File).optional(),
+    gallery: z
+      .array(
+        z.object({
+          id: z.string(),
+          file: z.instanceof(File).optional(),
+          preview: z.string().optional().nullable(),
+          isMain: z.boolean(),
+          url: z.string().optional().nullable(),
+          altText: z.string().optional(),
+          isDeleted: z.boolean().optional(),
+        }),
+      )
+      .optional(),
     imageMetas: z.array(productImageMetaSchema).default([]),
     attributes: z
       .array(

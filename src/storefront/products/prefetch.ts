@@ -14,3 +14,14 @@ export async function prefetchStorefrontProducts(
     staleTime: 1000 * 60,
   });
 }
+
+export async function prefetchStorefrontProductDetails(
+  queryClient: QueryClient,
+  slug: string,
+) {
+  return queryClient.prefetchQuery({
+    queryKey: queryKeys.storefront.products.details(slug),
+    queryFn: () => storefrontProductsApi.findOne(slug),
+    staleTime: 1000 * 60,
+  });
+}
