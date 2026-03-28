@@ -41,29 +41,20 @@ export const usePageLayout = ({ segmentLabel }: UsePageLayoutProps = {}) => {
 
   const setActiveMenu = useLayoutStore((s) => s.setActiveMenu);
   const setBreadcrumbs = useLayoutStore((s) => s.setBreadcrumbs);
-  const resetLayout = useLayoutStore((s) => s.resetLayout);
 
   useEffect(() => {
     if (!config) return;
 
     const { title, activeMenuKey, breadcrumbs } = config;
 
-    if (title) {
-      if (typeof document !== "undefined") {
-        document.title = title
-          ? `CyberPhone | Admin | ${title}`
-          : "CyberPhone | Admin";
-      }
+    if (typeof document !== "undefined" && title) {
+      document.title = title
+        ? `CyberPhone | Admin | ${title}`
+        : "CyberPhone | Admin";
     }
 
     if (breadcrumbs.length) setBreadcrumbs(breadcrumbs);
 
     if (activeMenuKey) setActiveMenu(activeMenuKey);
-  }, [config, setActiveMenu, setBreadcrumbs, resetLayout]);
-
-  useEffect(() => {
-    return () => {
-      resetLayout();
-    };
-  }, [resetLayout]);
+  }, [config, setActiveMenu, setBreadcrumbs]);
 };
