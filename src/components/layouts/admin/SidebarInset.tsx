@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 import {
   Breadcrumb,
@@ -14,38 +13,14 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { useLayoutStore } from "@/stores/layout";
 
 interface AppSidebarInsetProps {
   children: React.ReactNode;
 }
 
-const BREADCRUMB_LABELS: Record<string, string> = {
-  dashboard: "Dashboard",
-  products: "Products",
-  create: "Create",
-  edit: "Edit",
-};
-
 export function AppSidebarInset({ children }: AppSidebarInsetProps) {
-  const pathname = usePathname();
-
-  const segments = pathname
-    .split("/")
-    .filter(Boolean)
-    .filter((segment) => segment !== "admin");
-
-  const breadcrumbs = segments.map((segment, index) => {
-    const href = "/admin/" + segments.slice(0, index + 1).join("/");
-    const isLast = index === segments.length - 1;
-
-    return {
-      label:
-        BREADCRUMB_LABELS[segment] ??
-        segment.charAt(0).toUpperCase() + segment.slice(1),
-      href,
-      isLast,
-    };
-  });
+  const breadcrumbs = useLayoutStore((state) => state.breadcrumbs);
 
   return (
     <SidebarInset>
@@ -61,15 +36,15 @@ export function AppSidebarInset({ children }: AppSidebarInsetProps) {
           <Breadcrumb>
             <BreadcrumbList>
               {breadcrumbs.map((item, index) => (
-                <React.Fragment key={item.href}>
+                <React.Fragment key={index}>
                   {index > 0 && <BreadcrumbSeparator />}
                   <BreadcrumbItem>
-                    {item.isLast ? (
-                      <BreadcrumbPage>{item.label}</BreadcrumbPage>
-                    ) : (
+                    {item.href ? (
                       <BreadcrumbLink asChild>
                         <Link href={item.href}>{item.label}</Link>
                       </BreadcrumbLink>
+                    ) : (
+                      <BreadcrumbPage>{item.label}</BreadcrumbPage>
                     )}
                   </BreadcrumbItem>
                 </React.Fragment>

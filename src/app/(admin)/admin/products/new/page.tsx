@@ -19,10 +19,13 @@ import { useCreateProduct } from "@/features/products/mutations";
 import { CreateProductFormValues } from "@/features/products/schemas";
 import { handleApiError } from "@/utils";
 import { CreateProductRequest } from "@/features/products/types";
+import { usePageLayout } from "@/hooks";
 
 export default function NewProductPage() {
   const tempId = useMemo(() => uuidv4(), []);
   const router = useRouter();
+
+  usePageLayout();
 
   const brandsQuery = useBrands({ page: 1, limit: 1000 });
   const categoriesQuery = useCategories({ page: 1, limit: 1000 });

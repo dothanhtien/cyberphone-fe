@@ -22,6 +22,7 @@ import {
 } from "@/features/dashboard/queries";
 import { FilterParams } from "@/features/dashboard/types";
 import { formatCurrency } from "@/utils";
+import { usePageLayout } from "@/hooks";
 
 const DEFAULT_FILTER: FilterParams = {
   from: dayjs().startOf("month").format("YYYY-MM-DD"),
@@ -31,6 +32,8 @@ const DEFAULT_FILTER: FilterParams = {
 export default function AdminDashboardPage() {
   const [filter, setFilter] = useState<FilterParams>(DEFAULT_FILTER);
   const hasShownErrorToast = useRef(false);
+
+  usePageLayout();
 
   const summary = useDashboardSummary(filter);
   const revenue = useDashboardRevenue(filter);

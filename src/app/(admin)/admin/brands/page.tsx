@@ -11,10 +11,12 @@ import { PageHeading } from "@/components/PageHeading";
 import { BrandsTable } from "@/features/brands/components/BrandsTable";
 import { useBrands } from "@/features/brands/queries";
 import { useDeleteBrand } from "@/features/brands/mutations";
-import { usePagination } from "@/hooks";
+import { usePageLayout, usePagination } from "@/hooks";
 
 export default function BrandsPage() {
   const router = useRouter();
+
+  usePageLayout();
 
   const {
     pagination,
