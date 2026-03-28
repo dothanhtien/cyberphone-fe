@@ -55,7 +55,7 @@ export function ProductItem({ product }: ProductItemProps) {
       <CardContent>
         <Link
           key={product.id}
-          href={`/products/${product.id}`}
+          href={`/products/${product.slug}`}
           className="block"
         >
           <div>

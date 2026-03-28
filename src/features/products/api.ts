@@ -120,6 +120,16 @@ export const productsApi = {
       formData.append("attributes", JSON.stringify(data.attributes));
     }
 
+    if (Array.isArray(data.imageMetas)) {
+      formData.append("imageMetas", JSON.stringify(data.imageMetas));
+    }
+
+    if (Array.isArray(data.images) && data.images.length) {
+      data.images.forEach((file) => {
+        formData.append("images", file);
+      });
+    }
+
     return apiClient.patch(`/admin/products/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",

@@ -116,7 +116,11 @@ export function RichTextEditor({
 
       <EditorContent
         editor={editor}
-        className="px-4 py-3 text-sm"
+        className={cn(
+          "px-4 py-3 text-sm",
+          "max-h-[70vh] overflow-hidden",
+          "focus:overflow-y-auto focus-within:overflow-y-auto",
+        )}
         style={{ minHeight }}
       />
 

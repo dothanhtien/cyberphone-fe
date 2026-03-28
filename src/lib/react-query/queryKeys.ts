@@ -65,6 +65,8 @@ export const queryKeys = {
         "list",
         params ?? {},
       ],
+      details: (slug: string) =>
+        [...queryKeys.storefront.products.all(), "details", slug] as const,
     },
     cart: {
       all: () => [...queryKeys.storefront.all, "cart"] as const,

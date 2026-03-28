@@ -13,3 +13,11 @@ export const useStorefrontProducts = (
     staleTime: 1000 * 60,
   });
 };
+
+export const useStorefrontProductDetails = (slug: string) => {
+  return useQuery({
+    queryKey: queryKeys.storefront.products.details(slug),
+    queryFn: () => storefrontProductsApi.findOne(slug),
+    staleTime: 1000 * 60,
+  });
+};

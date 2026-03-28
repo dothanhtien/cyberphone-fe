@@ -1,0 +1,9 @@
+@layer components {
+  .swiper-button-prev svg, .swiper-button-next svg {
+    @apply text-orange-400;
+  }
+
+  .swiper-slide-thumb-active > div {
+    @apply border-orange-400;
+  }
+}

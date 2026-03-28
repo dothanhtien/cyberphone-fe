@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "../components/editor/rich-text-editor.css";
+@import "../storefront/products/components/product-details/image-gallery.css";
 
 @custom-variant dark (&:is(.dark *));
 
