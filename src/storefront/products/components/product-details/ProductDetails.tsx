@@ -32,7 +32,10 @@ export function ProductDetails({ slug }: { slug: string }) {
       return;
     }
 
-    if (!selectedVariant) return;
+    if (!selectedVariant) {
+      toast.error("Please select a variant.");
+      return;
+    }
 
     addToCartMutation.mutate(
       {

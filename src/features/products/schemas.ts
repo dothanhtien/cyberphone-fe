@@ -53,7 +53,7 @@ export const createProductSchema = z
     gallery: z
       .array(
         z.object({
-          id: z.string(),
+          id: z.uuid(),
           file: z.instanceof(File).optional(),
           preview: z.string().optional().nullable(),
           isMain: z.boolean(),

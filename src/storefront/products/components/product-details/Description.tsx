@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDownIcon } from "lucide-react";
+import DOMPurify from "dompurify";
 
 import { Button } from "@/components/ui/button";
 
@@ -9,6 +10,7 @@ interface DescriptionProps {
 
 export function Description({ description }: DescriptionProps) {
   const [open, setOpen] = useState(false);
+  const sanitizedHtml = DOMPurify.sanitize(description);
 
   return (
     <div className="relative">
@@ -16,7 +18,7 @@ export function Description({ description }: DescriptionProps) {
         className={`prose max-w-none ProseMirror overflow-hidden transition-all duration-300 ${
           open ? "max-h-full" : "max-h-125"
         }`}
-        dangerouslySetInnerHTML={{ __html: description }}
+        dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
       />
 
       <div className="w-full flex justify-center mt-4">

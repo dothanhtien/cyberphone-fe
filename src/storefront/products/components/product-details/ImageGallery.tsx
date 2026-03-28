@@ -34,7 +34,7 @@ export function ProductDetailsGallery({ images }: ProductDetailsGalleryProps) {
             <div className="flex items-center justify-center bg-white">
               <Image
                 src={img.url}
-                alt=""
+                alt={img.id}
                 className="object-contain"
                 height={300}
                 width={300}

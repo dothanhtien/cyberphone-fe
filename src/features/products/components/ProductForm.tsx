@@ -168,8 +168,8 @@ export function ProductForm({
     (values.gallery || []).forEach((img, index) => {
       if (img.file) {
         const ext = img.file.name.split(".").pop();
-        const renamedMainImage = new File([img.file], `${img.id}.${ext}`);
-        values.images.push(renamedMainImage);
+        const renamedFile = new File([img.file], `${img.id}.${ext}`);
+        values.images.push(renamedFile);
       }
 
       values.imageMetas.push({

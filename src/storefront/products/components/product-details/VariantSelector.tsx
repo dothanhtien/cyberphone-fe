@@ -30,6 +30,8 @@ export function VariantSelector({
   >(() => {
     const map: Record<string, string> = {};
 
+    if (!defaultVariant) return map;
+
     defaultVariant.attributes.forEach((attr) => {
       map[attr.productAttributeId] = attr.attributeValue;
     });
@@ -86,12 +88,16 @@ export function VariantSelector({
     });
   };
 
+  if (!variants.length) {
+    return null;
+  }
+
   return (
     <div className="attributes mb-6">
       {sortedAttributes.map((attr, index) => {
         const options = getAllOptions(attr.id);
 
-        if (!options.length) return undefined;
+        if (!options.length) return null;
 
         return (
           <div key={attr.id} className="mb-6">

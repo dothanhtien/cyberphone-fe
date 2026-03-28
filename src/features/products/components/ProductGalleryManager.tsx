@@ -93,6 +93,7 @@ const GalleryImageRow = memo(function GalleryImageRow({
       </Tooltip>
 
       <Button
+        type="button"
         variant="ghost"
         onClick={() => removeImage(img.id)}
         className="p-2 text-red-500"
