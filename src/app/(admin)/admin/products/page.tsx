@@ -11,10 +11,12 @@ import { PageHeading } from "@/components/PageHeading";
 import { ProductsTable } from "@/features/products/components/ProductsTable";
 import { useProducts } from "@/features/products/queries";
 import { useDeleteProduct } from "@/features/products/mutations";
-import { usePagination } from "@/hooks";
+import { usePageLayout, usePagination } from "@/hooks";
 
 export default function ProductsPage() {
   const router = useRouter();
+
+  usePageLayout();
 
   const {
     pagination,

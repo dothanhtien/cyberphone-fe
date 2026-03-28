@@ -15,6 +15,7 @@ import { CreateBrandFormValues } from "@/features/brands/schemas";
 import { MediaRefType } from "@/features/media/enums";
 import { useMedia } from "@/features/media/hooks/useMedia";
 import { handleApiError } from "@/utils";
+import { usePageLayout } from "@/hooks";
 
 export default function EditBrandPage() {
   const { id: brandId } = useParams<{ id: string }>();
@@ -22,6 +23,8 @@ export default function EditBrandPage() {
   const brandQuery = useBrandDetails(brandId);
 
   const brand = brandQuery.data;
+
+  usePageLayout({ segmentLabel: brand?.name });
 
   const updateBrandMutation = useUpdateBrand();
 

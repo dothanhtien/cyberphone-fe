@@ -19,6 +19,7 @@ import { ProductVariant } from "@/features/product-variants/types";
 import { ProductVariantFormValues } from "@/features/product-variants/schemas";
 import { ProductVariantModal } from "@/features/product-variants/components/ProductVariantModal";
 import { ApiError } from "@/types";
+import { usePageLayout } from "@/hooks";
 
 export default function ProductVariantsPage() {
   const params = useParams<{ id: string }>();
@@ -36,6 +37,8 @@ export default function ProductVariantsPage() {
   const updateProductVariantMutation = useUpdateProductVariant();
 
   const { data: attributes } = useProductAttributes(productId);
+
+  usePageLayout();
 
   const handleOpenCreate = () => {
     setEditingVariant(null);

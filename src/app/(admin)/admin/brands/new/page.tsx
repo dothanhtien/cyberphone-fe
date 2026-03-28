@@ -15,10 +15,13 @@ import { CreateBrandRequest } from "@/features/brands/types";
 import { MediaRefType } from "@/features/media/enums";
 import { useMedia } from "@/features/media/hooks/useMedia";
 import { handleApiError } from "@/utils";
+import { usePageLayout } from "@/hooks";
 
 export default function NewBrandPage() {
   const tempId = useMemo(() => uuidv4(), []);
   const router = useRouter();
+
+  usePageLayout();
 
   const createBrandMutation = useCreateBrand();
 

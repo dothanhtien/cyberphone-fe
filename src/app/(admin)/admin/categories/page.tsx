@@ -8,10 +8,12 @@ import { toast } from "sonner";
 import { CategoriesTable } from "@/features/categories/components/CategoriesTable";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
-import { usePagination } from "@/hooks";
+import { usePageLayout, usePagination } from "@/hooks";
 import { useCategories } from "@/features/categories/queries";
 
 export default function CategoriesPage() {
+  usePageLayout();
+
   const {
     pagination,
     setPagination,

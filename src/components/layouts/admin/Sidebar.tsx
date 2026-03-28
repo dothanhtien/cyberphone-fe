@@ -12,7 +12,7 @@ import {
   LogOut,
   Package,
   TabletSmartphone,
-  Users,
+  // Users,
 } from "lucide-react";
 
 import {
@@ -35,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useLayoutStore } from "@/stores/layout";
 
 const menuItems = [
   {
@@ -57,11 +58,11 @@ const menuItems = [
     url: "/admin/products",
     icon: Package,
   },
-  {
-    name: "Users",
-    url: "/admin/dashboard",
-    icon: Users,
-  },
+  // {
+  //   name: "Users",
+  //   url: "/admin/dashboard",
+  //   icon: Users,
+  // },
 ];
 
 const user = {
@@ -72,6 +73,7 @@ const user = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
+  const activeMenu = useLayoutStore((state) => state.activeMenu);
   const { isMobile } = useSidebar();
 
   const handleLogOut = () => {
@@ -87,10 +89,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/admin/dashboard">
                 <div
-                  className={`bg-sidebar-primary text-sidebar-primary-foreground
-                  flex items-center justify-center rounded-lg aspect-square size-8`}
+                  className={`bg-sidebar text-sidebar-primary-foreground
+                  flex items-center justify-center rounded-lg aspect-square`}
                 >
-                  <TabletSmartphone className="size-4 text-orange-400" />
+                  <TabletSmartphone className="text-orange-400 size-6!" />
                 </div>
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -108,7 +110,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.name}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton
+                  asChild
+                  isActive={activeMenu === item.url}
+                  className="
+                    transition-colors
+                    data-[active=true]:bg-sidebar-primary
+                    data-[active=true]:text-white
+                    data-[active=true]:font-semibold
+                  "
+                >
                   <Link href={item.url}>
                     <item.icon />
                     <span>{item.name}</span>

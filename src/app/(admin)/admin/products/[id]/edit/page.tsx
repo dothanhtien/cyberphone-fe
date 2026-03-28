@@ -17,6 +17,7 @@ import { useUpdateProduct } from "@/features/products/mutations";
 import { handleApiError } from "@/utils";
 import { MediaRefType } from "@/features/media/enums";
 import { useMedia } from "@/features/media/hooks/useMedia";
+import { usePageLayout } from "@/hooks";
 
 export default function EditProductPage() {
   const { id: productId } = useParams<{ id: string }>();
@@ -48,6 +49,8 @@ export default function EditProductPage() {
   const categories = categoriesQuery.data?.items ?? [];
 
   const isUpdating = updateProductMutation.isPending;
+
+  usePageLayout({ segmentLabel: product?.name });
 
   const handleUpdateProduct = (values: Partial<CreateProductFormValues>) => {
     updateProductMutation.mutate(

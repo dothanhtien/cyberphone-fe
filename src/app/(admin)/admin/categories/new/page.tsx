@@ -11,9 +11,11 @@ import { CategoryForm } from "@/features/categories/components/CategoryForm";
 import { CreateCategoryFormValues } from "@/features/categories/schemas";
 import { useCreateCategory } from "@/features/categories/mutations";
 import { ApiError } from "@/types";
+import { usePageLayout } from "@/hooks";
 
 export default function NewCategoryPage() {
   const router = useRouter();
+  usePageLayout();
   const createMutation = useCreateCategory();
   const isSubmitting = createMutation.isPending;
 
