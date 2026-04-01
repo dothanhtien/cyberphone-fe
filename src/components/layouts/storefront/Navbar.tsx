@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { TabletSmartphone } from "lucide-react";
+import { LogIn, TabletSmartphone } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { MiniCart } from "@/storefront/cart/components/MiniCart";
 
 export function Navbar() {
@@ -16,7 +17,15 @@ export function Navbar() {
             </span>
           </Link>
 
-          <MiniCart />
+          <div className="flex items-center">
+            <MiniCart />
+
+            <Button variant="ghost" asChild>
+              <Link href="/auth/login">
+                <LogIn />
+              </Link>
+            </Button>
+          </div>
         </div>
       </header>
 
