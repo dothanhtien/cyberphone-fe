@@ -172,11 +172,11 @@ export const RegisterForm = ({ isSubmitting, onSubmit }: RegisterFormProps) => {
           </Field>
 
           <Field>
-            <RequiredFieldLabel htmlFor="passwordConfimation">
+            <RequiredFieldLabel htmlFor="passwordConfirmation">
               Confim password
             </RequiredFieldLabel>
             <Input
-              id="passwordConfimation"
+              id="passwordConfirmation"
               type="password"
               {...register("passwordConfirmation")}
               aria-invalid={!!errors.passwordConfirmation}
@@ -192,7 +192,7 @@ export const RegisterForm = ({ isSubmitting, onSubmit }: RegisterFormProps) => {
           </Button>
 
           <FieldDescription className="text-center">
-            Already have an account?.&nbsp;
+            Already have an account?&nbsp;
             <Link href="/auth/login">Log in</Link>
           </FieldDescription>
         </Field>

@@ -3,8 +3,8 @@ import Link from "next/link";
 import { TabletSmartphone } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "CyberPhone | Login",
-  description: "Log in to the CyberPhone admin portal",
+  title: "CyberPhone | Authentication",
+  description: "CyberPhone admin portal authentication",
 };
 
 export default function AdminLoginLayout({
@@ -14,7 +14,10 @@ export default function AdminLoginLayout({
 }>) {
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <Link href="/" className="flex items-center gap-2 self-center font-bold text-2xl">
+      <Link
+        href="/"
+        className="flex items-center gap-2 self-center font-bold text-2xl"
+      >
         <TabletSmartphone className="size-8 text-orange-400" />
         CyberPhone
       </Link>
