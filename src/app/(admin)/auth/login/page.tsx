@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2Icon, TabletSmartphone } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -72,70 +72,53 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <Link
-          href="/"
-          className="flex items-center gap-2 self-center font-bold"
-        >
-          <TabletSmartphone className="size-6 text-orange-400" />
-          CyberPhone
-        </Link>
+    <Card className="w-full max-w-sm">
+      <CardHeader className="text-center">
+        <CardTitle>Welcome back</CardTitle>
+      </CardHeader>
 
-        <div className="flex flex-col gap-6">
-          <Card>
-            <CardHeader className="text-center">
-              <CardTitle className="text-xl">Welcome back</CardTitle>
-            </CardHeader>
+      <CardContent>
+        <form onSubmit={handleLogin}>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="identifier">Username / Phone</FieldLabel>
+              <Input
+                id="identifier"
+                required
+                disabled={loginMutation.isPending}
+                onChange={(e) =>
+                  handleInputChange("identifier", e.target.value)
+                }
+              />
+            </Field>
 
-            <CardContent>
-              <form onSubmit={handleLogin}>
-                <FieldGroup>
-                  <Field>
-                    <FieldLabel htmlFor="identifier">
-                      Username / Phone
-                    </FieldLabel>
-                    <Input
-                      id="identifier"
-                      required
-                      disabled={loginMutation.isPending}
-                      onChange={(e) =>
-                        handleInputChange("identifier", e.target.value)
-                      }
-                    />
-                  </Field>
+            <Field>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <Input
+                id="password"
+                type="password"
+                required
+                disabled={loginMutation.isPending}
+                onChange={(e) => handleInputChange("password", e.target.value)}
+              />
+            </Field>
 
-                  <Field>
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input
-                      id="password"
-                      type="password"
-                      required
-                      disabled={loginMutation.isPending}
-                      onChange={(e) =>
-                        handleInputChange("password", e.target.value)
-                      }
-                    />
-                  </Field>
+            <Field>
+              <Button type="submit" disabled={loginMutation.isPending}>
+                {loginMutation.isPending && (
+                  <Loader2Icon className="animate-spin" />
+                )}
+                Login
+              </Button>
 
-                  <Field>
-                    <Button type="submit" disabled={loginMutation.isPending}>
-                      {loginMutation.isPending && (
-                        <Loader2Icon className="animate-spin" />
-                      )}
-                      Login
-                    </Button>
-
-                    <FieldDescription className="text-center">
-                      Don&apos;t have an account? <Link href="/">Sign up</Link>
-                    </FieldDescription>
-                  </Field>
-                </FieldGroup>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
+              <FieldDescription className="text-center">
+                Don&apos;t have an account?{" "}
+                <Link href="/auth/register">Sign up</Link>
+              </FieldDescription>
+            </Field>
+          </FieldGroup>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

@@ -13,3 +13,9 @@ export enum OrderStatus {
   COMPLETED = "completed",
   CANCELLED = "cancelled",
 }
+
+export enum Gender {
+  MALE = "male",
+  FEMALE = "female",
+  OTHER = "other",
+}
