@@ -49,13 +49,11 @@ export default function LoginPage() {
       onSuccess: (response) => {
         localStorage.setItem("accessToken", response.accessToken);
         router.push("/admin/dashboard");
+        setCredentials({ identifier: "", password: "" });
       },
       onError: (error) => {
         console.log("Login failed: ", error);
-        toast.error("Username/Phone or password is invalid");
-      },
-      onSettled: () => {
-        setCredentials({ identifier: "", password: "" });
+        toast.error("Phone/Email or password is invalid");
       },
     });
   };
@@ -81,7 +79,7 @@ export default function LoginPage() {
         <form onSubmit={handleLogin}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="identifier">Username / Phone</FieldLabel>
+              <FieldLabel htmlFor="identifier">Phone / Email</FieldLabel>
               <Input
                 id="identifier"
                 required

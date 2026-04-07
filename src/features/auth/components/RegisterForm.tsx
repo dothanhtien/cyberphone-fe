@@ -58,18 +58,6 @@ export const RegisterForm = ({ isSubmitting, onSubmit }: RegisterFormProps) => {
       <FieldGroup>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field>
-            <RequiredFieldLabel htmlFor="username">Username</RequiredFieldLabel>
-            <Input
-              id="username"
-              {...register("username")}
-              aria-invalid={!!errors.username}
-            />
-            <FieldError>{errors.username?.message}</FieldError>
-          </Field>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field>
             <RequiredFieldLabel htmlFor="phone">Phone</RequiredFieldLabel>
             <Input
               id="phone"
