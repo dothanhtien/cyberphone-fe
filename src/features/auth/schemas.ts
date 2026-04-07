@@ -3,10 +3,6 @@ import { Gender } from "@/enums";
 
 export const registerSchema = z
   .object({
-    username: z
-      .string()
-      .min(1, "Username is required")
-      .max(100, "Username must be at most 100 characters"),
     phone: z
       .string()
       .min(1, "Phone is required")
