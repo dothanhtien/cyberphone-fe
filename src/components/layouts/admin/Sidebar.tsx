@@ -92,6 +92,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         clearSession();
         router.push("/auth/login");
       },
+      onError: () => {
+        clearSession();
+        router.push("/auth/login");
+      },
     });
   };
 
