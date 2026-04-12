@@ -1,36 +1,43 @@
 "use client";
 
-import { useEffect, useState, ReactNode } from "react";
+import { useEffect, ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
+
+import { AuthUserType } from "@/features/auth/types";
+import { useAuthStore } from "@/stores/auth";
 
 interface ProtectedRouteProps {
   children: ReactNode;
+  allowedType?: AuthUserType;
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+export function ProtectedRoute({ children, allowedType }: ProtectedRouteProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
-    const checkAuthentication = () => {
-      let token: string | null = null;
-      if (typeof window !== "undefined") {
-        token = localStorage.getItem("accessToken");
-      }
+    if (!hasHydrated) return;
 
-      if (!token && pathname !== "/auth/login") {
-        router.push("/auth/login");
-      }
-      setIsAuthenticated(!!token);
-      setIsAuthChecked(true);
-    };
+    if (!isAuthenticated) {
+      if (pathname !== "/auth/login") router.push("/auth/login");
+      return;
+    }
 
-    checkAuthentication();
-  }, [router, pathname]);
+    if (allowedType && user?.type !== allowedType) {
+      router.replace(
+        user?.type === "customer" ? "/customers/orders" : "/admin/dashboard",
+      );
+    }
+  }, [hasHydrated, isAuthenticated, user, allowedType, pathname, router]);
 
-  if (!isAuthChecked) return null;
+  if (!hasHydrated) return null;
 
-  return isAuthenticated ? <>{children}</> : null;
+  if (!isAuthenticated) return null;
+
+  if (allowedType && user?.type !== allowedType) return null;
+
+  return <>{children}</>;
 }

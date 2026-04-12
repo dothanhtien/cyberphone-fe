@@ -9,4 +9,6 @@ export const authApi = {
   register: async (data: RegisterRequest): Promise<{ id: string }> => {
     return apiClient.post<{ id: string }>("/auth/register", data);
   },
+
+  logout: async (): Promise<void> => apiClient.post("/auth/logout"),
 };

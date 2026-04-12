@@ -1,17 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { queryKeys } from "@/lib/react-query/queryKeys";
-import { useCartStore } from "@/stores/cart";
 import { storefrontCartApi } from "./api";
+import { ResolveCartRequest } from "./types";
+import { queryKeys } from "@/lib/react-query/queryKeys";
+import { useAuthStore } from "@/stores/auth";
+import { useCartStore } from "@/stores/cart";
 
 export const useStorefrontCart = ({ enabled = true } = {}) => {
   const cart = useCartStore((state) => state.cart);
+  const user = useAuthStore((state) => state.user);
   const hasHydrated = useCartStore((state) => state.hasHydrated);
   const setCart = useCartStore((state) => state.setCart);
 
-  const resolvedParams = {
+  const resolvedParams: ResolveCartRequest = {
     sessionId: cart?.sessionId,
-    userId: cart?.userId,
+    customerId: cart?.userId ?? user?.id,
   };
 
   return useQuery({

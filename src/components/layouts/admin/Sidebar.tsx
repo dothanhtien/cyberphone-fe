@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LogOut,
   Package,
+  ShoppingBag,
   TabletSmartphone,
   // Users,
 } from "lucide-react";
@@ -34,10 +35,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useLayoutStore } from "@/stores/layout";
+import { useAuthStore } from "@/stores/auth";
+import { useLogout } from "@/features/auth/mutations";
 
-const menuItems = [
+const userMenuItems = [
   {
     name: "Dashboard",
     url: "/admin/dashboard",
@@ -65,21 +68,42 @@ const menuItems = [
   // },
 ];
 
-const user = {
-  name: "Spider Man",
-  email: "m@example.com",
-  avatar: "https://ui.shadcn.com/avatars/shadcn.jpg",
-};
+const customerMenuItems = [
+  {
+    name: "My Orders",
+    url: "/customers/orders",
+    icon: ShoppingBag,
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   const activeMenu = useLayoutStore((state) => state.activeMenu);
+  const user = useAuthStore((state) => state.user);
+  const menuItems =
+    user?.type === "customer" ? customerMenuItems : userMenuItems;
+  const clearSession = useAuthStore((state) => state.clearSession);
   const { isMobile } = useSidebar();
+  const logoutMutation = useLogout();
 
   const handleLogOut = () => {
-    localStorage.removeItem("accessToken");
-    router.push("/auth/login");
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
+        clearSession();
+        router.push("/auth/login");
+      },
+    });
   };
+
+  const displayName =
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "Admin";
+  const displayEmail = user?.email ?? user?.phone ?? "No contact info";
+  const avatarFallback = displayName
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -97,7 +121,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">CyberPhone</span>
-                  <span className="truncate text-xs">Admin Portal</span>
+                  <span className="truncate text-xs">
+                    {user?.type === "user" ? "Admin" : "Customer"} Portal
+                  </span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -141,13 +167,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                    <AvatarFallback className="rounded-lg">
+                      {avatarFallback || "AD"}
+                    </AvatarFallback>
                   </Avatar>
 
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{user.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                    <span className="truncate font-medium">{displayName}</span>
+                    <span className="truncate text-xs">{displayEmail}</span>
                   </div>
 
                   <ChevronsUpDown className="ml-auto size-4" />
@@ -163,13 +190,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                      <AvatarFallback className="rounded-lg">
+                        {avatarFallback || "AD"}
+                      </AvatarFallback>
                     </Avatar>
 
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-medium">{user.name}</span>
-                      <span className="truncate text-xs">{user.email}</span>
+                      <span className="truncate font-medium">
+                        {displayName}
+                      </span>
+                      <span className="truncate text-xs">{displayEmail}</span>
                     </div>
                   </div>
                 </DropdownMenuLabel>
