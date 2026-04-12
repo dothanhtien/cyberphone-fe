@@ -6,9 +6,9 @@ import { AppSidebar } from "@/components/layouts/admin/Sidebar";
 import { AppSidebarInset } from "@/components/layouts/admin/SidebarInset";
 
 export const metadata: Metadata = {
-  title: "CyberPhone | Admin",
+  title: "CyberPhone | Customer",
   description:
-    "Admin dashboard for CyberPhone - Manage users, brands, categories and products",
+    "Customer dashboard for CyberPhone - View orders, payments and your profile",
 };
 
 export default function AdminLayout({
@@ -17,7 +17,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ProtectedRoute allowedType="user">
+    <ProtectedRoute allowedType="customer">
       <SidebarProvider>
         <AppSidebar />
         <AppSidebarInset>

@@ -1,5 +1,15 @@
 import { Gender } from "@/enums";
-import { User } from "@/features/users/types";
+
+export type AuthUserType = "user" | "customer";
+
+export interface AuthUser {
+  id: string;
+  type: AuthUserType;
+  phone: string;
+  email: string | null;
+  firstName: string;
+  lastName: string;
+}
 
 export interface LoginRequest {
   identifier: string;
@@ -7,7 +17,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  data: User;
+  data: AuthUser;
+  accessToken: string;
+}
+
+export interface RefreshTokenResponse {
   accessToken: string;
 }
 

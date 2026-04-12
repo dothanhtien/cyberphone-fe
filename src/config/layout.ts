@@ -132,4 +132,14 @@ export const layoutConfigMap: Record<
       },
     ],
   }),
+  "/customers/orders": () => ({
+    title: "My orders",
+    activeMenuKey: "/customers/orders",
+    breadcrumbs: [
+      {
+        label: "Orders",
+        href: "/customers/orders",
+      },
+    ],
+  }),
 };

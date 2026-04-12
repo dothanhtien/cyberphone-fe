@@ -36,9 +36,7 @@ export function ReviewCartItem({ item }: ReviewCartItemProps) {
     increaseCartItemQuantityMutation.mutate(
       { cartId: cart.id, itemId: item.id },
       {
-        onSuccess(data) {
-          increaseItemQuantity(data.id, data.quantity);
-        },
+        onSuccess: () => increaseItemQuantity(item.id),
       },
     );
   };
@@ -49,9 +47,7 @@ export function ReviewCartItem({ item }: ReviewCartItemProps) {
     decreaseCartItemQuantityMutation.mutate(
       { cartId: cart.id, itemId: item.id },
       {
-        onSuccess(data) {
-          decreaseItemQuantity(data.id, data.quantity);
-        },
+        onSuccess: () => decreaseItemQuantity(item.id),
       },
     );
   };
@@ -62,9 +58,7 @@ export function ReviewCartItem({ item }: ReviewCartItemProps) {
     removeCartItemMutation.mutate(
       { cartId: cart.id, itemId: item.id },
       {
-        onSuccess(data) {
-          removeItem(data.id);
-        },
+        onSuccess: () => removeItem(item.id),
       },
     );
   };

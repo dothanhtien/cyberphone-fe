@@ -9,6 +9,12 @@ export const useLogin = () => {
   });
 };
 
+export const useLogout = () => {
+  return useMutation({
+    mutationFn: () => authApi.logout(),
+  });
+};
+
 export const useRegister = () => {
   return useMutation({
     mutationFn: (data: RegisterRequest) => authApi.register(data),

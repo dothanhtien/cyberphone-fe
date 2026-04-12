@@ -17,38 +17,43 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginRequest } from "@/features/auth/types";
 import { useLogin } from "@/features/auth/mutations";
+import { useAuthStore } from "@/stores/auth";
 
 export default function LoginPage() {
   const [credentials, setCredentials] = useState<LoginRequest>({
     identifier: "",
     password: "",
   });
-  const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
   const loginMutation = useLogin();
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const user = useAuthStore((state) => state.user);
+  const setSession = useAuthStore((state) => state.setSession);
+
+  const getRedirectPath = (type: string) =>
+    type === "customer" ? "/customers/orders" : "/admin/dashboard";
 
   useEffect(() => {
-    const checkAuthentication = () => {
-      const token = localStorage.getItem("accessToken");
-      if (token) {
-        router.replace("/admin/dashboard");
-      } else {
-        setCheckingAuth(false);
-      }
-    };
+    if (!hasHydrated) return;
 
-    checkAuthentication();
-  }, [router]);
+    if (isAuthenticated && user) {
+      router.replace(getRedirectPath(user.type));
+    }
+  }, [hasHydrated, isAuthenticated, user, router]);
 
-  if (checkingAuth) return null;
+  if (!hasHydrated || isAuthenticated) return null;
 
   const handleLogin = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     loginMutation.mutate(credentials, {
       onSuccess: (response) => {
-        localStorage.setItem("accessToken", response.accessToken);
-        router.push("/admin/dashboard");
+        setSession({
+          user: response.data,
+          accessToken: response.accessToken,
+        });
+        router.push(getRedirectPath(response.data.type));
         setCredentials({ identifier: "", password: "" });
       },
       onError: (error) => {

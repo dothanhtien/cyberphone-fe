@@ -32,7 +32,7 @@ export interface Cart {
 }
 
 export interface ResolveCartRequest {
-  userId?: string | null;
+  customerId?: string | null;
   sessionId?: string | null;
 }
 
