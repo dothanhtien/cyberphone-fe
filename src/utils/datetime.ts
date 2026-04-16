@@ -12,7 +12,7 @@ export function formatDateTime(
 ) {
   if (!value) return options?.fallback ?? "-";
 
-  const format = options?.format ?? "YYYY-MM-DD HH:mm";
+  const format = options?.format ?? "YYYY-MM-DD HH:mm:ss";
   const tz = options?.timezone ?? DEFAULT_TZ;
 
   return dayjs(value).tz(tz).format(format);
