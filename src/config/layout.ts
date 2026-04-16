@@ -132,6 +132,28 @@ export const layoutConfigMap: Record<
       },
     ],
   }),
+
+  "/admin/orders": () => ({
+    title: "Orders",
+    activeMenuKey: "/admin/orders",
+    breadcrumbs: [
+      {
+        label: "Orders",
+        href: "/admin/orders",
+      },
+    ],
+  }),
+  "/admin/orders/[id]": (params) => ({
+    title: "Order details",
+    activeMenuKey: "/admin/orders",
+    breadcrumbs: [
+      { label: "Orders", href: "/admin/orders" },
+      {
+        label: params?.segmentLabel || "Details",
+      },
+    ],
+  }),
+
   "/customers/orders": () => ({
     title: "My orders",
     activeMenuKey: "/customers/orders",

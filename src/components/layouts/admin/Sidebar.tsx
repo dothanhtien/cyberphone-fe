@@ -39,6 +39,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useLayoutStore } from "@/stores/layout";
 import { useAuthStore } from "@/stores/auth";
 import { useLogout } from "@/features/auth/mutations";
+import { getAvatarFallback, getDisplayName } from "@/utils";
 
 const userMenuItems = [
   {
@@ -60,6 +61,11 @@ const userMenuItems = [
     name: "Products",
     url: "/admin/products",
     icon: Package,
+  },
+  {
+    name: "Orders",
+    url: "/admin/orders",
+    icon: ShoppingBag,
   },
   // {
   //   name: "Users",
@@ -99,15 +105,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     });
   };
 
-  const displayName =
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "Admin";
+  const displayName = getDisplayName({
+    firstName: user?.firstName,
+    lastName: user?.lastName,
+    fallbackName: "Admin",
+  });
   const displayEmail = user?.email ?? user?.phone ?? "No contact info";
-  const avatarFallback = displayName
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
+  const avatarFallback = getAvatarFallback(displayName);
 
   return (
     <Sidebar variant="inset" {...props}>

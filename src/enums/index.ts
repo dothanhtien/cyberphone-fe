@@ -5,6 +5,17 @@ export enum PaymentProvider {
   ZALOPAY = "zalopay",
 }
 
+export enum PaymentMethod {
+  MOMO = "momo",
+}
+
+export enum PaymentStatus {
+  PENDING = "pending",
+  SUCCESS = "success",
+  FAILED = "failed",
+  CANCELLED = "cancelled",
+}
+
 export enum OrderStatus {
   PENDING = "pending",
   CONFIRMED = "confirmed",
