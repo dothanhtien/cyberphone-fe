@@ -47,7 +47,7 @@ export const ordersColumns: ColumnDef<Order>[] = [
     header: () => <div className="text-right">Total</div>,
     cell: ({ cell }) => (
       <div className="text-right font-medium text-red-500">
-        {formatCurrency(cell.getValue<number>())}
+        {formatCurrency(cell.getValue<string>())}
         <span className="ml-1">VND</span>
       </div>
     ),

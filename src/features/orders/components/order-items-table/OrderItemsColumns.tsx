@@ -35,7 +35,7 @@ export const orderItemsColumns: ColumnDef<OrderItem>[] = [
     header: () => <div className="text-right">Unit price</div>,
     cell: ({ cell }) => (
       <div className="text-right font-medium">
-        {formatCurrency(cell.getValue<number>())}
+        {formatCurrency(cell.getValue<string>())}
         <span className="ml-1">VND</span>
       </div>
     ),
@@ -45,9 +45,7 @@ export const orderItemsColumns: ColumnDef<OrderItem>[] = [
     header: () => <div className="text-right">Sale price</div>,
     cell: ({ cell }) => (
       <div className="text-right font-medium">
-        {cell.getValue<number>()
-          ? formatCurrency(cell.getValue<number>())
-          : "0"}
+        {formatCurrency(cell.getValue<string>() ?? "0") || "0"}
         <span className="ml-1">VND</span>
       </div>
     ),
@@ -57,9 +55,7 @@ export const orderItemsColumns: ColumnDef<OrderItem>[] = [
     header: () => <div className="text-right">Subtotal</div>,
     cell: ({ cell }) => (
       <div className="text-right font-medium">
-        {cell.getValue<number>()
-          ? formatCurrency(cell.getValue<number>())
-          : "0"}
+        {formatCurrency(cell.getValue<string>() ?? "0") || "0"}
         <span className="ml-1">VND</span>
       </div>
     ),

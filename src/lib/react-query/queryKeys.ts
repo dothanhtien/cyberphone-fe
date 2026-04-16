@@ -42,8 +42,7 @@ export const queryKeys = {
     all: ["orders"] as const,
     list: (params?: PaginationParams) =>
       [...queryKeys.orders.all, "list", params] as const,
-    details: (id: string) =>
-      [...queryKeys.products.all, "details", id] as const,
+    details: (id: string) => [...queryKeys.orders.all, "details", id] as const,
   },
   dashboard: {
     all: ["dashboard"] as const,
