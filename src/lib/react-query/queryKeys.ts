@@ -1,8 +1,8 @@
-import { PaginationParams, StorefrontPaginationParams } from "@/types";
-import { ResolveCartRequest } from "@/storefront/cart/types";
 import { PaymentProvider } from "@/enums";
 import { FilterParams } from "@/features/dashboard/types";
 import { GetMediaItemsParams } from "@/features/media/types";
+import { ResolveCartRequest } from "@/storefront/cart/types";
+import { PaginationParams, StorefrontPaginationParams } from "@/types";
 
 export const queryKeys = {
   auth: {
@@ -13,6 +13,8 @@ export const queryKeys = {
     all: ["categories"] as const,
     list: (params?: PaginationParams) =>
       [...queryKeys.categories.all, "list", params] as const,
+    details: (id: string) =>
+      [...queryKeys.categories.all, "details", id] as const,
   },
   brands: {
     all: ["brands"] as const,

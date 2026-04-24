@@ -1,15 +1,83 @@
 "use client";
 
+import { Trash } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { SquarePen, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Category } from "@/features/categories/types";
-import { formatDateTime } from "@/utils";
 import { DEFAULT_IMAGE } from "@/constants";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Category } from "@/features/categories/types";
 
-export const categoriesColumns: ColumnDef<Category>[] = [
+interface GetCategoriesColumnsProps {
+  onDelete?: (id: string) => void;
+}
+
+function DeleteCell({
+  category,
+  onDelete,
+}: {
+  category: Category;
+  onDelete?: (id: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const canDelete = !category.productCount;
+
+  return (
+    <div className="text-center" onClick={(e) => e.stopPropagation()}>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn("size-8", canDelete ? "text-red-500" : "")}
+            onClick={(e) => e.stopPropagation()}
+            disabled={!canDelete}
+          >
+            <Trash />
+          </Button>
+        </PopoverTrigger>
+
+        <PopoverContent align="end" className="flex flex-col gap-2">
+          <div>Are you sure you want to delete this category?</div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpen(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete?.(category.id);
+                setOpen(false);
+              }}
+            >
+              Confirm
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+export const getCategoriesColumns = ({
+  onDelete,
+}: GetCategoriesColumnsProps): ColumnDef<Category>[] => [
   {
     accessorKey: "logo",
     header: () => <div className="text-center">Logo</div>,
@@ -42,30 +110,17 @@ export const categoriesColumns: ColumnDef<Category>[] = [
     header: "Slug",
   },
   {
-    accessorKey: "createdAt",
-    header: "Created At",
-    cell: ({ cell }) => formatDateTime(cell.getValue<string>()),
-  },
-  {
-    accessorKey: "updatedAt",
-    header: "Updated At",
-    cell: ({ cell }) => formatDateTime(cell.getValue<string>()),
+    accessorKey: "productCount",
+    header: () => <div className="text-center">Products</div>,
+    cell: ({ row }) => (
+      <div className="text-center">{row.original.productCount}</div>
+    ),
   },
   {
     id: "actions",
     header: () => <div className="text-center">Actions</div>,
-    cell: () => {
-      return (
-        <div className="text-center">
-          <Button variant="ghost" size="icon" className="size-8">
-            <SquarePen />
-          </Button>
-
-          <Button variant="ghost" size="icon" className="size-8 text-red-500">
-            <Trash />
-          </Button>
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <DeleteCell category={row.original} onDelete={onDelete} />
+    ),
   },
 ];
