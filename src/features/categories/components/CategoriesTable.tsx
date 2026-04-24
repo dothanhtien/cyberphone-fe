@@ -1,16 +1,10 @@
 import { PaginationState } from "@tanstack/react-table";
 
+import { getCategoriesColumns } from "./CategoriesColumns";
 import { DataTable } from "@/components/data-table/DataTable";
-import { categoriesColumns } from "./CategoriesColumns";
 import { Category } from "@/features/categories/types";
 
-export function CategoriesTable({
-  data = [],
-  loading,
-  pagination,
-  pageCount,
-  onPaginationChange,
-}: {
+interface CategoriesTableProps {
   data: Category[];
   loading?: boolean;
   pagination: PaginationState;
@@ -18,15 +12,28 @@ export function CategoriesTable({
   onPaginationChange: (
     updater: PaginationState | ((old: PaginationState) => PaginationState),
   ) => void;
-}) {
+  onDelete?: (id: string) => void;
+  onRowClick?: (category: Category) => void;
+}
+
+export function CategoriesTable({
+  data = [],
+  loading,
+  pagination,
+  pageCount,
+  onPaginationChange,
+  onDelete,
+  onRowClick,
+}: CategoriesTableProps) {
   return (
     <DataTable
-      columns={categoriesColumns}
+      columns={getCategoriesColumns({ onDelete })}
       data={data}
       loading={loading}
       pageCount={pageCount}
       pagination={pagination}
       onPaginationChange={onPaginationChange}
+      onRowClick={onRowClick}
     />
   );
 }

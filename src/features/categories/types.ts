@@ -4,18 +4,24 @@ export interface Category {
   slug: string;
   description: string | null;
   parentId: string | null;
-  isActive: boolean;
-  createdAt: string;
-  createdBy: string;
-  updatedAt: string | null;
-  updatedBy: string | null;
   logo: string | null;
+  productCount: number;
 }
 
 export interface CreateCategoryRequest {
+  id?: string;
   name: string;
   slug: string;
   parentId?: string | null;
   description?: string | null;
   logo?: File;
+}
+
+export interface UpdateCategoryRequest {
+  name?: string;
+  slug?: string;
+  parentId?: string | null;
+  description?: string | null;
+  logo?: File | null;
+  removeLogo?: boolean;
 }
