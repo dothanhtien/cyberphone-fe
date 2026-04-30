@@ -11,6 +11,14 @@ export interface StorefrontProduct {
   variantId: string;
 }
 
+export interface StorefrontHomeData extends Record<
+  string,
+  StorefrontProduct[]
+> {
+  newProducts: StorefrontProduct[];
+  featuredProducts: StorefrontProduct[];
+}
+
 export interface StorefrontProductAttribute {
   id: string;
   attributeKey: string;

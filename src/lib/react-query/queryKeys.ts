@@ -66,6 +66,7 @@ export const queryKeys = {
     all: ["storefront"] as const,
     products: {
       all: () => [...queryKeys.storefront.all, "products"] as const,
+      home: () => [...queryKeys.storefront.products.all(), "home"] as const,
       list: (params: StorefrontPaginationParams = {}) => [
         ...queryKeys.storefront.products.all(),
         "list",

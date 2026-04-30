@@ -5,13 +5,13 @@ import Image from "next/image";
 import { Heart, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 
+import { StorefrontProduct } from "../types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { StorefrontProduct } from "../types";
-import { formatCurrency } from "@/utils";
+import { DEFAULT_IMAGE } from "@/constants";
 import { useAddToCart } from "@/storefront/cart/mutations";
 import { useCartStore } from "@/stores/cart";
-import { DEFAULT_IMAGE } from "@/constants";
+import { formatCurrency } from "@/utils";
 
 interface ProductItemProps {
   product: StorefrontProduct;
@@ -25,6 +25,11 @@ export function ProductItem({ product }: ProductItemProps) {
   const handleClickAddToCart = () => {
     if (!cart) {
       toast.error("Cart is loading. Please try again.");
+      return;
+    }
+
+    if (!product.variantId) {
+      toast.error("Please select a variant before adding to cart.");
       return;
     }
 

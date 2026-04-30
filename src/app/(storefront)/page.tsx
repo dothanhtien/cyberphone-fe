@@ -11,7 +11,7 @@ import { Slider } from "@/storefront/home/components/Slider";
 export default async function Home() {
   const queryClient = new QueryClient();
 
-  await prefetchStorefrontProducts(queryClient, {});
+  await prefetchStorefrontProducts(queryClient);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
