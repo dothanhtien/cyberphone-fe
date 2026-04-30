@@ -1,10 +1,17 @@
 import { GraphQLClient } from "graphql-request";
-import type { RequestDocument, RequestOptions, Variables } from "graphql-request";
+import type {
+  RequestDocument,
+  RequestOptions,
+  Variables,
+} from "graphql-request";
 import { useAuthStore } from "@/stores/auth";
 
-const endpoint =
-  process.env.NEXT_PUBLIC_GRAPHQL_URL ||
-  `${process.env.NEXT_PUBLIC_GRAPHQL_URL}/graphql`;
+const baseUrl = process.env.NEXT_PUBLIC_GRAPHQL_URL;
+const endpoint = baseUrl
+  ? baseUrl.endsWith("/graphql")
+    ? baseUrl
+    : `${baseUrl.replace(/\/$/, "")}/graphql`
+  : "/graphql";
 
 const client = new GraphQLClient(endpoint, {
   credentials: "include",

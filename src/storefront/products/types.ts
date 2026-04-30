@@ -3,7 +3,6 @@ export interface StorefrontProduct {
   name: string;
   slug: string;
   shortDescription: string | null;
-  longDescription: string | null;
   price: number;
   salePrice: number | null;
   inStock: boolean;
