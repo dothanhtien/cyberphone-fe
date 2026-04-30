@@ -1,16 +1,13 @@
 import { QueryClient } from "@tanstack/react-query";
 
-import { StorefrontPaginationParams } from "@/types";
-import { queryKeys } from "@/lib/react-query/queryKeys";
 import { storefrontProductsApi } from "./api";
+import { fetchStorefrontProducts } from "./graphql";
+import { queryKeys } from "@/lib/react-query/queryKeys";
 
-export async function prefetchStorefrontProducts(
-  queryClient: QueryClient,
-  params: StorefrontPaginationParams = {},
-) {
+export async function prefetchStorefrontProducts(queryClient: QueryClient) {
   return queryClient.prefetchQuery({
-    queryKey: queryKeys.storefront.products.list(params),
-    queryFn: () => storefrontProductsApi.findAll(params),
+    queryKey: queryKeys.storefront.products.home(),
+    queryFn: () => fetchStorefrontProducts(),
     staleTime: 1000 * 60,
   });
 }

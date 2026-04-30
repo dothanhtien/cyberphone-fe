@@ -3,12 +3,19 @@ export interface StorefrontProduct {
   name: string;
   slug: string;
   shortDescription: string | null;
-  longDescription: string | null;
   price: number;
   salePrice: number | null;
   inStock: boolean;
   mainImage: string | null;
   variantId: string;
+}
+
+export interface StorefrontHomeData extends Record<
+  string,
+  StorefrontProduct[]
+> {
+  newProducts: StorefrontProduct[];
+  featuredProducts: StorefrontProduct[];
 }
 
 export interface StorefrontProductAttribute {
