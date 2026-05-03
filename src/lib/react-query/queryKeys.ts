@@ -62,6 +62,11 @@ export const queryKeys = {
       [...queryKeys.media.all, "getMediaItems", params] as const,
   },
 
+  configurations: {
+    all: ["configurations"] as const,
+    sliders: () => [...queryKeys.configurations.all, "sliders"] as const,
+  },
+
   storefront: {
     all: ["storefront"] as const,
     products: {

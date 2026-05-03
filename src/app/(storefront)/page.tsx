@@ -7,6 +7,7 @@ import {
 import { ProductList } from "@/storefront/products/components/ProductList";
 import { prefetchStorefrontProducts } from "@/storefront/products/prefetch";
 import { Slider } from "@/storefront/home/components/Slider";
+import { HeroSection } from "@/storefront/home/components/HeroSection";
 
 export default async function Home() {
   const queryClient = new QueryClient();
@@ -15,9 +16,7 @@ export default async function Home() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="mt-2">
-        <Slider />
-      </div>
+      <HeroSection slider={<Slider />} />
 
       <div className="mt-6">
         <ProductList />

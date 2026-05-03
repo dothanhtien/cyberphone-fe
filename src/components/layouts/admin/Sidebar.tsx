@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LogOut,
   Package,
+  Settings,
   ShoppingBag,
   TabletSmartphone,
   // Users,
@@ -21,6 +22,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -41,37 +43,35 @@ import { useAuthStore } from "@/stores/auth";
 import { useLogout } from "@/features/auth/mutations";
 import { getAvatarFallback, getDisplayName } from "@/utils";
 
-const userMenuItems = [
+const userNavGroups = [
   {
-    name: "Dashboard",
-    url: "/admin/dashboard",
-    icon: LayoutDashboard,
+    label: null,
+    items: [
+      { name: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
+    ],
   },
   {
-    name: "Brands",
-    url: "/admin/brands",
-    icon: BadgeCheck,
+    label: "Catalog",
+    items: [
+      { name: "Brands", url: "/admin/brands", icon: BadgeCheck },
+      { name: "Categories", url: "/admin/categories", icon: Layers },
+      { name: "Products", url: "/admin/products", icon: Package },
+    ],
   },
   {
-    name: "Categories",
-    url: "/admin/categories",
-    icon: Layers,
+    label: "Sales",
+    items: [{ name: "Orders", url: "/admin/orders", icon: ShoppingBag }],
   },
   {
-    name: "Products",
-    url: "/admin/products",
-    icon: Package,
+    label: "Configuration",
+    items: [
+      {
+        name: "Storefront",
+        url: "/admin/configurations/storefront",
+        icon: Settings,
+      },
+    ],
   },
-  {
-    name: "Orders",
-    url: "/admin/orders",
-    icon: ShoppingBag,
-  },
-  // {
-  //   name: "Users",
-  //   url: "/admin/dashboard",
-  //   icon: Users,
-  // },
 ];
 
 const customerMenuItems = [
@@ -86,8 +86,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   const activeMenu = useLayoutStore((state) => state.activeMenu);
   const user = useAuthStore((state) => state.user);
-  const menuItems =
-    user?.type === "customer" ? customerMenuItems : userMenuItems;
+  const navGroups =
+    user?.type === "customer"
+      ? [{ label: null, items: customerMenuItems }]
+      : userNavGroups;
   const clearSession = useAuthStore((state) => state.clearSession);
   const { isMobile } = useSidebar();
   const logoutMutation = useLogout();
@@ -140,29 +142,37 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-          <SidebarMenu>
-            {menuItems.map((item) => (
-              <SidebarMenuItem key={item.name}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={activeMenu === item.url}
-                  className="
-                    transition-colors
-                    data-[active=true]:bg-sidebar-primary
-                    data-[active=true]:text-white
-                    data-[active=true]:font-semibold
-                  "
-                >
-                  <Link href={item.url}>
-                    <item.icon />
-                    <span>{item.name}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
+        {navGroups.map((group) => (
+          <SidebarGroup
+            key={group.label}
+            className="group-data-[collapsible=icon]:hidden"
+          >
+            {group.label && (
+              <SidebarGroupLabel>{group.label.toUpperCase()}</SidebarGroupLabel>
+            )}
+            <SidebarMenu>
+              {group.items.map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={activeMenu === item.url}
+                    className="
+                      transition-colors
+                      data-[active=true]:bg-sidebar-primary
+                      data-[active=true]:text-white
+                      data-[active=true]:font-semibold
+                    "
+                  >
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter>
