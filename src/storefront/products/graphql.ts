@@ -1,58 +1,50 @@
 import { gql } from "graphql-request";
 
-import { HOME_CATEGORY_SECTIONS } from "@/config/storefront";
-import { gqlRequest } from "@/lib/graphql/client";
 import { StorefrontHomeData } from "./types";
+import { gqlRequest } from "@/lib/graphql/client";
 
-const categoryFields = HOME_CATEGORY_SECTIONS.map(
-  ({ slug }) =>
-    `${slug.replace(/-/g, "_")}: categoryProducts(categorySlug: "${slug}", limit: $limit) {
-      id 
-      name 
-      slug 
-      shortDescription 
-      isFeatured 
-      isBestseller 
-      price 
-      salePrice  
-      inStock 
-      mainImage
-      variantId
-    }`,
-).join("\n");
-
-const GET_HOME_PRODUCTS = gql`
-  query StorefrontHome($limit: Int = 10) {
-    newProducts(limit: $limit) {
-      id 
-      name 
-      slug 
-      shortDescription 
-      isFeatured 
-      isBestseller 
-      price 
-      salePrice  
-      inStock 
-      mainImage
-      variantId
-    }
-    featuredProducts(limit: $limit) {
-      id 
-      name 
-      slug 
-      shortDescription 
-      isFeatured 
-      isBestseller 
-      price 
-      salePrice  
-      inStock 
-      mainImage
-      variantId
-    }
-    ${categoryFields}
-  }
+const PRODUCT_FIELDS = `
+  id
+  name
+  slug
+  shortDescription
+  isFeatured
+  isBestseller
+  price
+  salePrice
+  inStock
+  mainImage
+  variantId
 `;
 
-export async function fetchStorefrontProducts(limit = 10): Promise<StorefrontHomeData> {
-  return gqlRequest<StorefrontHomeData>(GET_HOME_PRODUCTS, { limit });
+export const slugToKey = (slug: string) => slug.replace(/-/g, "_");
+
+function buildHomeProductsQuery(categorySlugs: string[]) {
+  const categoryFields = categorySlugs
+    .map(
+      (slug) =>
+        `${slugToKey(slug)}: categoryProducts(categorySlug: "${slug}", limit: $limit) {
+          ${PRODUCT_FIELDS}
+        }`,
+    )
+    .join("\n");
+
+  return gql`
+    query StorefrontHome($limit: Int = 10) {
+      newProducts(limit: $limit) {
+        ${PRODUCT_FIELDS}
+      }
+      featuredProducts(limit: $limit) {
+        ${PRODUCT_FIELDS}
+      }
+      ${categoryFields}
+    }
+  `;
+}
+
+export async function fetchStorefrontProducts(
+  categorySlugs: string[],
+  limit = 10,
+): Promise<StorefrontHomeData> {
+  return gqlRequest<StorefrontHomeData>(buildHomeProductsQuery(categorySlugs), { limit });
 }

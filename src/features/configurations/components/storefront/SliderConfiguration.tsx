@@ -10,8 +10,8 @@ import type { DragEndEvent } from "@dnd-kit/react";
 import { isSortableOperation } from "@dnd-kit/react/sortable";
 
 import { SliderItemCard, type SliderItemField } from "./SliderItemCard";
-import { useSyncSliders } from "../../mutations";
-import { useSliders } from "../../queries";
+import { useSyncStorefrontSliders } from "../../mutations";
+import { useStorefrontSliders } from "../../queries";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { handleApiError } from "@/utils/api";
@@ -21,7 +21,7 @@ interface SliderFormValues {
 }
 
 export function SliderConfiguration() {
-  const { data: slidersData } = useSliders();
+  const { data: slidersData } = useStorefrontSliders();
 
   const { control, handleSubmit, reset } = useForm<SliderFormValues>({
     defaultValues: {
@@ -52,14 +52,14 @@ export function SliderConfiguration() {
     name: "items",
   });
 
-  const syncSlidersMutation = useSyncSliders();
+  const syncSlidersMutation = useSyncStorefrontSliders();
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { operation } = event;
     if (!isSortableOperation(operation)) return;
-    const { source, target } = operation;
-    if (source && target && source.id !== target.id) {
-      move(source.index, target.index);
+    const { source } = operation;
+    if (source && source.initialIndex !== source.index) {
+      move(source.initialIndex, source.index);
     }
   };
 

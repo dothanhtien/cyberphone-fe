@@ -8,10 +8,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-import { useSliders } from "@/features/configurations/queries";
+import { useStorefrontSliders } from "@/features/configurations/queries";
 
 export function Slider() {
-  const { data: sliders } = useSliders();
+  const { data: sliders } = useStorefrontSliders();
 
   const activeSliders = sliders
     ?.filter((s) => s.isActive && s.url)
