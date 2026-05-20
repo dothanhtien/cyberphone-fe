@@ -11,12 +11,17 @@ import { type StorefrontCategoryChild } from "@/features/configurations/types";
 import { cn } from "@/lib/utils";
 
 function DynamicIcon({ name, ...props }: { name: string } & LucideProps) {
-  const [Icon, setIcon] = useState<React.ComponentType<LucideProps> | null>(null);
+  const [Icon, setIcon] = useState<React.ComponentType<LucideProps> | null>(
+    null,
+  );
 
   useEffect(() => {
-    const importFn = dynamicIconImports[name as keyof typeof dynamicIconImports];
+    const importFn =
+      dynamicIconImports[name as keyof typeof dynamicIconImports];
     if (!importFn) return;
-    importFn().then((mod) => setIcon(() => mod.default as React.ComponentType<LucideProps>));
+    importFn().then((mod) =>
+      setIcon(() => mod.default as React.ComponentType<LucideProps>),
+    );
   }, [name]);
 
   if (!Icon) return null;
@@ -52,7 +57,7 @@ export function CategoryNavBar({ activeLabel, onOpen }: Props) {
             onMouseEnter={() => onOpen?.(label, item.children ?? [])}
           >
             <Link
-              href={`/products?category=${item.categorySlug ?? ""}`}
+              href={`/products?category=${encodeURIComponent(item.categorySlug ?? "")}`}
               className={cn(
                 "flex w-full items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-md transition-colors",
                 isActive
@@ -66,7 +71,9 @@ export function CategoryNavBar({ activeLabel, onOpen }: Props) {
                 </span>
               )}
               <span className="flex-1">{label}</span>
-              {hasChildren && <ChevronRightIcon className="size-4 text-muted-foreground" />}
+              {hasChildren && (
+                <ChevronRightIcon className="size-4 text-muted-foreground" />
+              )}
             </Link>
           </div>
         );

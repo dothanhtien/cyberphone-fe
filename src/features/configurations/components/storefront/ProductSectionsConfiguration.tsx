@@ -49,7 +49,7 @@ export function ProductSectionsConfiguration() {
   useEffect(() => {
     if (productSectionsData?.length && !isDirty) {
       reset({
-        categories: productSectionsData
+        categories: [...productSectionsData]
           .sort((a, b) => a.displayOrder - b.displayOrder)
           .map((s) => ({
             categoryId: s.categoryId ?? "",

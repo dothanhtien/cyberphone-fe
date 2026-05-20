@@ -43,7 +43,7 @@ export function CategoriesPanelConfiguration() {
   useEffect(() => {
     if (categoriesPanelData?.length && !isDirty) {
       reset({
-        categories: categoriesPanelData
+        categories: [...categoriesPanelData]
           .sort((a, b) => a.displayOrder - b.displayOrder)
           .map((item) => ({
             categoryId: item.categoryId ?? "",

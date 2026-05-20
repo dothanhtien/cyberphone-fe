@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { UploadCloud, Trash2, Move } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSortable } from "@dnd-kit/react/sortable";
 
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,7 @@ export function SliderItemCard({
   onRemove,
 }: SliderItemCardProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const previewUrlRef = useRef<string | null>(null);
   const [dragging, setDragging] = useState(false);
 
   const { ref, handleRef, isDragging } = useSortable({ id: fieldId, index });
@@ -58,8 +59,16 @@ export function SliderItemCard({
       type: original.type,
     });
     const preview = URL.createObjectURL(file);
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    previewUrlRef.current = preview;
     onChange({ ...value, file, preview });
   };
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    };
+  }, []);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -132,7 +141,7 @@ export function SliderItemCard({
                 <div className="relative w-full h-36">
                   <Image
                     src={imageSrc}
-                    alt={value.title || `Slide ${index + 1}`}
+                    alt={value.altText || value.title || `Slide ${index + 1}`}
                     fill
                     unoptimized
                     className="object-contain"

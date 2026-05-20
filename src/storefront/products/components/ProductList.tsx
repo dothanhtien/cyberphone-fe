@@ -36,7 +36,7 @@ export function ProductList() {
       .sort((a, b) => a.displayOrder - b.displayOrder) ?? [];
 
   const categorySlugs = configurations
-    ? enabledSections.map((s) => s.categorySlug!)
+    ? Array.from(new Set(enabledSections.map((s) => s.categorySlug!)))
     : undefined;
 
   const { data, isLoading, isError } = useStorefrontProducts(categorySlugs);

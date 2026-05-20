@@ -142,9 +142,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        {navGroups.map((group) => (
+        {navGroups.map((group, groupIndex) => (
           <SidebarGroup
-            key={group.label}
+            key={group.label ?? `group-${groupIndex}`}
             className="group-data-[collapsible=icon]:hidden"
           >
             {group.label && (

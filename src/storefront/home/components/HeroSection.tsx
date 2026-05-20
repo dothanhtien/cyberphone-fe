@@ -39,7 +39,7 @@ export function HeroSection({ slider }: { slider: React.ReactNode }) {
               {activeChildren.map((child) => (
                 <Link
                   key={child.id}
-                  href={`/products?category=${child.slug}`}
+                  href={`/products?category=${encodeURIComponent(child.slug)}`}
                   className="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors hover:bg-muted text-foreground"
                 >
                   {child.name}
