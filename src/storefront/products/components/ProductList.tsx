@@ -3,7 +3,8 @@
 import { ProductItem } from "./ProductItem";
 import { useStorefrontProducts } from "../queries";
 import { StorefrontProduct } from "../types";
-import { HOME_CATEGORY_SECTIONS } from "@/config/storefront";
+import { slugToKey } from "../graphql";
+import { useAllStorefrontConfigurations } from "@/features/configurations/queries";
 
 function ProductSection({
   title,
@@ -27,7 +28,18 @@ function ProductSection({
 }
 
 export function ProductList() {
-  const { data, isLoading, isError } = useStorefrontProducts();
+  const { data: configurations } = useAllStorefrontConfigurations();
+
+  const enabledSections =
+    configurations?.["product-sections"]
+      ?.filter((s) => s.enabled && s.categorySlug)
+      .sort((a, b) => a.displayOrder - b.displayOrder) ?? [];
+
+  const categorySlugs = configurations
+    ? Array.from(new Set(enabledSections.map((s) => s.categorySlug!)))
+    : undefined;
+
+  const { data, isLoading, isError } = useStorefrontProducts(categorySlugs);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -39,11 +51,11 @@ export function ProductList() {
     <>
       <ProductSection title="New Arrivals" products={data.newProducts} />
       <ProductSection title="Featured" products={data.featuredProducts} />
-      {HOME_CATEGORY_SECTIONS.map(({ slug, label }) => (
+      {enabledSections.map(({ categorySlug, title, categoryName }) => (
         <ProductSection
-          key={slug}
-          title={label}
-          products={data[slug.replace(/-/g, "_")] ?? []}
+          key={categorySlug}
+          title={title ?? categoryName ?? ""}
+          products={data[slugToKey(categorySlug!)] ?? []}
         />
       ))}
     </>

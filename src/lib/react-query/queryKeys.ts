@@ -62,11 +62,19 @@ export const queryKeys = {
       [...queryKeys.media.all, "getMediaItems", params] as const,
   },
 
+  configurations: {
+    all: ["configurations"] as const,
+    sliders: () => [...queryKeys.configurations.all, "sliders"] as const,
+    allItems: () => [...queryKeys.configurations.all, "items"] as const,
+    items: (type?: string) => [...queryKeys.configurations.all, "items", type] as const,
+  },
+
   storefront: {
     all: ["storefront"] as const,
     products: {
       all: () => [...queryKeys.storefront.all, "products"] as const,
-      home: () => [...queryKeys.storefront.products.all(), "home"] as const,
+      home: (slugs: string[] | undefined = []) =>
+        [...queryKeys.storefront.products.all(), "home", slugs] as const,
       list: (params: StorefrontPaginationParams = {}) => [
         ...queryKeys.storefront.products.all(),
         "list",

@@ -154,6 +154,17 @@ export const layoutConfigMap: Record<
     ],
   }),
 
+  "/admin/configurations/storefront": () => ({
+    title: "Storefront Configurations",
+    activeMenuKey: "/admin/configurations/storefront",
+    breadcrumbs: [
+      {
+        label: "Storefront Configurations",
+        href: "/admin/configurations/storefront",
+      },
+    ],
+  }),
+
   "/customers/orders": () => ({
     title: "My orders",
     activeMenuKey: "/customers/orders",
