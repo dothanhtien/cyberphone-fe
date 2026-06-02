@@ -62,7 +62,7 @@ export function PaymentStatusBadge({ status }: PaymentStatusBadgeProps) {
   const Icon = config.Icon;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-start">
       <Badge
         variant="outline"
         className={`flex w-fit items-center gap-1.5 px-2 py-0.5 text-xs font-medium ${config.className}`}

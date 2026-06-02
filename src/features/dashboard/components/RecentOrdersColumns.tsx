@@ -3,9 +3,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { RecentOrder } from "../types";
-import { OrderStatus } from "@/enums";
-import { formatCurrency } from "@/utils";
+import { OrderStatus, PaymentStatus } from "@/enums";
 import { OrderStatusBadge } from "@/features/orders/components/OrderStatusBadge";
+import { PaymentStatusBadge } from "@/features/orders/components/PaymentStatusBadge";
+import { formatCurrency } from "@/utils";
 
 export const recentOrdersColumns: ColumnDef<RecentOrder>[] = [
   {
@@ -33,7 +34,25 @@ export const recentOrdersColumns: ColumnDef<RecentOrder>[] = [
     cell: ({ cell }) => {
       const status = cell.getValue<OrderStatus>();
 
-      return <OrderStatusBadge status={status} />;
+      return (
+        <div className="flex justify-center">
+          <OrderStatusBadge status={status} />
+        </div>
+      );
+    },
+  },
+
+  {
+    accessorKey: "paymentStatus",
+    header: () => <div className="text-center">Payment</div>,
+    cell: ({ cell }) => {
+      const status = cell.getValue<PaymentStatus>();
+
+      return (
+        <div className="flex justify-center">
+          <PaymentStatusBadge status={status} />
+        </div>
+      );
     },
   },
 ];

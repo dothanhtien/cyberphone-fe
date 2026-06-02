@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { AddToCartRequest } from "./types";
+import { AddToCartRequest, BuyNowRequest } from "./types";
 import { storefrontCartApi } from "./api";
 
 interface AddToCartVariables {
@@ -43,5 +43,11 @@ export function useRemoveCartItem() {
   return useMutation({
     mutationFn: ({ cartId, itemId }: RemoveCartItemVariables) =>
       storefrontCartApi.removeCartItem(cartId, itemId),
+  });
+}
+
+export function useBuyNow() {
+  return useMutation({
+    mutationFn: (data: BuyNowRequest) => storefrontCartApi.buyNow(data),
   });
 }

@@ -42,9 +42,12 @@ export default function CheckoutPaymentPage() {
     null,
   );
 
-  const { cart, hasHydrated: hasCartHydrated } = useCartStore((state) => state);
-  const { shippingAddress, hasHydrated: hasCheckoutHydrated } =
-    useCheckoutStore((state) => state);
+  const { hasHydrated: hasCartHydrated } = useCartStore((state) => state);
+  const {
+    shippingAddress,
+    activeCart,
+    hasHydrated: hasCheckoutHydrated,
+  } = useCheckoutStore((state) => state);
 
   const createOrderMutation = useCreateOrder();
   const createPaymentMutation = useCreatePayment();
@@ -77,7 +80,7 @@ export default function CheckoutPaymentPage() {
   };
 
   const handleCreateOrder = () => {
-    if (!cart) {
+    if (!activeCart) {
       toast.error("Your cart is empty");
       router.replace("/cart");
       return;
@@ -92,7 +95,7 @@ export default function CheckoutPaymentPage() {
 
     createOrderMutation.mutate(
       {
-        cartId: cart.id,
+        cartId: activeCart.id,
         shippingName: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
         shippingPhone: shippingAddress.phone,
         shippingAddressLine1: shippingAddress.line1,

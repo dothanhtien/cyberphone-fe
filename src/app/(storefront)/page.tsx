@@ -4,10 +4,11 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
+import { FeaturedCategories } from "@/storefront/home/components/FeaturedCategories";
+import { HeroSection } from "@/storefront/home/components/HeroSection";
+import { Slider } from "@/storefront/home/components/Slider";
 import { ProductList } from "@/storefront/products/components/ProductList";
 import { prefetchStorefrontProducts } from "@/storefront/products/prefetch";
-import { Slider } from "@/storefront/home/components/Slider";
-import { HeroSection } from "@/storefront/home/components/HeroSection";
 
 export default async function Home() {
   const queryClient = new QueryClient();
@@ -18,7 +19,9 @@ export default async function Home() {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <HeroSection slider={<Slider />} />
 
-      <div className="mt-6">
+      <FeaturedCategories />
+
+      <div className="mt-10">
         <ProductList />
       </div>
     </HydrationBoundary>
