@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CircleCheckBig, CircleX } from "lucide-react";
@@ -15,11 +15,18 @@ import { useCartStore } from "@/stores/cart";
 
 export default function CheckoutResultPage() {
   const searchParams = useSearchParams();
-  const resetShippingAddress = useCheckoutStore(
-    (state) => state.resetShippingAddress,
-  );
-  const resetCart = useCartStore((state) => state.resetCart);
-  const setCanQueryCart = useCartStore((state) => state.setCanQueryCart);
+  const {
+    activeCart,
+    hasHydrated: checkoutHasHydrated,
+    resetShippingAddress,
+    clearActiveCart,
+  } = useCheckoutStore((state) => state);
+  const {
+    cart,
+    hasHydrated: cartHasHydrated,
+    resetCart,
+    setCanQueryCart,
+  } = useCartStore((state) => state);
 
   const { provider, params } = useMemo(() => {
     if (!searchParams) return { provider: undefined, params: undefined };
@@ -41,17 +48,39 @@ export default function CheckoutResultPage() {
 
   const isSuccess = data?.status === "success";
 
+  const activeCartIdRef = useRef(activeCart?.id);
+  const cartIdRef = useRef(cart?.id);
+  const cleanupDoneRef = useRef(false);
+
+  useEffect(() => {
+    if (cartHasHydrated && checkoutHasHydrated && !cleanupDoneRef.current) {
+      activeCartIdRef.current = activeCart?.id;
+      cartIdRef.current = cart?.id;
+    }
+  }, [cartHasHydrated, checkoutHasHydrated, activeCart?.id, cart?.id]);
+
   useEffect(() => {
     setCanQueryCart(!isLoading);
 
-    if (data?.status === "success") {
-      resetCart();
+    if (
+      cartHasHydrated &&
+      checkoutHasHydrated &&
+      data?.status === "success" &&
+      !cleanupDoneRef.current
+    ) {
+      cleanupDoneRef.current = true;
+      const isBuyNow = activeCartIdRef.current !== cartIdRef.current;
+      if (!isBuyNow) resetCart();
+      clearActiveCart();
       resetShippingAddress();
     }
   }, [
+    cartHasHydrated,
+    checkoutHasHydrated,
     data?.status,
     isLoading,
     resetCart,
+    clearActiveCart,
     resetShippingAddress,
     setCanQueryCart,
   ]);

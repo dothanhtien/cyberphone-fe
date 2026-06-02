@@ -19,17 +19,17 @@ export function Slider() {
 
   if (!activeSliders?.length) {
     return (
-      <div className="rounded-lg overflow-hidden shadow-lg w-full aspect-16/5 bg-muted flex items-center justify-center">
+      <div className="rounded-xl overflow-hidden w-full aspect-16/6 bg-muted flex items-center justify-center">
         <p className="text-muted-foreground text-sm">No slides available</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg overflow-hidden shadow-lg">
+    <div className="rounded-xl overflow-hidden shadow-xl">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={20}
+        spaceBetween={0}
         slidesPerView={1}
         navigation
         pagination={{ clickable: true }}
@@ -38,12 +38,12 @@ export function Slider() {
       >
         {activeSliders.map((slider, index) => (
           <SwiperSlide key={slider.id}>
-            <div className="relative w-full aspect-16/5 bg-gray-100">
+            <div className="relative w-full aspect-16/6 bg-gray-100">
               <Image
                 src={slider.url!}
                 alt={slider.altText ?? slider.title ?? `Slide ${index + 1}`}
                 fill
-                className="object-contain"
+                className="object-cover"
                 loading={index === 0 ? "eager" : "lazy"}
                 sizes="100vw"
               />

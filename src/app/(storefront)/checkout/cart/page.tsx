@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cart";
+import { useCheckoutStore } from "@/stores/checkout";
 import { ReviewCartItem } from "@/storefront/checkout/components/ReviewCartItem";
 import { formatCurrency } from "@/utils";
 
 export default function CheckoutCartPage() {
   const router = useRouter();
   const { cart, hasHydrated } = useCartStore((state) => state);
+  const setActiveCart = useCheckoutStore((state) => state.setActiveCart);
   const subtotal = useCartStore((state) => state.subtotal);
 
   if (!hasHydrated) return null;
@@ -31,7 +33,10 @@ export default function CheckoutCartPage() {
         )}
 
         <Button
-          onClick={() => router.push("/checkout/shipping")}
+          onClick={() => {
+            if (cart) setActiveCart(cart);
+            router.push("/checkout/shipping");
+          }}
           disabled={(cart?.items?.length ?? 0) === 0}
           className="w-full mt-1"
         >

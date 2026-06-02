@@ -87,7 +87,7 @@ export function ReviewCartItem({ item }: ReviewCartItemProps) {
             <div>
               <Button
                 variant="outline"
-                size="xs"
+                size="icon-xs"
                 onClick={handleDecreaseQuantity}
                 disabled={decreaseCartItemQuantityMutation.isPending}
                 aria-label={`Decrease quantity of ${item.variantName}`}
@@ -99,7 +99,7 @@ export function ReviewCartItem({ item }: ReviewCartItemProps) {
 
               <Button
                 variant="outline"
-                size="xs"
+                size="icon-xs"
                 onClick={handleIncreaseQuantity}
                 disabled={increaseCartItemQuantityMutation.isPending}
                 aria-label={`Increase quantity of ${item.variantName}`}
@@ -112,7 +112,7 @@ export function ReviewCartItem({ item }: ReviewCartItemProps) {
           <div className="col-span-1 text-right">
             <Button
               variant="destructive"
-              size="xs"
+              size="icon-xs"
               onClick={handleRemovecartItem}
               disabled={removeCartItemMutation.isPending}
               aria-label={`Remove ${item.variantName} from cart`}

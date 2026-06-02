@@ -33,7 +33,7 @@ export function OrderItemsTable({
   });
 
   return (
-    <div className="overflow-hidden border bg-white rounded-xl">
+    <div className="overflow-hidden">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
