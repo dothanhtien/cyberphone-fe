@@ -43,6 +43,11 @@ export const useCheckoutStore = create<CheckoutState>()(
         name: "checkout-storage",
 
         onRehydrateStorage: () => (state) => {
+          if (state?.activeCart) {
+            const expired =
+              new Date(state.activeCart.expiresAt).getTime() < Date.now();
+            if (expired) state.clearActiveCart();
+          }
           state?.setHasHydrated(true);
         },
       },

@@ -34,7 +34,7 @@ export function ProductDetailsGallery({ images }: ProductDetailsGalleryProps) {
       >
         {images.map((img) => (
           <SwiperSlide key={img.id}>
-            <div className="flex items-center justify-center w-full h-full bg-white p-4">
+            <div className="relative flex items-center justify-center w-full h-full bg-white p-4">
               <Image
                 src={img.url}
                 alt={img.id}

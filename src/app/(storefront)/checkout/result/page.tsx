@@ -15,9 +15,18 @@ import { useCartStore } from "@/stores/cart";
 
 export default function CheckoutResultPage() {
   const searchParams = useSearchParams();
-  const { activeCart, resetShippingAddress, clearActiveCart } =
-    useCheckoutStore((state) => state);
-  const { cart, resetCart, setCanQueryCart } = useCartStore((state) => state);
+  const {
+    activeCart,
+    hasHydrated: checkoutHasHydrated,
+    resetShippingAddress,
+    clearActiveCart,
+  } = useCheckoutStore((state) => state);
+  const {
+    cart,
+    hasHydrated: cartHasHydrated,
+    resetCart,
+    setCanQueryCart,
+  } = useCartStore((state) => state);
 
   const { provider, params } = useMemo(() => {
     if (!searchParams) return { provider: undefined, params: undefined };
@@ -44,16 +53,21 @@ export default function CheckoutResultPage() {
   const cleanupDoneRef = useRef(false);
 
   useEffect(() => {
-    if (!cleanupDoneRef.current) {
+    if (cartHasHydrated && checkoutHasHydrated && !cleanupDoneRef.current) {
       activeCartIdRef.current = activeCart?.id;
       cartIdRef.current = cart?.id;
     }
-  }, [activeCart?.id, cart?.id]);
+  }, [cartHasHydrated, checkoutHasHydrated, activeCart?.id, cart?.id]);
 
   useEffect(() => {
     setCanQueryCart(!isLoading);
 
-    if (data?.status === "success" && !cleanupDoneRef.current) {
+    if (
+      cartHasHydrated &&
+      checkoutHasHydrated &&
+      data?.status === "success" &&
+      !cleanupDoneRef.current
+    ) {
       cleanupDoneRef.current = true;
       const isBuyNow = activeCartIdRef.current !== cartIdRef.current;
       if (!isBuyNow) resetCart();
@@ -61,6 +75,8 @@ export default function CheckoutResultPage() {
       resetShippingAddress();
     }
   }, [
+    cartHasHydrated,
+    checkoutHasHydrated,
     data?.status,
     isLoading,
     resetCart,
