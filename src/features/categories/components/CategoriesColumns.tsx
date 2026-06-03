@@ -36,6 +36,7 @@ function DeleteCell({
           <Button
             variant="ghost"
             size="icon"
+            aria-label={`Delete ${category.name}`}
             className={cn("size-8", canDelete ? "text-red-500" : "")}
             onClick={(e) => e.stopPropagation()}
             disabled={!canDelete}

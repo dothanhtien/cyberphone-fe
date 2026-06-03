@@ -88,7 +88,7 @@ export function CategoryForm({
     reset({
       name: category.name,
       slug: category.slug,
-      parentId: category.parentId ?? undefined,
+      parentId: category.parentId,
       description: category.description ?? undefined,
       logo: undefined,
       removeLogo: undefined,
@@ -151,15 +151,14 @@ export function CategoryForm({
               name="parentId"
               render={({ field, fieldState }) => (
                 <Field>
-                  <FieldLabel htmlFor="parentId">
-                    Parent category
-                  </FieldLabel>
+                  <FieldLabel htmlFor="parentId">Parent category</FieldLabel>
 
                   <Select
-                    key={field.value}
                     name={field.name}
-                    value={field.value}
-                    onValueChange={field.onChange}
+                    value={field.value ?? "none"}
+                    onValueChange={(v) =>
+                      field.onChange(v === "none" ? null : v)
+                    }
                   >
                     <SelectTrigger
                       id="parentId"
@@ -170,6 +169,7 @@ export function CategoryForm({
 
                     <SelectContent>
                       <SelectGroup>
+                        <SelectItem value="none">No parent</SelectItem>
                         {(parentCategories ?? []).map((pc) => (
                           <SelectItem key={pc.id} value={pc.id}>
                             {pc.name}

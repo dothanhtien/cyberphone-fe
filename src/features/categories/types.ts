@@ -21,6 +21,7 @@ export interface UpdateCategoryRequest {
   name?: string;
   slug?: string;
   parentId?: string | null;
+  removeParent?: boolean;
   description?: string | null;
   logo?: File | null;
   removeLogo?: boolean;

@@ -60,6 +60,14 @@ export const categoriesApi = {
       formData.append("description", data.description ?? "");
     }
 
+    if (data.parentId !== undefined) {
+      if (data.parentId === null) {
+        formData.append("removeParent", "true");
+      } else {
+        formData.append("parentId", data.parentId);
+      }
+    }
+
     if (data.logo) {
       formData.append("logo", data.logo);
     }
