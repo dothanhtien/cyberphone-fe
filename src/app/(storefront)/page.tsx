@@ -4,22 +4,24 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
+import { FeaturedCategories } from "@/storefront/home/components/FeaturedCategories";
+import { HeroSection } from "@/storefront/home/components/HeroSection";
+import { Slider } from "@/storefront/home/components/Slider";
 import { ProductList } from "@/storefront/products/components/ProductList";
 import { prefetchStorefrontProducts } from "@/storefront/products/prefetch";
-import { Slider } from "@/storefront/home/components/Slider";
 
 export default async function Home() {
   const queryClient = new QueryClient();
 
-  await prefetchStorefrontProducts(queryClient, {});
+  await prefetchStorefrontProducts(queryClient);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="mt-2">
-        <Slider />
-      </div>
+      <HeroSection slider={<Slider />} />
 
-      <div className="mt-6">
+      <FeaturedCategories />
+
+      <div className="mt-10">
         <ProductList />
       </div>
     </HydrationBoundary>

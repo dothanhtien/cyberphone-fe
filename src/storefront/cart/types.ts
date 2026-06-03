@@ -40,3 +40,8 @@ export interface AddToCartRequest {
   variantId: string;
   quantity: number;
 }
+
+export interface BuyNowRequest {
+  variantId: string;
+  customerId?: string;
+}

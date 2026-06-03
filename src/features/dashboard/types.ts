@@ -31,4 +31,5 @@ export interface RecentOrder {
   code: string;
   totalAmount: number;
   orderStatus: string;
+  paymentStatus: string;
 }

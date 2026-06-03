@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+
+import { cn } from "@/lib/utils";
 import { StorefrontProductAttribute, StorefrontVariant } from "../../types";
 
 interface VariantSelectorProps {
@@ -21,7 +22,7 @@ export function VariantSelector({
   );
 
   const defaultVariant = useMemo(
-    () => variants.find((v) => v.isDefault) || variants[0],
+    () => variants.find((v) => v.isDefault) ?? variants[0],
     [variants],
   );
 
@@ -29,24 +30,23 @@ export function VariantSelector({
     Record<string, string>
   >(() => {
     const map: Record<string, string> = {};
-
-    if (!defaultVariant) return map;
-
-    defaultVariant.attributes.forEach((attr) => {
+    defaultVariant?.attributes.forEach((attr) => {
       map[attr.productAttributeId] = attr.attributeValue;
     });
 
     return map;
   });
 
-  const selectedVariant = useMemo(() => {
-    return variants.find((v) =>
-      v.attributes.every(
-        (attr) =>
-          selectedAttributes[attr.productAttributeId] === attr.attributeValue,
+  const selectedVariant = useMemo(
+    () =>
+      variants.find((v) =>
+        v.attributes.every(
+          (attr) =>
+            selectedAttributes[attr.productAttributeId] === attr.attributeValue,
+        ),
       ),
-    );
-  }, [variants, selectedAttributes]);
+    [variants, selectedAttributes],
+  );
 
   useEffect(() => {
     onChange?.(selectedVariant);
@@ -58,12 +58,11 @@ export function VariantSelector({
     variants.forEach((v) => {
       const va = v.attributes.find((a) => a.productAttributeId === attrId);
 
-      if (va) {
+      if (va)
         map.set(
           va.attributeValue,
           va.attributeValueDisplay ?? va.attributeValue,
         );
-      }
     });
 
     return Array.from(map.entries()).map(([value, label]) => ({
@@ -72,89 +71,80 @@ export function VariantSelector({
     }));
   };
 
-  const isOptionAvailable = (attrId: string, optionValue: string) => {
-    return variants.some((variant) => {
-      return variant.attributes.every((attr) => {
-        if (attr.productAttributeId === attrId) {
+  const isOptionAvailable = (attrId: string, optionValue: string) =>
+    variants.some((v) =>
+      v.attributes.every((attr) => {
+        if (attr.productAttributeId === attrId)
           return attr.attributeValue === optionValue;
-        }
 
-        const selectedValue = selectedAttributes[attr.productAttributeId];
+        const selected = selectedAttributes[attr.productAttributeId];
 
-        if (!selectedValue) return true;
+        return !selected || attr.attributeValue === selected;
+      }),
+    );
 
-        return attr.attributeValue === selectedValue;
-      });
-    });
-  };
-
-  if (!variants.length) {
-    return null;
-  }
+  if (!variants.length) return null;
 
   return (
-    <div className="attributes mb-6">
+    <div className="flex flex-col gap-5">
       {sortedAttributes.map((attr, index) => {
         const options = getAllOptions(attr.id);
 
         if (!options.length) return null;
 
         return (
-          <div key={attr.id} className="mb-6">
-            <div className="font-semibold mb-3">{attr.attributeKeyDisplay}</div>
+          <div key={attr.id}>
+            <p className="text-sm font-semibold mb-2.5 text-foreground">
+              {attr.attributeKeyDisplay}
+              {selectedAttributes[attr.id] && (
+                <span className="ml-2 font-normal text-muted-foreground">
+                  {
+                    options.find((o) => o.value === selectedAttributes[attr.id])
+                      ?.label
+                  }
+                </span>
+              )}
+            </p>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="flex flex-wrap gap-2">
               {options.map((option) => {
                 const isSelected = selectedAttributes[attr.id] === option.value;
-
                 const isAvailable = isOptionAvailable(attr.id, option.value);
 
                 return (
-                  <Card
+                  <button
                     key={option.value}
+                    type="button"
+                    disabled={!isAvailable}
                     onClick={() => {
                       if (!isAvailable) return;
 
                       setSelectedAttributes((prev) => {
                         const next = { ...prev };
 
-                        const isCurrentlySelected =
-                          prev[attr.id] === option.value;
-
-                        if (isCurrentlySelected) {
+                        if (prev[attr.id] === option.value) {
                           delete next[attr.id];
-
-                          sortedAttributes.slice(index + 1).forEach((a) => {
-                            delete next[a.id];
-                          });
                         } else {
                           next[attr.id] = option.value;
-
-                          sortedAttributes.slice(index + 1).forEach((a) => {
-                            delete next[a.id];
-                          });
                         }
-
+                        
+                        sortedAttributes
+                          .slice(index + 1)
+                          .forEach((a) => delete next[a.id]);
                         return next;
                       });
                     }}
-                    className={`rounded-lg transition ring p-3
-                      ${
-                        isAvailable
-                          ? "cursor-pointer"
-                          : "opacity-30 cursor-not-allowed"
-                      }
-                      ${
-                        isSelected
-                          ? "ring-orange-400 bg-orange-50"
-                          : "ring-muted-foreground"
-                      }
-                    `}
+                    className={cn(
+                      "px-3.5 py-1.5 rounded-lg border text-sm font-medium transition-all",
+                      isSelected
+                        ? "border-orange-400 ring-orange-400"
+                        : "border-border bg-background hover:border-primary/50 text-foreground",
+                      !isAvailable &&
+                        "opacity-35 cursor-not-allowed line-through",
+                    )}
                   >
-                    <CardContent className="text-center">
-                      <span>{option.label}</span>
-                    </CardContent>
-                  </Card>
+                    {option.label}
+                  </button>
                 );
               })}
             </div>

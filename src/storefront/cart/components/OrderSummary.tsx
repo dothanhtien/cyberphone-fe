@@ -1,24 +1,35 @@
 import Image from "next/image";
 
+import { DEFAULT_IMAGE } from "@/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cart";
+import { useCheckoutStore } from "@/stores/checkout";
 import { formatCurrency } from "@/utils";
-import { DEFAULT_IMAGE } from "@/constants";
 
 export function OrderSummary() {
-  const { cart, hasHydrated } = useCartStore((state) => state);
+  const { hasHydrated } = useCartStore((state) => state);
   const subtotal = useCartStore((state) => state.subtotal);
+  const activeCart = useCheckoutStore((state) => state.activeCart);
+  const hasCheckoutHydrated = useCheckoutStore((state) => state.hasHydrated);
 
-  if (!hasHydrated) return null;
+  if (!hasHydrated || !hasCheckoutHydrated) return null;
+
+  const activeSubtotal = activeCart
+    ? activeCart.items.reduce(
+        (sum, item) => sum + (item.salePrice ?? item.price) * item.quantity,
+        0,
+      )
+    : subtotal();
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="font-bold">Order summary</CardTitle>
       </CardHeader>
+
       <CardContent>
-        {cart?.items.map((item) => (
+        {activeCart?.items.map((item) => (
           <div key={item.id} className="flex text-sm mb-3">
             <Image
               src={item.imageUrl ?? DEFAULT_IMAGE}
@@ -27,6 +38,7 @@ export function OrderSummary() {
               height={100}
               alt={item.variantName}
             />
+
             <div className="space-y-1">
               <div className="font-bold">{item.variantName}</div>
               <div className="text-xs">Qty: {item.quantity}</div>
@@ -36,10 +48,14 @@ export function OrderSummary() {
             </div>
           </div>
         ))}
+
         <Separator className="my-6" />
+
         <div className="flex justify-between text-sm font-bold">
           <div>Total amount</div>
-          <div className="text-red-700">{formatCurrency(subtotal())} VND</div>
+          <div className="text-red-700">
+            {formatCurrency(activeSubtotal)} VND
+          </div>
         </div>
       </CardContent>
     </Card>

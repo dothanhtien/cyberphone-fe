@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { StorefrontPaginationParams } from "@/types";
-import { queryKeys } from "@/lib/react-query/queryKeys";
 import { storefrontProductsApi } from "./api";
+import { fetchStorefrontProducts } from "./graphql";
+import { queryKeys } from "@/lib/react-query/queryKeys";
 
-export const useStorefrontProducts = (
-  params: StorefrontPaginationParams = {},
-) => {
+export const useStorefrontProducts = (categorySlugs: string[] | undefined) => {
   return useQuery({
-    queryKey: queryKeys.storefront.products.list(params),
-    queryFn: () => storefrontProductsApi.findAll(params),
+    queryKey: queryKeys.storefront.products.home(categorySlugs),
+    queryFn: () => fetchStorefrontProducts(categorySlugs!),
     staleTime: 1000 * 60,
+    enabled: categorySlugs !== undefined,
   });
 };
 
