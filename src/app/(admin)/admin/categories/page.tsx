@@ -2,16 +2,19 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
-import { CategoriesTable } from "@/features/categories/components/CategoriesTable";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
-import { usePageLayout, usePagination } from "@/hooks";
+import { CategoriesTable } from "@/features/categories/components/CategoriesTable";
+import { useDeleteCategory } from "@/features/categories/mutations";
 import { useCategories } from "@/features/categories/queries";
+import { usePageLayout, usePagination } from "@/hooks";
 
 export default function CategoriesPage() {
+  const router = useRouter();
   usePageLayout();
 
   const {
@@ -38,6 +41,15 @@ export default function CategoriesPage() {
     }
   }, [data, isError, updatePagination, updatePageCount]);
 
+  const deleteCategoryMutation = useDeleteCategory();
+
+  const handleDeleteCategory = (id: string) => {
+    deleteCategoryMutation.mutate(id, {
+      onSuccess: () => toast.success("Category deleted successfully"),
+      onError: () => toast.error("An error occurred when deleting category"),
+    });
+  };
+
   return (
     <>
       <div className="flex justify-between items-center mb-6">
@@ -56,6 +68,10 @@ export default function CategoriesPage() {
         pagination={pagination}
         pageCount={pageCount}
         onPaginationChange={setPagination}
+        onDelete={handleDeleteCategory}
+        onRowClick={(category) =>
+          router.push(`/admin/categories/${category.id}/edit`)
+        }
       />
     </>
   );

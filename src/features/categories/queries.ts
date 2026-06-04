@@ -10,3 +10,10 @@ export const useCategories = (params?: PaginationParams) => {
     queryFn: () => categoriesApi.findAll(params),
   });
 };
+
+export const useCategoryDetails = (id: string) => {
+  return useQuery({
+    queryKey: queryKeys.categories.details(id),
+    queryFn: () => categoriesApi.findOne(id),
+  });
+};

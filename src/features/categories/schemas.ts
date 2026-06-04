@@ -6,6 +6,7 @@ export const createCategorySchema = z.object({
   parentId: z.string().nullable().optional(),
   description: z.string().optional(),
   logo: z.instanceof(File).optional(),
+  removeLogo: z.boolean().optional(),
 });
 
 export type CreateCategoryFormValues = z.infer<typeof createCategorySchema>;

@@ -1,39 +1,81 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { AxiosError } from "axios";
 import { Loader2, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
 import { CategoryForm } from "@/features/categories/components/CategoryForm";
-import { CreateCategoryFormValues } from "@/features/categories/schemas";
 import { useCreateCategory } from "@/features/categories/mutations";
-import { ApiError } from "@/types";
+import { CreateCategoryFormValues } from "@/features/categories/schemas";
+import { CreateCategoryRequest } from "@/features/categories/types";
+import { MediaRefType } from "@/features/media/enums";
+import { useMedia } from "@/features/media/hooks/useMedia";
 import { usePageLayout } from "@/hooks";
+import { handleApiError } from "@/utils";
+import { useCategories } from "@/features/categories/queries";
+import { PageLoading } from "@/components/PageLoading";
+import { ErrorCard } from "@/components/ErrorCard";
 
 export default function NewCategoryPage() {
   const router = useRouter();
-  usePageLayout();
-  const createMutation = useCreateCategory();
-  const isSubmitting = createMutation.isPending;
+  const tempId = useMemo(() => uuidv4(), []);
 
-  const handleCreateCategory = (data: CreateCategoryFormValues) => {
-    createMutation.mutate(data, {
+  usePageLayout();
+
+  const categoriesQuery = useCategories({ page: 1, limit: 1000 });
+
+  const createMutation = useCreateCategory();
+
+  const {
+    mediaItems,
+    isLoadingMediaItems,
+    fetchMediaItems,
+    uploadMediaItems,
+    isUploadingMediaItems,
+    deleteMediaItem,
+    isDeletingMediaItem,
+  } = useMedia({
+    refType: MediaRefType.CATEGORY,
+    refId: tempId,
+    isTemporary: true,
+  });
+
+  const isLoading = categoriesQuery.isLoading;
+  const categories = categoriesQuery.data?.items ?? [];
+
+  const isCreating = createMutation.isPending;
+
+  const handleCreateCategory = (data: Partial<CreateCategoryFormValues>) => {
+    const dataToCreate: CreateCategoryRequest = {
+      ...data,
+      id: tempId,
+      name: data.name!,
+      slug: data.slug!,
+    };
+
+    createMutation.mutate(dataToCreate, {
       onSuccess: () => {
         toast.success("Category created successfully!");
         router.push("/admin/categories");
       },
-      onError: (error) => {
-        const axiosError = error as AxiosError<ApiError>;
-        console.error("Create category failed:", error);
-        toast.error(
-          axiosError.response?.data?.message || "Failed to create category",
-        );
-      },
+      onError: (error) =>
+        handleApiError(error, "An error occurred when creating category"),
     });
   };
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
+  if (categoriesQuery.isError) {
+    return (
+      <ErrorCard title="An error occurred when fetching categories. Please try again." />
+    );
+  }
 
   return (
     <div className="max-w-230">
@@ -49,9 +91,10 @@ export default function NewCategoryPage() {
           size="lg"
           type="submit"
           form="category-form"
-          disabled={isSubmitting}
+          disabled={isCreating}
+          className="w-full sm:w-auto"
         >
-          {isSubmitting ? (
+          {isCreating ? (
             <>
               <Loader2 className="animate-spin" />
               Saving...
@@ -65,7 +108,17 @@ export default function NewCategoryPage() {
         </Button>
       </div>
 
-      <CategoryForm onSubmit={handleCreateCategory} />
+      <CategoryForm
+        parentCategories={categories}
+        onSubmit={handleCreateCategory}
+        mediaItems={mediaItems}
+        isLoadingMediaItems={isLoadingMediaItems}
+        onFetchMediaItems={fetchMediaItems}
+        onUploadMediaItems={uploadMediaItems}
+        isUploadingMediaItems={isUploadingMediaItems}
+        onDeleteMediaItem={deleteMediaItem}
+        isDeletingMediaItem={isDeletingMediaItem}
+      />
     </div>
   );
 }
