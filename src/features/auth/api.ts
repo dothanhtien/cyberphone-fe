@@ -1,5 +1,10 @@
 import { apiClient } from "@/lib/axios/client";
-import { LoginRequest, LoginResponse, RegisterRequest } from "./types";
+import {
+  ForgotPasswordRequest,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+} from "./types";
 
 export const authApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
@@ -11,4 +16,8 @@ export const authApi = {
   },
 
   logout: async (): Promise<void> => apiClient.post("/auth/logout"),
+
+  forgotPassword: async (data: ForgotPasswordRequest): Promise<void> => {
+    return apiClient.post("/auth/forgot-password", data);
+  },
 };

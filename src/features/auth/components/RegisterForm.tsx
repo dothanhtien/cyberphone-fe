@@ -58,25 +58,26 @@ export const RegisterForm = ({ isSubmitting, onSubmit }: RegisterFormProps) => {
       <FieldGroup>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field>
-            <RequiredFieldLabel htmlFor="phone">Phone</RequiredFieldLabel>
-            <Input
-              id="phone"
-              {...register("phone")}
-              aria-invalid={!!errors.phone}
-            />
-            <FieldError>{errors.phone?.message}</FieldError>
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <RequiredFieldLabel htmlFor="email">Email</RequiredFieldLabel>
             <Input
               id="email"
-              {...register("email", {
-                setValueAs: (v) => (v === "" ? undefined : v),
-              })}
+              type="email"
+              {...register("email")}
               aria-invalid={!!errors.email}
             />
             <FieldError>{errors.email?.message}</FieldError>
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="phone">Phone</FieldLabel>
+            <Input
+              id="phone"
+              {...register("phone", {
+                setValueAs: (v) => (v === "" ? undefined : v),
+              })}
+              aria-invalid={!!errors.phone}
+            />
+            <FieldError>{errors.phone?.message}</FieldError>
           </Field>
         </div>
 
@@ -181,7 +182,7 @@ export const RegisterForm = ({ isSubmitting, onSubmit }: RegisterFormProps) => {
 
           <FieldDescription className="text-center">
             Already have an account?&nbsp;
-            <Link href="/auth/login">Log in</Link>
+            <Link href="/auth/login">Login</Link>
           </FieldDescription>
         </Field>
       </FieldGroup>
