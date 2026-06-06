@@ -21,6 +21,10 @@ export const registerSchema = z
       .max(30, "Phone must be at most 30 characters")
       .regex(/^[0-9\s-]*$/, "Phone can only contain numbers, spaces, and '-'")
       .refine((v) => !v || v.trim().length > 0, "Phone cannot be blank")
+      .refine(
+        (v) => !v || /\d/.test(v),
+        "Phone must contain at least one digit",
+      )
       .optional(),
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
