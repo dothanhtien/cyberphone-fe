@@ -58,7 +58,7 @@ export default function LoginPage() {
       },
       onError: (error) => {
         console.log("Login failed: ", error);
-        toast.error("Phone/Email or password is invalid");
+        toast.error("Email/Phone or password is invalid");
       },
     });
   };
@@ -84,11 +84,13 @@ export default function LoginPage() {
         <form onSubmit={handleLogin}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="identifier">Phone / Email</FieldLabel>
+              <FieldLabel htmlFor="identifier">Email / Phone</FieldLabel>
               <Input
                 id="identifier"
+                type="text"
                 required
                 disabled={loginMutation.isPending}
+                value={credentials.identifier}
                 onChange={(e) =>
                   handleInputChange("identifier", e.target.value)
                 }
@@ -102,6 +104,7 @@ export default function LoginPage() {
                 type="password"
                 required
                 disabled={loginMutation.isPending}
+                value={credentials.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
               />
             </Field>
@@ -115,8 +118,12 @@ export default function LoginPage() {
               </Button>
 
               <FieldDescription className="text-center">
+                <Link href="/auth/forgot-password">Forgot password?</Link>
+              </FieldDescription>
+
+              <FieldDescription className="text-center">
                 Don&apos;t have an account?{" "}
-                <Link href="/auth/register">Sign up</Link>
+                <Link href="/auth/register">Register</Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

@@ -5,8 +5,8 @@ export type AuthUserType = "user" | "customer";
 export interface AuthUser {
   id: string;
   type: AuthUserType;
-  phone: string;
-  email: string | null;
+  email: string;
+  phone: string | null;
   firstName: string;
   lastName: string;
 }
@@ -26,12 +26,16 @@ export interface RefreshTokenResponse {
 }
 
 export interface RegisterRequest {
-  phone: string;
-  email?: string;
+  email: string;
+  phone?: string;
   password: string;
   passwordConfirmation: string;
   firstName: string;
   lastName: string;
   dateOfBirth?: string;
   gender?: Gender;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
 }

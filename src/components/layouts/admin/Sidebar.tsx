@@ -112,7 +112,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     lastName: user?.lastName,
     fallbackName: "Admin",
   });
-  const displayEmail = user?.email ?? user?.phone ?? "No contact info";
+  const displayEmail = user?.email ?? "No contact info";
   const avatarFallback = getAvatarFallback(displayName);
 
   return (
