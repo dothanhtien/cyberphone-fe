@@ -13,6 +13,7 @@ import {
   Package,
   Settings,
   ShoppingBag,
+  Store,
   TabletSmartphone,
   // Users,
 } from "lucide-react";
@@ -75,6 +76,11 @@ const userNavGroups = [
 ];
 
 const customerMenuItems = [
+  {
+    name: "Back to Store",
+    url: "/",
+    icon: Store,
+  },
   {
     name: "My Orders",
     url: "/customers/orders",

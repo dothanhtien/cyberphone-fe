@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Navbar } from "@/components/layouts/storefront/Navbar";
 import { Footer } from "@/components/layouts/storefront/Footer";
+import { StorefrontGuard } from "@/components/layouts/storefront/StorefrontGuard";
 
 export const metadata: Metadata = {
   title: "Cyberphone",
@@ -17,7 +18,7 @@ export default function StorefrontLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <StorefrontGuard>
       <Navbar />
 
       <main
@@ -30,6 +31,6 @@ export default function StorefrontLayout({
       </main>
 
       <Footer />
-    </>
+    </StorefrontGuard>
   );
 }
