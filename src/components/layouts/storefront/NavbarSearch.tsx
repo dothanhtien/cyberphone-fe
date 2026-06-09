@@ -92,7 +92,8 @@ export function NavbarSearch() {
 
       {showDropdown && (
         <div className="absolute top-full mt-2 left-0 w-80 bg-popover border border-border rounded-lg shadow-lg z-50 overflow-hidden">
-          {isFetching && products.length === 0 ? (
+          {isFetching ||
+          (query.trim().length > 0 && debouncedQuery !== query) ? (
             <div className="py-8 text-center text-sm text-muted-foreground">
               Searching...
             </div>

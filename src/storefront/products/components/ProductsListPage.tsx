@@ -122,7 +122,9 @@ export function ProductsListPage() {
   const category = searchParams.get("category") ?? undefined;
   const brand = searchParams.get("brand") ?? undefined;
   const sort = searchParams.get("sort") ?? undefined;
-  const page = Math.max(1, Number(searchParams.get("page") ?? "1"));
+  const _parsedPage = parseInt(searchParams.get("page") ?? "", 10);
+  const page =
+    Number.isInteger(_parsedPage) && _parsedPage >= 1 ? _parsedPage : 1;
   const search = searchParams.get("search") ?? undefined;
 
   const [localSearch, setLocalSearch] = useState(search ?? "");
