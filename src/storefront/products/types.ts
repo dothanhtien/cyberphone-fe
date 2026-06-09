@@ -61,3 +61,19 @@ export interface StorefrontProductDetails {
   attributes: StorefrontProductAttribute[];
   images: StorefrontProductImage[];
 }
+
+export interface StorefrontProductsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: string;
+  brand?: string;
+  sort?: string;
+}
+
+export interface StorefrontProductList {
+  items: StorefrontProduct[];
+  totalCount: number;
+  currentPage: number;
+  itemsPerPage: number;
+}

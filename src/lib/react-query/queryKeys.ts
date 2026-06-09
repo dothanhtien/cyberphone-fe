@@ -2,7 +2,8 @@ import { PaymentProvider } from "@/enums";
 import { FilterParams } from "@/features/dashboard/types";
 import { GetMediaItemsParams } from "@/features/media/types";
 import { ResolveCartRequest } from "@/storefront/cart/types";
-import { PaginationParams, StorefrontPaginationParams } from "@/types";
+import { StorefrontProductsParams } from "@/storefront/products/types";
+import { PaginationParams } from "@/types";
 
 export const queryKeys = {
   auth: {
@@ -77,10 +78,10 @@ export const queryKeys = {
       all: () => [...queryKeys.storefront.all, "products"] as const,
       home: (slugs: string[] | undefined = []) =>
         [...queryKeys.storefront.products.all(), "home", slugs] as const,
-      list: (params: StorefrontPaginationParams = {}) => [
+      list: (params: StorefrontProductsParams = {}) => [
         ...queryKeys.storefront.products.all(),
         "list",
-        params ?? {},
+        params,
       ],
       details: (slug: string) =>
         [...queryKeys.storefront.products.all(), "details", slug] as const,

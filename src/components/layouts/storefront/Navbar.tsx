@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogIn, LogOut, ShoppingBag, TabletSmartphone } from "lucide-react";
 
-import { MiniCart } from "@/storefront/cart/components/MiniCart";
+import { NavbarSearch } from "./NavbarSearch";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLogout } from "@/features/auth/mutations";
+import { MiniCart } from "@/storefront/cart/components/MiniCart";
 import { useAuthStore } from "@/stores/auth";
 import { getAvatarFallback, getDisplayName } from "@/utils";
 
@@ -52,6 +53,8 @@ export function Navbar() {
           </Link>
 
           <div className="flex items-center gap-2">
+            <NavbarSearch />
+
             <MiniCart />
 
             {user ? (

@@ -17,13 +17,16 @@ const PRODUCT_FIELDS = `
   variantId
 `;
 
-export const slugToKey = (slug: string) => slug.replace(/-/g, "_");
+export const slugToKey = (slug: string) => {
+  const key = slug.replace(/-/g, "_");
+  return /^[0-9]/.test(key) ? `_${key}` : key;
+};
 
 function buildHomeProductsQuery(categorySlugs: string[]) {
   const categoryFields = categorySlugs
     .map(
       (slug) =>
-        `${slugToKey(slug)}: categoryProducts(categorySlug: "${slug}", limit: $limit) {
+        `${slugToKey(slug)}: categoryProducts(category: "${slug}", limit: $limit) {
           ${PRODUCT_FIELDS}
         }`,
     )
@@ -46,5 +49,7 @@ export async function fetchStorefrontProducts(
   categorySlugs: string[],
   limit = 10,
 ): Promise<StorefrontHomeData> {
-  return gqlRequest<StorefrontHomeData>(buildHomeProductsQuery(categorySlugs), { limit });
+  return gqlRequest<StorefrontHomeData>(buildHomeProductsQuery(categorySlugs), {
+    limit,
+  });
 }
