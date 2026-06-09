@@ -55,9 +55,7 @@ export function NavbarSearch() {
 
   const handleViewAll = () => {
     setOpen(false);
-    router.push(
-      `/products?search=${encodeURIComponent(debouncedQuery.trim())}`,
-    );
+    router.push(`/products?search=${encodeURIComponent(query.trim())}`);
   };
 
   const handleProductClick = () => {
@@ -155,7 +153,7 @@ export function NavbarSearch() {
               >
                 View all{" "}
                 {totalCount > 5 ? `${totalCount.toLocaleString()} ` : ""}results
-                for &quot;{debouncedQuery.trim()}&quot;
+                for &quot;{query.trim()}&quot;
               </button>
             </>
           )}
