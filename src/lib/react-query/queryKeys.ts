@@ -47,6 +47,13 @@ export const queryKeys = {
       [...queryKeys.orders.all, "list", params] as const,
     details: (id: string) => [...queryKeys.orders.all, "details", id] as const,
   },
+  customerOrders: {
+    all: ["customerOrders"] as const,
+    list: (params?: PaginationParams) =>
+      [...queryKeys.customerOrders.all, "list", params] as const,
+    details: (id: string) =>
+      [...queryKeys.customerOrders.all, "details", id] as const,
+  },
   dashboard: {
     all: ["dashboard"] as const,
     summary: (filter?: FilterParams) =>
@@ -69,7 +76,8 @@ export const queryKeys = {
     all: ["configurations"] as const,
     sliders: () => [...queryKeys.configurations.all, "sliders"] as const,
     allItems: () => [...queryKeys.configurations.all, "items"] as const,
-    items: (type?: string) => [...queryKeys.configurations.all, "items", type] as const,
+    items: (type?: string) =>
+      [...queryKeys.configurations.all, "items", type] as const,
   },
 
   storefront: {
