@@ -25,6 +25,7 @@ export const useUpdateOrderStatus = (options?: UseUpdateOrderStatusOptions) => {
       ordersApi.updateStatus(id, status),
     onSuccess: (_, { label }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.customerOrders.all });
       toast.success(`${label} successful`);
       options?.onSuccess?.();
     },
