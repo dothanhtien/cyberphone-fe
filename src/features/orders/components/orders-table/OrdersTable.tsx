@@ -13,6 +13,7 @@ interface OrdersTableProps {
     updater: PaginationState | ((old: PaginationState) => PaginationState),
   ) => void;
   onRowClick?: (order: Order) => void;
+  hideCustomer?: boolean;
 }
 
 export function OrdersTable({
@@ -22,10 +23,15 @@ export function OrdersTable({
   pageCount,
   onPaginationChange,
   onRowClick,
+  hideCustomer,
 }: OrdersTableProps) {
+  const columns = hideCustomer
+    ? ordersColumns.filter((col) => col.id !== "customer")
+    : ordersColumns;
+
   return (
     <DataTable
-      columns={ordersColumns}
+      columns={columns}
       data={data}
       loading={loading}
       pageCount={pageCount}

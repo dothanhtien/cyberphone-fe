@@ -42,9 +42,15 @@ const PAYMENT_STATUS_CONFIG: Record<
 
   [PaymentStatus.CANCELLED]: {
     label: "Cancelled",
-    className:
-      "bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300",
+    className: "bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300",
     Icon: XCircle,
+  },
+
+  [PaymentStatus.REFUNDED]: {
+    label: "Refunded",
+    className:
+      "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
+    Icon: CircleDot,
   },
 };
 

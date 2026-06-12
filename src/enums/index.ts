@@ -14,6 +14,7 @@ export enum PaymentStatus {
   SUCCESS = "success",
   FAILED = "failed",
   CANCELLED = "cancelled",
+  REFUNDED = "refunded",
 }
 
 export enum OrderStatus {

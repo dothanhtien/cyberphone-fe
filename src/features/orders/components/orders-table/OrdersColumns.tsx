@@ -29,7 +29,7 @@ export const ordersColumns: ColumnDef<Order>[] = [
   },
   {
     id: "customer",
-    header: () => <div className="text-center">Customer</div>,
+    header: "Customer",
     cell: ({ row }) => {
       const displayName = getDisplayName({
         firstName: row.original.customer?.firstName,
@@ -38,7 +38,7 @@ export const ordersColumns: ColumnDef<Order>[] = [
       const avatarFallback = getAvatarFallback(displayName);
 
       return (
-        <div className="flex items-center justify-center gap-2.5">
+        <div className="flex items-center gap-2.5">
           <Avatar className="h-8 w-8">
             <AvatarFallback className="text-xs">
               {avatarFallback}

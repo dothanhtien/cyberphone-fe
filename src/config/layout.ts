@@ -175,4 +175,14 @@ export const layoutConfigMap: Record<
       },
     ],
   }),
+  "/customers/orders/[id]": (params) => ({
+    title: "Order details",
+    activeMenuKey: "/customers/orders",
+    breadcrumbs: [
+      { label: "Orders", href: "/customers/orders" },
+      {
+        label: params?.segmentLabel || "Details",
+      },
+    ],
+  }),
 };

@@ -1,4 +1,9 @@
-import { OrderStatus, PaymentMethod, PaymentStatus } from "@/enums";
+import {
+  OrderStatus,
+  PaymentMethod,
+  PaymentProvider,
+  PaymentStatus,
+} from "@/enums";
 
 export interface Order {
   id: string;
@@ -31,6 +36,22 @@ export interface OrderItem {
   unitPrice: string;
   salePrice: string;
   itemTotal: string;
+}
+
+export interface OrderPayment {
+  id: string;
+  transactionId: string | null;
+  amount: string;
+  currency: string;
+  provider: PaymentProvider;
+  paymentMethod: string | null;
+  status: PaymentStatus;
+  failureReason: string | null;
+  paidAt: string | null;
+  refundedAt: string | null;
+  refundTransactionId: string | null;
+  checkoutUrl: string | null;
+  createdAt: string;
 }
 
 export interface OrderDetails {
@@ -68,4 +89,5 @@ export interface OrderDetails {
   orderTotal: string;
   orderStatus: OrderStatus;
   items: OrderItem[];
+  payments: OrderPayment[];
 }

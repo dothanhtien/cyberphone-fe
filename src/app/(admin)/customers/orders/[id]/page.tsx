@@ -5,14 +5,13 @@ import { useParams } from "next/navigation";
 import { ErrorCard } from "@/components/ErrorCard";
 import { PageLoading } from "@/components/PageLoading";
 import { OrderDetailsView } from "@/features/orders/components/OrderDetailsView";
-import { OrderStatusActions } from "@/features/orders/components/OrderStatusActions";
-import { useOrderDetails } from "@/features/orders/queries";
+import { useCustomerOrderDetails } from "@/features/orders/queries";
 import { usePageLayout } from "@/hooks";
 
 export default function OrderDetailsPage() {
   const { id: orderId } = useParams<{ id: string }>();
 
-  const orderQuery = useOrderDetails(orderId);
+  const orderQuery = useCustomerOrderDetails(orderId);
   const order = orderQuery.data;
 
   usePageLayout({ segmentLabel: order ? `#${order.code}` : "" });
@@ -25,15 +24,5 @@ export default function OrderDetailsPage() {
     return <ErrorCard title="Order not found. Please try again." />;
   }
 
-  return (
-    <OrderDetailsView
-      order={order}
-      actions={
-        <OrderStatusActions
-          orderId={orderId}
-          currentStatus={order.orderStatus}
-        />
-      }
-    />
-  );
+  return <OrderDetailsView order={order} />;
 }
