@@ -20,7 +20,7 @@ interface ProductVariantModalProps {
   variant: ProductVariant | null;
   attributes: ProductAttribute[];
   onOpenChange: (open: boolean) => void;
-  onSubmit: (values: ProductVariantFormValues) => void;
+  onSubmit: (values: Partial<ProductVariantFormValues>) => void;
 }
 
 export function ProductVariantModal({

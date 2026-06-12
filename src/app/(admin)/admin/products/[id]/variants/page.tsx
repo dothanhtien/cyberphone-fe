@@ -57,12 +57,12 @@ export default function ProductVariantsPage() {
     setIsModalOpen(open);
   };
 
-  const handleSubmit = (values: ProductVariantFormValues) => {
+  const handleSubmit = (values: Partial<ProductVariantFormValues>) => {
     if (isCreateMode) {
       createProductVariantMutation.mutate(
         {
           productId,
-          data: values,
+          data: values as ProductVariantFormValues,
         },
         {
           onSuccess: () => {

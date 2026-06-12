@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/react-query/queryKeys";
+import { MediaRefType } from "./enums";
 import { Media, UploadMediaItemsParams } from "./types";
 import { mediaApi } from "./api";
 
@@ -30,7 +31,7 @@ export const useDeleteMediaItem = ({
   refId,
   isTemporary,
 }: {
-  refType: string;
+  refType: MediaRefType;
   refId: string;
   isTemporary?: boolean;
 }) => {

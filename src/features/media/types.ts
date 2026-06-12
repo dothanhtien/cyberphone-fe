@@ -7,9 +7,9 @@ export interface GetMediaItemsParams {
 }
 
 export interface UploadMediaItemsParams {
-  refType: string;
+  refType: MediaRefType;
   refId: string;
-  usageType: string;
+  usageType: MediaUsageType;
   isTemporary?: boolean;
   files: File[];
 }
