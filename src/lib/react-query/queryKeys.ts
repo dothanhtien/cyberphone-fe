@@ -72,6 +72,14 @@ export const queryKeys = {
       [...queryKeys.media.all, "getMediaItems", params] as const,
   },
 
+  customers: {
+    all: ["customers"] as const,
+    list: (params?: PaginationParams) =>
+      [...queryKeys.customers.all, "list", params] as const,
+    details: (id: string) =>
+      [...queryKeys.customers.all, "details", id] as const,
+  },
+
   configurations: {
     all: ["configurations"] as const,
     sliders: () => [...queryKeys.configurations.all, "sliders"] as const,

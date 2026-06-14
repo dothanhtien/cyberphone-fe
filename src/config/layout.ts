@@ -154,6 +154,27 @@ export const layoutConfigMap: Record<
     ],
   }),
 
+  "/admin/customers": () => ({
+    title: "Customers",
+    activeMenuKey: "/admin/customers",
+    breadcrumbs: [
+      {
+        label: "Customers",
+        href: "/admin/customers",
+      },
+    ],
+  }),
+  "/admin/customers/[id]": (params) => ({
+    title: "Customer details",
+    activeMenuKey: "/admin/customers",
+    breadcrumbs: [
+      { label: "Customers", href: "/admin/customers" },
+      {
+        label: params?.segmentLabel || "Details",
+      },
+    ],
+  }),
+
   "/admin/configurations/storefront": () => ({
     title: "Storefront Configurations",
     activeMenuKey: "/admin/configurations/storefront",
