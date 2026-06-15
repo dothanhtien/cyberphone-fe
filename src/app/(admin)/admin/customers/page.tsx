@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { PageHeading } from "@/components/PageHeading";
 import { CustomersTable } from "@/features/customers/components/CustomersTable";
 import { useCustomers } from "@/features/customers/queries";
-import { useDeleteCustomer } from "@/features/customers/mutations";
+import { useDeactivateCustomer } from "@/features/customers/mutations";
 import { usePageLayout, usePagination } from "@/hooks";
 
 export default function CustomersPage() {
@@ -28,10 +28,10 @@ export default function CustomersPage() {
     limit: pagination.pageSize,
   });
 
-  const deleteCustomerMutation = useDeleteCustomer();
+  const deactivateCustomerMutation = useDeactivateCustomer();
 
   const handleDelete = (id: string) => {
-    deleteCustomerMutation.mutate(id, {
+    deactivateCustomerMutation.mutate(id, {
       onSuccess: () => toast.success("Customer deactivated successfully"),
       onError: () =>
         toast.error("An error occurred when deactivating customer"),

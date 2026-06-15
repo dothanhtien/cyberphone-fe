@@ -18,7 +18,7 @@ import { PageHeading } from "@/components/PageHeading";
 import { PageLoading } from "@/components/PageLoading";
 import { CustomerEditForm } from "@/features/customers/components/CustomerEditForm";
 import { useCustomerDetails } from "@/features/customers/queries";
-import { useDeleteCustomer } from "@/features/customers/mutations";
+import { useDeactivateCustomer } from "@/features/customers/mutations";
 import { usePageLayout } from "@/hooks";
 import { formatDateTime } from "@/utils";
 
@@ -29,7 +29,7 @@ export default function CustomerDetailsPage() {
   const customerQuery = useCustomerDetails(customerId);
   const customer = customerQuery.data;
 
-  const deleteCustomerMutation = useDeleteCustomer();
+  const deactivateCustomerMutation = useDeactivateCustomer();
 
   usePageLayout({
     segmentLabel: customer ? `${customer.firstName} ${customer.lastName}` : "",
@@ -42,8 +42,8 @@ export default function CustomerDetailsPage() {
     }
   }, [customerQuery.isPending, customerQuery.isError, router]);
 
-  const handleDelete = () => {
-    deleteCustomerMutation.mutate(customerId, {
+  const handleDeactivate = () => {
+    deactivateCustomerMutation.mutate(customerId, {
       onSuccess: () => {
         toast.success("Customer deactivated successfully");
         router.push("/admin/customers");
@@ -86,8 +86,8 @@ export default function CustomerDetailsPage() {
               <Button
                 variant="destructive"
                 size="sm"
-                disabled={deleteCustomerMutation.isPending}
-                onClick={handleDelete}
+                disabled={deactivateCustomerMutation.isPending}
+                onClick={handleDeactivate}
               >
                 Confirm
               </Button>

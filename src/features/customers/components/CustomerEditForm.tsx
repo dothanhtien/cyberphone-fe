@@ -69,19 +69,21 @@ export function CustomerEditForm({ customer }: CustomerEditFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { errors, dirtyFields, isSubmitting },
+    formState: { errors, dirtyFields, isDirty, isSubmitting },
   } = form;
 
   useEffect(() => {
-    reset({
-      email: customer.email,
-      phone: customer.phone ?? "",
-      firstName: customer.firstName,
-      lastName: customer.lastName,
-      dateOfBirth: parseDateOfBirth(customer.dateOfBirth),
-      gender: customer.gender ?? undefined,
-    });
-  }, [customer, reset]);
+    if (!isDirty) {
+      reset({
+        email: customer.email,
+        phone: customer.phone ?? "",
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        dateOfBirth: parseDateOfBirth(customer.dateOfBirth),
+        gender: customer.gender ?? undefined,
+      });
+    }
+  }, [customer, reset, isDirty]);
 
   const isPending = updateMutation.isPending || isSubmitting;
 
@@ -110,7 +112,17 @@ export function CustomerEditForm({ customer }: CustomerEditFormProps) {
     updateMutation.mutate(
       { id: customer.id, data: payload },
       {
-        onSuccess: () => toast.success("Customer updated successfully"),
+        onSuccess: (updatedCustomer) => {
+          toast.success("Customer updated successfully");
+          reset({
+            email: updatedCustomer.email,
+            phone: updatedCustomer.phone ?? "",
+            firstName: updatedCustomer.firstName,
+            lastName: updatedCustomer.lastName,
+            dateOfBirth: parseDateOfBirth(updatedCustomer.dateOfBirth),
+            gender: updatedCustomer.gender ?? undefined,
+          });
+        },
         onError: (error) =>
           handleApiError(error, "An error occurred when updating customer"),
       },

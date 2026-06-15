@@ -24,7 +24,7 @@ export const useUpdateCustomer = () => {
   });
 };
 
-export const useDeleteCustomer = () => {
+export const useDeactivateCustomer = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
