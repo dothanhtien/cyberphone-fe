@@ -15,7 +15,7 @@ import {
   ShoppingBag,
   Store,
   TabletSmartphone,
-  // Users,
+  Users,
 } from "lucide-react";
 
 import {
@@ -61,7 +61,10 @@ const userNavGroups = [
   },
   {
     label: "Sales",
-    items: [{ name: "Orders", url: "/admin/orders", icon: ShoppingBag }],
+    items: [
+      { name: "Orders", url: "/admin/orders", icon: ShoppingBag },
+      { name: "Customers", url: "/admin/customers", icon: Users },
+    ],
   },
   {
     label: "Configuration",
