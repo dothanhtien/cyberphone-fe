@@ -1,5 +1,14 @@
 import { BreadcrumbItem } from "@/types";
 
+function profileLayoutConfig(prefix: "/admin" | "/customers") {
+  const href = `${prefix}/profile`;
+  return () => ({
+    title: "My Profile",
+    activeMenuKey: href,
+    breadcrumbs: [{ label: "Profile", href }],
+  });
+}
+
 export const layoutConfigMap: Record<
   string,
   (params?: { segmentLabel?: string; pathname?: string }) => {
@@ -186,6 +195,8 @@ export const layoutConfigMap: Record<
     ],
   }),
 
+  "/admin/profile": profileLayoutConfig("/admin"),
+
   "/customers/orders": () => ({
     title: "My orders",
     activeMenuKey: "/customers/orders",
@@ -206,4 +217,6 @@ export const layoutConfigMap: Record<
       },
     ],
   }),
+
+  "/customers/profile": profileLayoutConfig("/customers"),
 };

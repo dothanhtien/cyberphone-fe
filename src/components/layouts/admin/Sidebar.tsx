@@ -95,10 +95,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   const activeMenu = useLayoutStore((state) => state.activeMenu);
   const user = useAuthStore((state) => state.user);
-  const navGroups =
-    user?.type === "customer"
-      ? [{ label: null, items: customerMenuItems }]
-      : userNavGroups;
+  const isCustomer = user?.type === "customer";
+  const navGroups = isCustomer
+    ? [{ label: null, items: customerMenuItems }]
+    : userNavGroups;
+  const profileHref = isCustomer ? "/customers/profile" : "/admin/profile";
   const clearSession = useAuthStore((state) => state.clearSession);
   const { isMobile } = useSidebar();
   const logoutMutation = useLogout();
@@ -233,9 +234,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem>
-                  <CircleUserRound />
-                  Profile
+                <DropdownMenuItem asChild>
+                  <Link href={profileHref}>
+                    <CircleUserRound />
+                    Profile
+                  </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />

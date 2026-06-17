@@ -10,6 +10,10 @@ export const queryKeys = {
     all: ["auth"] as const,
     me: () => ["auth", "me"] as const,
   },
+  profile: {
+    all: ["profile"] as const,
+    me: () => ["profile", "me"] as const,
+  },
   categories: {
     all: ["categories"] as const,
     list: (params?: PaginationParams) =>
