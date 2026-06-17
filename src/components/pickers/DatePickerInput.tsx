@@ -48,7 +48,7 @@ export function DatePickerInput({
   );
 
   const date = isValidDate(controlledValue) ? controlledValue : undefined;
-  const month = date;
+  const [month, setMonth] = useState<Date | undefined>(date);
 
   const handleSelect = (selectedDate: Date | undefined) => {
     setInputValue(selectedDate ? formatDate(selectedDate) : "");
@@ -119,7 +119,7 @@ export function DatePickerInput({
               mode="single"
               selected={date}
               month={month}
-              onMonthChange={() => {}}
+              onMonthChange={setMonth}
               onSelect={handleSelect}
             />
           </PopoverContent>
