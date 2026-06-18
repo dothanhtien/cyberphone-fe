@@ -9,7 +9,15 @@ export function parseDateOfBirth(
   const [y, m, d] = dob.split("-").map(Number);
   if (!y || !m || !d) return undefined;
   const date = new Date(y, m - 1, d);
-  return isNaN(date.getTime()) ? undefined : date;
+  if (
+    isNaN(date.getTime()) ||
+    date.getFullYear() !== y ||
+    date.getMonth() + 1 !== m ||
+    date.getDate() !== d
+  ) {
+    return undefined;
+  }
+  return date;
 }
 
 export function toISODate(date: Date): string {

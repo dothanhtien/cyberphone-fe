@@ -97,10 +97,6 @@ export function ProfileForm({
 
   const onSubmit = (values: UpdateProfileFormValues) => {
     const dirty = getDirtyValues(dirtyFields, values);
-    if (!Object.keys(dirty).length) {
-      onEditingChange(false);
-      return;
-    }
 
     const payload: UpdateProfileRequest = {};
     if (dirty.firstName !== undefined) payload.firstName = dirty.firstName;
@@ -117,6 +113,11 @@ export function ProfileForm({
       payload.currentPassword = dirty.currentPassword;
       payload.newPassword = dirty.newPassword;
       payload.newPasswordConfirmation = dirty.newPasswordConfirmation;
+    }
+
+    if (!Object.keys(payload).length) {
+      onEditingChange(false);
+      return;
     }
 
     updateMutation.mutate(payload, {

@@ -48,7 +48,16 @@ export function DatePickerInput({
   );
 
   const date = isValidDate(controlledValue) ? controlledValue : undefined;
+  const formattedDate = date ? formatDate(date) : "";
+
   const [month, setMonth] = useState<Date | undefined>(date);
+  const [prevFormattedDate, setPrevFormattedDate] = useState(formattedDate);
+
+  if (prevFormattedDate !== formattedDate) {
+    setPrevFormattedDate(formattedDate);
+    setInputValue(formattedDate);
+    setMonth(date);
+  }
 
   const handleSelect = (selectedDate: Date | undefined) => {
     setInputValue(selectedDate ? formatDate(selectedDate) : "");
