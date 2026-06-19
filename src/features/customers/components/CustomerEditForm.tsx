@@ -26,26 +26,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DatePickerInput } from "@/components/pickers/DatePickerInput";
-import { getDirtyValues, handleApiError } from "@/utils";
 import { Gender } from "@/enums";
+import {
+  getDirtyValues,
+  handleApiError,
+  parseDateOfBirth,
+  toISODate,
+} from "@/utils";
 
 interface CustomerEditFormProps {
   customer: Customer;
-}
-
-function parseDateOfBirth(dob: string | null): Date | undefined {
-  if (!dob) return undefined;
-  const [y, m, d] = dob.split("-").map(Number);
-  if (!y || !m || !d) return undefined;
-  const date = new Date(y, m - 1, d);
-  return isNaN(date.getTime()) ? undefined : date;
-}
-
-function toISODate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
 }
 
 export function CustomerEditForm({ customer }: CustomerEditFormProps) {
