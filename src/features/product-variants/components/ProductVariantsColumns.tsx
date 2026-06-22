@@ -1,21 +1,19 @@
 "use client";
 
+import { Star, Trash } from "lucide-react";
 import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
-import { Ellipsis, SquarePen, Star, Trash } from "lucide-react";
 
+import { PRODUCT_VARIANT_STOCK_STATUS } from "../constants";
+import { ProductVariantStockStatus } from "../enums";
+import { ProductVariantListItem } from "../types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { PRODUCT_VARIANT_STOCK_STATUS } from "../constants";
-import { ProductVariantStockStatus } from "../enums";
-import { ProductVariant } from "../types";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { formatCurrency } from "@/utils";
 import { DEFAULT_IMAGE } from "@/constants";
 
@@ -26,12 +24,12 @@ const STOCK_STATUS_STYLES = {
 };
 
 interface GetProductVariantColumnsProps {
-  onEdit: (data: ProductVariant) => void;
+  onDelete: (id: string) => void;
 }
 
 export function getProductVariantsColumns({
-  onEdit,
-}: GetProductVariantColumnsProps): ColumnDef<ProductVariant>[] {
+  onDelete,
+}: GetProductVariantColumnsProps): ColumnDef<ProductVariantListItem>[] {
   return [
     {
       id: "isDefault",
@@ -60,7 +58,7 @@ export function getProductVariantsColumns({
         return (
           <div className="flex items-center gap-4">
             <Image
-              src={DEFAULT_IMAGE}
+              src={variant.mainImageUrl ?? DEFAULT_IMAGE}
               className="rounded bg-muted object-contain"
               width={64}
               height={64}
@@ -98,31 +96,39 @@ export function getProductVariantsColumns({
     },
     {
       id: "actions",
-      header: "Actions",
+      header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="size-8">
-                <Ellipsis />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="min-w-40">
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => onEdit(row.original)}>
-                  <SquarePen /> Edit
-                </DropdownMenuItem>
+          <div className="text-center" onClick={(e) => e.stopPropagation()}>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8 text-red-500"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Trash />
+                </Button>
+              </PopoverTrigger>
 
-                <DropdownMenuItem>
-                  <Star /> Set as default
-                </DropdownMenuItem>
-
-                <DropdownMenuItem>
-                  <Trash /> Delete
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <PopoverContent align="end" className="flex flex-col gap-2">
+                <div>Are you sure you want to delete this variant?</div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete?.(row.original.id);
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
         );
       },
     },

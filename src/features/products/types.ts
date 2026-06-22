@@ -7,6 +7,7 @@ export interface ProductImage {
   imageType: ProductImageType;
   altText: string | null;
   url: string;
+  displayOrder: number;
 }
 
 export interface ProductAttribute {

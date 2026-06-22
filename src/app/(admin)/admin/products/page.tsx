@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
+import { Button } from "@/components/ui/button";
 import { ProductsTable } from "@/features/products/components/ProductsTable";
 import { useProducts } from "@/features/products/queries";
 import { useDeleteProduct } from "@/features/products/mutations";
@@ -60,7 +60,7 @@ export default function ProductsPage() {
 
         <Button size="lg" asChild>
           <Link href="/admin/products/new">
-            <Plus /> New products
+            <Plus /> New product
           </Link>
         </Button>
       </div>

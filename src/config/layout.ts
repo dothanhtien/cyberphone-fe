@@ -141,6 +141,52 @@ export const layoutConfigMap: Record<
       },
     ],
   }),
+  "/admin/products/[id]/variants/new": (params) => ({
+    title: "New variant",
+    activeMenuKey: "/admin/products",
+    breadcrumbs: [
+      { label: "Products", href: "/admin/products" },
+      {
+        label: params?.segmentLabel || "Details",
+      },
+      {
+        label: "Variants",
+        href: params?.pathname?.replace("/new", "") || "/admin/products",
+      },
+      {
+        label: "New",
+      },
+    ],
+  }),
+  "/admin/products/[id]/variants/[variantId]": (params) => ({
+    title: "Variant details",
+    activeMenuKey: "/admin/products",
+    breadcrumbs: [
+      { label: "Products", href: "/admin/products" },
+      {
+        label: params?.segmentLabel || "Details",
+      },
+      {
+        label: "Variants",
+      },
+    ],
+  }),
+  "/admin/products/[id]/variants/[variantId]/edit": (params) => ({
+    title: "Edit variant",
+    activeMenuKey: "/admin/products",
+    breadcrumbs: [
+      { label: "Products", href: "/admin/products" },
+      {
+        label: params?.segmentLabel || "Details",
+      },
+      {
+        label: "Variants",
+      },
+      {
+        label: "Edit",
+      },
+    ],
+  }),
 
   "/admin/orders": () => ({
     title: "Orders",

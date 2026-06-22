@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import { ColumnDef } from "@tanstack/react-table";
 import {
   CheckCircle2,
   CircleDot,
@@ -10,6 +8,8 @@ import {
   Trash,
   XCircle,
 } from "lucide-react";
+import Image from "next/image";
+import { ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -99,7 +99,7 @@ export const getProductsColumns = ({
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: () => <div className="text-center">Status</div>,
       cell: ({ cell }) => {
         const status = cell.getValue<ProductStatus>();
 
@@ -149,44 +149,52 @@ export const getProductsColumns = ({
         }
 
         return (
-          <Badge variant={variant} className={className ?? ""}>
-            <Icon className="mr-1 h-3.5 w-3.5" />
-            {status.toUpperCase()}
-          </Badge>
+          <div className="text-center">
+            <Badge variant={variant} className={className ?? ""}>
+              <Icon className="mr-1 h-3.5 w-3.5" />
+              {status.toUpperCase()}
+            </Badge>
+          </div>
         );
       },
     },
     {
       id: "flags",
-      header: "Flags",
+      header: () => <div className="text-center">Flags</div>,
       cell: ({ row }) => {
         const isFeatured = row.original.isFeatured;
         const isBestseller = row.original.isBestseller;
 
         if (isFeatured || isBestseller) {
           return (
-            <div className="flex flex-col w-full flex-wrap justify-start gap-1">
-              {isFeatured && (
-                <Badge className="bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
-                  Featured
-                </Badge>
-              )}
+            <div className="text-center">
+              <div>
+                {isFeatured && (
+                  <Badge className="bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
+                    Featured
+                  </Badge>
+                )}
+              </div>
 
-              {isBestseller && (
-                <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">
-                  Best Seller
-                </Badge>
-              )}
+              <div>
+                {isBestseller && (
+                  <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">
+                    Best Seller
+                  </Badge>
+                )}
+              </div>
             </div>
           );
         } else {
-          return <div className="text-muted-foreground">No flags</div>;
+          return (
+            <div className="text-muted-foreground text-center">No flags</div>
+          );
         }
       },
     },
     {
       id: "actions",
-      header: "Actions",
+      header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
         const canDelete = !row.original.variantCount;
 

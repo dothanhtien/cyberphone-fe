@@ -1,5 +1,7 @@
 import * as z from "zod";
 
+import { ProductImageType } from "@/features/products/enums";
+
 export const productVariantSchema = z
   .object({
     name: z
@@ -34,6 +36,32 @@ export const productVariantSchema = z
       .int("Low stock threshold must be an integer")
       .min(0, "Low stock threshold must be greater than or equal to 0"),
     isDefault: z.boolean(),
+    gallery: z
+      .array(
+        z.object({
+          id: z.string(),
+          file: z.instanceof(File).optional(),
+          preview: z.string().optional().nullable(),
+          isMain: z.boolean(),
+          url: z.string().optional().nullable(),
+          altText: z.string().optional(),
+          isDeleted: z.boolean().optional(),
+        }),
+      )
+      .optional(),
+    images: z.array(z.instanceof(File)).default([]),
+    imageMetas: z
+      .array(
+        z.object({
+          id: z.string().optional(),
+          imageType: z.nativeEnum(ProductImageType),
+          altText: z.string().nullable().optional(),
+          title: z.string().nullable().optional(),
+          displayOrder: z.number().optional(),
+          isDeleted: z.boolean().optional(),
+        }),
+      )
+      .default([]),
     attributes: z.array(
       z.object({
         id: z.string().optional(),

@@ -44,6 +44,8 @@ export const queryKeys = {
     lists: () => [...queryKeys.productVariants.all, "list"] as const,
     list: (productId: string) =>
       [...queryKeys.productVariants.lists(), productId] as const,
+    details: (variantId: string) =>
+      [...queryKeys.productVariants.all, "details", variantId] as const,
   },
   orders: {
     all: ["orders"] as const,
