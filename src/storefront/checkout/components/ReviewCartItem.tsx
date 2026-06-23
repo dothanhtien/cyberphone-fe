@@ -66,19 +66,20 @@ export function ReviewCartItem({ item }: ReviewCartItemProps) {
   return (
     <Card key={item.id} className="mb-4">
       <CardContent>
-        <div className="grid grid-cols-5 gap-4">
-          <div className="col-span-1">
+        <div className="flex gap-4">
+          <div className="shrink-0">
             <Image
               src={item.imageUrl ?? DEFAULT_IMAGE}
               loading="eager"
               width={100}
               height={100}
               alt=""
+              className="rounded object-cover"
             />
           </div>
 
-          <div className="col-span-3">
-            <h3 className="font-bold mb-3">{item.variantName}</h3>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-bold mb-2 truncate">{item.variantName}</h3>
 
             <p className="font-semibold text-base text-red-700 mb-3">
               {formatCurrency(item.salePrice ?? item.price)} VND
@@ -109,7 +110,7 @@ export function ReviewCartItem({ item }: ReviewCartItemProps) {
             </div>
           </div>
 
-          <div className="col-span-1 text-right">
+          <div className="shrink-0">
             <Button
               variant="destructive"
               size="icon-xs"

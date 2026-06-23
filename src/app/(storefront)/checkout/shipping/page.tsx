@@ -22,10 +22,10 @@ export default function CheckoutShippngPage() {
   if (!hasHydrated) return;
 
   return (
-    <div className="grid grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
       <ShippingForm onSubmit={handleSubmit} address={shippingAddress} />
 
-      <div className="col-span-2">
+      <div className="lg:col-span-2">
         <OrderSummary />
       </div>
     </div>

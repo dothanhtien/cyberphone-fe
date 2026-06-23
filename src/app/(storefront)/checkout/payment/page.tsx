@@ -126,8 +126,8 @@ export default function CheckoutPaymentPage() {
   if (!hasCartHydrated || !hasCheckoutHydrated) return null;
 
   return (
-    <div className="grid grid-cols-5 gap-4 items-start">
-      <Card className="col-span-3">
+    <div className="grid grid-cols-1 gap-4 items-start lg:grid-cols-5">
+      <Card className="lg:col-span-3">
         <CardHeader>
           <CardTitle className="font-bold flex gap-2">
             <CreditCard /> <span>Payment method</span>
@@ -182,7 +182,7 @@ export default function CheckoutPaymentPage() {
         </CardContent>
       </Card>
 
-      <div className="col-span-2">
+      <div className="lg:col-span-2">
         <OrderSummary />
       </div>
     </div>

@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogIn, LogOut, ShoppingBag, TabletSmartphone } from "lucide-react";
+import {
+  LogIn,
+  LogOut,
+  Search,
+  ShoppingBag,
+  TabletSmartphone,
+} from "lucide-react";
 
 import { NavbarSearch } from "./NavbarSearch";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -53,7 +59,15 @@ export function Navbar() {
           </Link>
 
           <div className="flex items-center gap-2">
-            <NavbarSearch />
+            <div className="hidden md:block">
+              <NavbarSearch />
+            </div>
+
+            <Button variant="ghost" size="icon" asChild className="md:hidden">
+              <Link href="/products">
+                <Search className="h-5 w-5" />
+              </Link>
+            </Button>
 
             <MiniCart />
 

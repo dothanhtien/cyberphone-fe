@@ -19,8 +19,8 @@ export default function CheckoutCartPage() {
   if (!hasHydrated) return null;
 
   return (
-    <div className="grid grid-cols-5 gap-6">
-      <div className="col-span-3">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+      <div className="lg:col-span-3">
         <h2 className="font-bold mb-3">Cart items</h2>
         {(cart?.items?.length ?? 0) === 0 ? (
           <Card className="mb-3">
@@ -44,7 +44,7 @@ export default function CheckoutCartPage() {
         </Button>
       </div>
 
-      <div className="col-span-2">
+      <div className="lg:col-span-2">
         <h2 className="font-bold mb-3">Order summary</h2>
         <Card>
           <CardContent>
