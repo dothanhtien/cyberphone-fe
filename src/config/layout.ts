@@ -135,6 +135,8 @@ export const layoutConfigMap: Record<
       { label: "Products", href: "/admin/products" },
       {
         label: params?.segmentLabel || "Details",
+        href:
+          params?.pathname?.replace("/variants", "/edit") || "/admin/products",
       },
       {
         label: "Variants",
@@ -148,6 +150,9 @@ export const layoutConfigMap: Record<
       { label: "Products", href: "/admin/products" },
       {
         label: params?.segmentLabel || "Details",
+        href:
+          params?.pathname?.replace("/variants/new", "/edit") ||
+          "/admin/products",
       },
       {
         label: "Variants",
@@ -158,29 +163,22 @@ export const layoutConfigMap: Record<
       },
     ],
   }),
-  "/admin/products/[id]/variants/[variantId]": (params) => ({
-    title: "Variant details",
-    activeMenuKey: "/admin/products",
-    breadcrumbs: [
-      { label: "Products", href: "/admin/products" },
-      {
-        label: params?.segmentLabel || "Details",
-      },
-      {
-        label: "Variants",
-      },
-    ],
-  }),
   "/admin/products/[id]/variants/[variantId]/edit": (params) => ({
     title: "Edit variant",
     activeMenuKey: "/admin/products",
     breadcrumbs: [
       { label: "Products", href: "/admin/products" },
       {
-        label: params?.segmentLabel || "Details",
+        label: "Details",
+        href:
+          params?.pathname
+            ?.replace(/\/[^/]+\/edit$/, "")
+            ?.replace(/\/[^/]+$/, "/edit") || "/admin/products",
       },
       {
         label: "Variants",
+        href:
+          params?.pathname?.replace(/\/[^/]+\/edit$/, "") || "/admin/products",
       },
       {
         label: "Edit",

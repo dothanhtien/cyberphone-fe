@@ -74,7 +74,7 @@ export function ProductVariantForm({
             stockQuantity: variant.stockQuantity,
             lowStockThreshold: variant.lowStockThreshold,
             isDefault: variant.isDefault,
-            gallery: (variant.images ?? [])
+            gallery: [...(variant.images ?? [])]
               .sort((a, b) => a.displayOrder - b.displayOrder)
               .map((img) => ({
                 id: img.id,
@@ -224,6 +224,7 @@ export function ProductVariantForm({
                 name="price"
                 render={({ field }) => (
                   <Input
+                    id="price"
                     type="text"
                     value={formatCurrency(field.value ?? "")}
                     onChange={(e) => {
@@ -251,6 +252,7 @@ export function ProductVariantForm({
                 name="salePrice"
                 render={({ field }) => (
                   <Input
+                    id="salePrice"
                     type="text"
                     value={formatCurrency(field.value ?? "")}
                     onChange={(e) => {
@@ -276,6 +278,7 @@ export function ProductVariantForm({
                 name="costPrice"
                 render={({ field }) => (
                   <Input
+                    id="costPrice"
                     type="text"
                     value={formatCurrency(field.value ?? "")}
                     onChange={(e) => {

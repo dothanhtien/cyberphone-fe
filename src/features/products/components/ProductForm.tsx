@@ -120,7 +120,7 @@ export function ProductForm({
       isFeatured: product.isFeatured,
       isBestseller: product.isBestseller,
       attributes: product.attributes,
-      gallery: product.images
+      gallery: [...product.images]
         .sort((a, b) => a.displayOrder - b.displayOrder)
         .map((img) => ({
           id: img.id,

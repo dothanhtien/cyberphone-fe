@@ -20,7 +20,7 @@ export function buildImagePayload(gallery: ImageItem[]): {
 
   gallery.forEach((img) => {
     if (img.file) {
-      const ext = img.file.name.split(".").pop();
+      const ext = img.file.name.split(".").pop() ?? "";
       images.push(new File([img.file], `${img.id}.${ext}`));
     }
 

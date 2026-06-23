@@ -13,12 +13,15 @@ function buildVariantFormData(
   const { images, imageMetas, ...rest } = data;
 
   Object.entries(rest).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      formData.append(
-        key,
-        typeof value === "object" ? JSON.stringify(value) : String(value),
-      );
-    }
+    if (value === undefined) return;
+    formData.append(
+      key,
+      value === null
+        ? ""
+        : typeof value === "object"
+          ? JSON.stringify(value)
+          : String(value),
+    );
   });
 
   images?.forEach((file) => formData.append("images", file));
