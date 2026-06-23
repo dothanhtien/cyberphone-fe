@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TabletSmartphone } from "lucide-react";
 
+import { STORE_NAME } from "@/config";
+
 export const metadata: Metadata = {
-  title: "CyberPhone | Authentication",
-  description: "CyberPhone admin portal authentication",
+  title: `${STORE_NAME} | Authentication`,
+  description: `${STORE_NAME} admin portal authentication`,
 };
 
 export default function AdminLoginLayout({
@@ -19,7 +21,7 @@ export default function AdminLoginLayout({
         className="flex items-center gap-2 self-center font-bold text-2xl"
       >
         <TabletSmartphone className="size-8 text-orange-400" />
-        CyberPhone
+        {STORE_NAME}
       </Link>
 
       {children}

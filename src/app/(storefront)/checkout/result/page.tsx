@@ -12,6 +12,7 @@ import { useStorefrontPayment } from "@/storefront/payment/queries";
 import { StorefrontPayment } from "@/storefront/payment/types";
 import { useCheckoutStore } from "@/stores/checkout";
 import { useCartStore } from "@/stores/cart";
+import { STORE_NAME } from "@/config";
 
 export default function CheckoutResultPage() {
   const searchParams = useSearchParams();
@@ -115,7 +116,7 @@ function PaymentSuccessful({ data }: { data: StorefrontPayment }) {
 
       <div className="mb-6">
         <h1 className="font-bold text-2xl mb-3">Payment successful!</h1>
-        <p>Thank you for shopping at CyberPhone</p>
+        <p>Thank you for shopping at {STORE_NAME}</p>
       </div>
 
       <div className="mb-6">
