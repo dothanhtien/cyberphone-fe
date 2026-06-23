@@ -26,7 +26,10 @@ export function TopProducts({ data, loading = false }: TopProductsProps) {
         ) : (
           <>
             {data.map((product) => (
-              <div className="flex mb-3 last:mb-0" key={product.id}>
+              <div
+                className="flex items-center gap-4 mb-3 last:mb-0"
+                key={product.id}
+              >
                 <Image
                   className="rounded-lg"
                   alt={product.name}

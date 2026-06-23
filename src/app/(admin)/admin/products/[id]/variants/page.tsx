@@ -39,11 +39,12 @@ export default function ProductVariantsPage() {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <PageHeading>Manage variants</PageHeading>
 
         <Button
           size="lg"
+          className="w-full sm:w-auto"
           onClick={() =>
             router.push(`/admin/products/${productId}/variants/new`)
           }

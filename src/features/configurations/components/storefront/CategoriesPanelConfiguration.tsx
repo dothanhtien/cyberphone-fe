@@ -1,6 +1,7 @@
 "use client";
 
 import { Save } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -29,7 +30,8 @@ export function CategoriesPanelConfiguration() {
     useStorefrontConfigurations<StorefrontCategoryPanelItem>(
       StorefrontConfigurationSection.CATEGORIES_PANEL,
     );
-  const { mutate: syncCategoriesPanel } = useSyncStorefrontConfigurations();
+  const { mutate: syncCategoriesPanel, isPending } =
+    useSyncStorefrontConfigurations();
 
   const {
     control,
@@ -140,9 +142,18 @@ export function CategoriesPanelConfiguration() {
         }}
       />
 
-      <Button type="submit">
-        <Save className="h-4 w-4" />
-        Save
+      <Button type="submit" disabled={isPending}>
+        {isPending ? (
+          <>
+            <Spinner />
+            Saving...
+          </>
+        ) : (
+          <>
+            <Save className="h-4 w-4" />
+            Save changes
+          </>
+        )}
       </Button>
     </form>
   );

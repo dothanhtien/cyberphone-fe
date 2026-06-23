@@ -3,13 +3,11 @@
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 
-import { useUpdateCustomer } from "../mutations";
+import type { useUpdateCustomer } from "../mutations";
 import { updateCustomerSchema, UpdateCustomerFormValues } from "../schemas";
 import { Customer, UpdateCustomerRequest } from "../types";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Field,
@@ -36,11 +34,13 @@ import {
 
 interface CustomerEditFormProps {
   customer: Customer;
+  updateMutation: ReturnType<typeof useUpdateCustomer>;
 }
 
-export function CustomerEditForm({ customer }: CustomerEditFormProps) {
-  const updateMutation = useUpdateCustomer();
-
+export function CustomerEditForm({
+  customer,
+  updateMutation,
+}: CustomerEditFormProps) {
   const form = useForm<UpdateCustomerFormValues>({
     resolver: zodResolver(updateCustomerSchema),
     mode: "all",
@@ -59,7 +59,7 @@ export function CustomerEditForm({ customer }: CustomerEditFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { errors, dirtyFields, isDirty, isSubmitting },
+    formState: { errors, dirtyFields, isDirty },
   } = form;
 
   useEffect(() => {
@@ -74,8 +74,6 @@ export function CustomerEditForm({ customer }: CustomerEditFormProps) {
       });
     }
   }, [customer, reset, isDirty]);
-
-  const isPending = updateMutation.isPending || isSubmitting;
 
   const onSubmit = (values: UpdateCustomerFormValues) => {
     const dirty = getDirtyValues(dirtyFields, values);
@@ -212,22 +210,6 @@ export function CustomerEditForm({ customer }: CustomerEditFormProps) {
             />
             {errors.gender && <FieldError>{errors.gender.message}</FieldError>}
           </Field>
-        </div>
-
-        <div className="flex justify-end">
-          <Button type="submit" size="lg" disabled={isPending}>
-            {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-                Save changes
-              </>
-            )}
-          </Button>
         </div>
       </FieldGroup>
     </form>

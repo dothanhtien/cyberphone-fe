@@ -79,7 +79,7 @@ export default function NewCategoryPage() {
 
   return (
     <div className="max-w-230">
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
         <div>
           <PageHeading className="mb-3">New category</PageHeading>
           <p className="text-muted-foreground text-sm mb-3">

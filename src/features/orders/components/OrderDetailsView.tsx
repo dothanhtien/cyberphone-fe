@@ -57,7 +57,9 @@ export function OrderDetailsView({ order, actions }: OrderDetailsViewProps) {
         <PageHeading className="break-all">{order.code}</PageHeading>
         <OrderStatusBadge status={order.orderStatus} />
         <PaymentStatusBadge status={order.paymentStatus} />
-        {actions && <div className="ml-auto">{actions}</div>}
+        {actions && (
+          <div className="w-full sm:w-auto sm:ml-auto">{actions}</div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

@@ -78,7 +78,8 @@ export function SliderConfiguration() {
       },
       {
         onSuccess: () => toast.success("Sliders saved successfully"),
-        onError: (error) => handleApiError(error, "An error occurred when saving sliders"),
+        onError: (error) =>
+          handleApiError(error, "An error occurred when saving sliders"),
       },
     );
   };
@@ -135,7 +136,7 @@ export function SliderConfiguration() {
         ) : (
           <>
             <Save className="h-4 w-4" />
-            Save
+            Save changes
           </>
         )}
       </Button>

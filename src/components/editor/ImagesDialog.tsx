@@ -81,7 +81,10 @@ export function ImagesDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="min-w-4xl" aria-describedby="">
+      <DialogContent
+        className="w-full sm:max-w-2xl md:max-w-4xl"
+        aria-describedby=""
+      >
         <DialogHeader>
           <DialogTitle>Select an image to insert</DialogTitle>
         </DialogHeader>
@@ -97,7 +100,7 @@ export function ImagesDialog({
           )}
 
           {!isLoadingMediaItems && !!mediaItems.length && (
-            <div className="grid grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
               {mediaItems.map((item) => (
                 <div
                   key={item.id}
