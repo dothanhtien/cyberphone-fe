@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { usePathname } from "next/navigation";
 
-import { layoutConfigMap } from "@/config";
+import { layoutConfigMap, STORE_NAME } from "@/config";
 import { useLayoutStore } from "@/stores/layout";
 
 interface UsePageLayoutProps {
@@ -49,8 +49,8 @@ export const usePageLayout = ({ segmentLabel }: UsePageLayoutProps = {}) => {
 
     if (typeof document !== "undefined" && title) {
       document.title = title
-        ? `CyberPhone | Admin | ${title}`
-        : "CyberPhone | Admin";
+        ? `${STORE_NAME} | Admin | ${title}`
+        : `${STORE_NAME} | Admin`;
     }
 
     if (breadcrumbs.length) setBreadcrumbs(breadcrumbs);

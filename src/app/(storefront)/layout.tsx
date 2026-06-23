@@ -3,10 +3,11 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/layouts/storefront/Navbar";
 import { Footer } from "@/components/layouts/storefront/Footer";
 import { StorefrontGuard } from "@/components/layouts/storefront/StorefrontGuard";
+import { STORE_NAME } from "@/config";
 
 export const metadata: Metadata = {
-  title: "Cyberphone",
-  description: "Cyberphone storefront",
+  title: STORE_NAME,
+  description: `${STORE_NAME} storefront`,
 };
 
 const HEADER_HEIGHT = 80;

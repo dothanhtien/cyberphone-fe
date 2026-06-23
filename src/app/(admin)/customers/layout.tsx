@@ -4,11 +4,11 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layouts/admin/Sidebar";
 import { AppSidebarInset } from "@/components/layouts/admin/SidebarInset";
+import { STORE_NAME } from "@/config";
 
 export const metadata: Metadata = {
-  title: "CyberPhone | Customer",
-  description:
-    "Customer dashboard for CyberPhone - View orders, payments and your profile",
+  title: `${STORE_NAME} | Customer`,
+  description: `Customer dashboard for ${STORE_NAME} - View orders, payments and your profile`,
 };
 
 export default function AdminLayout({

@@ -43,6 +43,7 @@ import { useLayoutStore } from "@/stores/layout";
 import { useAuthStore } from "@/stores/auth";
 import { useLogout } from "@/features/auth/mutations";
 import { getAvatarFallback, getDisplayName } from "@/utils";
+import { STORE_NAME } from "@/config";
 
 const userNavGroups = [
   {
@@ -140,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">CyberPhone</span>
+                  <span className="truncate font-medium">{STORE_NAME}</span>
                   <span className="truncate text-xs">
                     {user?.type === "user" ? "Admin" : "Customer"} Portal
                   </span>

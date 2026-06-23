@@ -25,6 +25,7 @@ import { useLogout } from "@/features/auth/mutations";
 import { MiniCart } from "@/storefront/cart/components/MiniCart";
 import { useAuthStore } from "@/stores/auth";
 import { getAvatarFallback, getDisplayName } from "@/utils";
+import { STORE_NAME } from "@/config";
 
 export function Navbar() {
   const router = useRouter();
@@ -54,7 +55,7 @@ export function Navbar() {
         <div className="max-w-300 container p-4 mx-auto flex justify-between">
           <Link href="/" className="logo font-bold">
             <span className="flex gap-1">
-              <TabletSmartphone className="text-orange-400" /> CyberPhone
+              <TabletSmartphone className="text-orange-400" /> {STORE_NAME}
             </span>
           </Link>
 
