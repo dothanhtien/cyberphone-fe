@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { queryKeys } from "@/lib/react-query/queryKeys";
+import { productVariantsApi } from "./api";
 import {
   CreateProductVariantRequest,
   UpdateProductVariantRequest,
 } from "./types";
-import { productVariantsApi } from "./api";
+import { queryKeys } from "@/lib/react-query/queryKeys";
 
 interface CreateProductVariantVariables {
   productId: string;
@@ -41,6 +41,31 @@ export const useUpdateProductVariant = () => {
     onSuccess: (_, variable) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.productVariants.list(variable.productId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.productVariants.details(variable.variantId),
+      });
+    },
+  });
+};
+
+interface DeleteProductVariantVariables {
+  productId: string;
+  variantId: string;
+}
+
+export const useDeleteProductVariant = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ variantId }: DeleteProductVariantVariables) =>
+      productVariantsApi.delete(variantId),
+    onSuccess: (_, { productId, variantId }) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.productVariants.list(productId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.productVariants.details(variantId),
       });
     },
   });

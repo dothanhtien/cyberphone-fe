@@ -135,9 +135,53 @@ export const layoutConfigMap: Record<
       { label: "Products", href: "/admin/products" },
       {
         label: params?.segmentLabel || "Details",
+        href:
+          params?.pathname?.replace("/variants", "/edit") || "/admin/products",
       },
       {
         label: "Variants",
+      },
+    ],
+  }),
+  "/admin/products/[id]/variants/new": (params) => ({
+    title: "New variant",
+    activeMenuKey: "/admin/products",
+    breadcrumbs: [
+      { label: "Products", href: "/admin/products" },
+      {
+        label: params?.segmentLabel || "Details",
+        href:
+          params?.pathname?.replace("/variants/new", "/edit") ||
+          "/admin/products",
+      },
+      {
+        label: "Variants",
+        href: params?.pathname?.replace("/new", "") || "/admin/products",
+      },
+      {
+        label: "New",
+      },
+    ],
+  }),
+  "/admin/products/[id]/variants/[variantId]/edit": (params) => ({
+    title: "Edit variant",
+    activeMenuKey: "/admin/products",
+    breadcrumbs: [
+      { label: "Products", href: "/admin/products" },
+      {
+        label: "Details",
+        href:
+          params?.pathname
+            ?.replace(/\/[^/]+\/edit$/, "")
+            ?.replace(/\/[^/]+$/, "/edit") || "/admin/products",
+      },
+      {
+        label: "Variants",
+        href:
+          params?.pathname?.replace(/\/[^/]+\/edit$/, "") || "/admin/products",
+      },
+      {
+        label: "Edit",
       },
     ],
   }),

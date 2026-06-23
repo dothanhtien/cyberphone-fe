@@ -4,20 +4,20 @@ import { Loader2, Save, Settings } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ErrorCard";
-import { PageLoading } from "@/components/PageLoading";
 import { PageHeading } from "@/components/PageHeading";
-import { ProductForm } from "@/features/products/components/ProductForm";
+import { PageLoading } from "@/components/PageLoading";
+import { Button } from "@/components/ui/button";
 import { useBrands } from "@/features/brands/queries";
 import { useCategories } from "@/features/categories/queries";
-import { useProductDetails } from "@/features/products/queries";
-import { CreateProductFormValues } from "@/features/products/schemas";
-import { useUpdateProduct } from "@/features/products/mutations";
-import { handleApiError } from "@/utils";
 import { MediaRefType } from "@/features/media/enums";
 import { useMedia } from "@/features/media/hooks/useMedia";
+import { ProductForm } from "@/features/products/components/ProductForm";
+import { useUpdateProduct } from "@/features/products/mutations";
+import { useProductDetails } from "@/features/products/queries";
+import { CreateProductFormValues } from "@/features/products/schemas";
 import { usePageLayout } from "@/hooks";
+import { handleApiError } from "@/utils";
 
 export default function EditProductPage() {
   const { id: productId } = useParams<{ id: string }>();
@@ -84,6 +84,7 @@ export default function EditProductPage() {
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap md:justify-end">
           <Button
             size="lg"
+            variant="outline"
             type="button"
             className="w-full sm:w-auto"
             onClick={() => router.push(`/admin/products/${productId}/variants`)}

@@ -1,126 +1,61 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
-import { AxiosError } from "axios";
 import { Plus } from "lucide-react";
+import { useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/PageHeading";
+import { Button } from "@/components/ui/button";
 import { ProductVariantsTable } from "@/features/product-variants/components/ProductVariantsTable";
+import { useDeleteProductVariant } from "@/features/product-variants/mutations";
 import { useProductVariants } from "@/features/product-variants/queries";
-import { useProductAttributes } from "@/features/products/queries";
-import {
-  useCreateProductVariant,
-  useUpdateProductVariant,
-} from "@/features/product-variants/mutations";
-import { ProductVariant } from "@/features/product-variants/types";
-import { ProductVariantFormValues } from "@/features/product-variants/schemas";
-import { ProductVariantModal } from "@/features/product-variants/components/ProductVariantModal";
-import { ApiError } from "@/types";
 import { usePageLayout } from "@/hooks";
+import { handleApiError } from "@/utils";
 
 export default function ProductVariantsPage() {
   const params = useParams<{ id: string }>();
   const productId = params.id;
+  const router = useRouter();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingVariant, setEditingVariant] = useState<ProductVariant | null>(
-    null,
-  );
-
-  const isCreateMode = !editingVariant;
+  usePageLayout(); // TODO: add segment for product name
 
   const { data: variants } = useProductVariants(productId);
-  const createProductVariantMutation = useCreateProductVariant();
-  const updateProductVariantMutation = useUpdateProductVariant();
+  const deleteVariantMutation = useDeleteProductVariant();
 
-  const { data: attributes } = useProductAttributes(productId);
-
-  usePageLayout();
-
-  const handleOpenCreate = () => {
-    setEditingVariant(null);
-    setIsModalOpen(true);
-  };
-
-  const handleEditVariant = (variant: ProductVariant) => {
-    setEditingVariant(variant);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = (open: boolean) => {
-    if (!open) {
-      setEditingVariant(null);
-    }
-    setIsModalOpen(open);
-  };
-
-  const handleSubmit = (values: Partial<ProductVariantFormValues>) => {
-    if (isCreateMode) {
-      createProductVariantMutation.mutate(
+  const handleDeleteVariant = useCallback(
+    (variantId: string) => {
+      deleteVariantMutation.mutate(
+        { productId, variantId },
         {
-          productId,
-          data: values as ProductVariantFormValues,
-        },
-        {
-          onSuccess: () => {
-            toast.success("Product variant created successfully!");
-            setIsModalOpen(false);
-          },
-          onError: (error) => {
-            const axiosError = error as AxiosError<ApiError>;
-            toast.error(
-              axiosError.response?.data?.message ||
-                "Failed to create product variant",
-            );
-          },
+          onSuccess: () => toast.success("Variant deleted successfully"),
+          onError: (error) =>
+            handleApiError(error, "An error occurred when deleting variant"),
         },
       );
-    } else if (editingVariant) {
-      updateProductVariantMutation.mutate(
-        {
-          productId,
-          variantId: editingVariant.id,
-          data: values,
-        },
-        {
-          onSuccess: () => {
-            toast.success("Product variant updated successfully!");
-            setIsModalOpen(false);
-          },
-          onError: (error) => {
-            const axiosError = error as AxiosError<ApiError>;
-            toast.error(
-              axiosError.response?.data?.message ||
-                "Failed to update product variant",
-            );
-          },
-        },
-      );
-    }
-  };
+    },
+    [deleteVariantMutation, productId],
+  );
 
   return (
     <>
       <div className="flex justify-between items-center mb-6">
         <PageHeading>Manage variants</PageHeading>
 
-        <Button size="lg" onClick={handleOpenCreate}>
-          <Plus /> Add variant
+        <Button
+          size="lg"
+          onClick={() =>
+            router.push(`/admin/products/${productId}/variants/new`)
+          }
+        >
+          <Plus /> New variant
         </Button>
       </div>
 
-      <ProductVariantsTable data={variants ?? []} onEdit={handleEditVariant} />
-
-      <ProductVariantModal
-        mode={isCreateMode ? "create" : "update"}
-        open={isModalOpen}
-        variant={editingVariant}
-        attributes={attributes ?? []}
-        onOpenChange={handleCloseModal}
-        onSubmit={handleSubmit}
+      <ProductVariantsTable
+        productId={productId}
+        data={variants ?? []}
+        onDelete={handleDeleteVariant}
       />
     </>
   );

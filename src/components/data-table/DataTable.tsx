@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import {
   ColumnDef,
   flexRender,
@@ -8,8 +9,8 @@ import {
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
 
+import { DataTablePagination } from "./DataTablePagination";
 import {
   Table,
   TableBody,
@@ -18,15 +19,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "./DataTablePagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   loading?: boolean;
-  pagination: PaginationState;
-  pageCount: number;
-  onPaginationChange: (
+  pagination?: PaginationState;
+  pageCount?: number;
+  onPaginationChange?: (
     updater: PaginationState | ((old: PaginationState) => PaginationState),
   ) => void;
   onRowClick?: (row: TData) => void;
@@ -41,18 +41,18 @@ export function DataTable<TData, TValue>({
   onPaginationChange,
   onRowClick,
 }: DataTableProps<TData, TValue>) {
+  const hasPagination = !!pagination && !!onPaginationChange;
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
-    state: {
-      pagination,
-    },
-    manualPagination: true,
-    pageCount,
-    onPaginationChange,
+    state: hasPagination ? { pagination } : undefined,
+    manualPagination: hasPagination,
+    pageCount: hasPagination ? pageCount : undefined,
+    onPaginationChange: hasPagination ? onPaginationChange : undefined,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: hasPagination ? getPaginationRowModel() : undefined,
   });
 
   return (
@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      <DataTablePagination table={table} />
+      {hasPagination && <DataTablePagination table={table} />}
     </div>
   );
 }
