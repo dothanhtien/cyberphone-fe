@@ -101,7 +101,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     : userNavGroups;
   const profileHref = isCustomer ? "/customers/profile" : "/admin/profile";
   const clearSession = useAuthStore((state) => state.clearSession);
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
   const logoutMutation = useLogout();
 
   const handleLogOut = () => {
@@ -173,7 +173,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       data-[active=true]:font-semibold
                     "
                   >
-                    <Link href={item.url}>
+                    <Link
+                      href={item.url}
+                      onClick={() => isMobile && setOpenMobile(false)}
+                    >
                       <item.icon />
                       <span>{item.name}</span>
                     </Link>
@@ -235,7 +238,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem asChild>
-                  <Link href={profileHref}>
+                  <Link
+                    href={profileHref}
+                    onClick={() => isMobile && setOpenMobile(false)}
+                  >
                     <CircleUserRound />
                     Profile
                   </Link>

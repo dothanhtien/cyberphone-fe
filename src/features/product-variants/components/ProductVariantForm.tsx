@@ -163,7 +163,7 @@ export function ProductVariantForm({
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <Field>
               <RequiredFieldLabel htmlFor="name">Name</RequiredFieldLabel>
               <Input
@@ -216,7 +216,7 @@ export function ProductVariantForm({
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <Field>
               <RequiredFieldLabel htmlFor="price">Price</RequiredFieldLabel>
               <Controller
@@ -244,7 +244,7 @@ export function ProductVariantForm({
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <Field>
               <FieldLabel htmlFor="salePrice">Sale price</FieldLabel>
               <Controller
@@ -308,7 +308,7 @@ export function ProductVariantForm({
         </CardHeader>
 
         <CardContent>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <Field>
               <RequiredFieldLabel htmlFor="stockQuantity">
                 Stock quantity
@@ -390,7 +390,7 @@ export function ProductVariantForm({
                       <span className="text-destructive">*</span>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6 bg-neutral-100 p-4 rounded-2xl">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-neutral-100 p-4 rounded-2xl">
                       <Field>
                         <RequiredFieldLabel>Value</RequiredFieldLabel>
 

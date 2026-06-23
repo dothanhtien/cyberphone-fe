@@ -80,11 +80,11 @@ export function OrderStatusActions({
 
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
         {advanceAction && (
           <Button
-            size="sm"
             disabled={mutation.isPending}
+            className="w-full sm:w-auto"
             onClick={() => setPendingAction(advanceAction)}
           >
             {advanceAction.label}
@@ -92,10 +92,9 @@ export function OrderStatusActions({
         )}
         {canCancel && (
           <Button
-            size="sm"
             variant="outline"
             disabled={mutation.isPending}
-            className="text-destructive hover:text-destructive"
+            className="w-full sm:w-auto text-destructive hover:text-destructive"
             onClick={() =>
               setPendingAction({
                 target: OrderStatus.CANCELLED,

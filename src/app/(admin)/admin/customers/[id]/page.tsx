@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Trash } from "lucide-react";
+import { Loader2, Save, Trash } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +18,10 @@ import { PageHeading } from "@/components/PageHeading";
 import { PageLoading } from "@/components/PageLoading";
 import { CustomerEditForm } from "@/features/customers/components/CustomerEditForm";
 import { useCustomerDetails } from "@/features/customers/queries";
-import { useDeactivateCustomer } from "@/features/customers/mutations";
+import {
+  useDeactivateCustomer,
+  useUpdateCustomer,
+} from "@/features/customers/mutations";
 import { usePageLayout } from "@/hooks";
 import { formatDateTime } from "@/utils";
 
@@ -30,6 +33,7 @@ export default function CustomerDetailsPage() {
   const customer = customerQuery.data;
 
   const deactivateCustomerMutation = useDeactivateCustomer();
+  const updateCustomerMutation = useUpdateCustomer();
 
   usePageLayout({
     segmentLabel: customer ? `${customer.firstName} ${customer.lastName}` : "",
@@ -71,29 +75,55 @@ export default function CustomerDetailsPage() {
           <p className="text-muted-foreground text-sm">{customer!.email}</p>
         </div>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="destructive" size="lg">
-              <Trash className="mr-2 h-4 w-4" />
-              Deactivate
-            </Button>
-          </PopoverTrigger>
-
-          <PopoverContent align="end" className="flex flex-col gap-2">
-            <div>Are you sure you want to deactivate this customer?</div>
-
-            <div className="flex justify-end gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Popover>
+            <PopoverTrigger asChild>
               <Button
                 variant="destructive"
-                size="sm"
-                disabled={deactivateCustomerMutation.isPending}
-                onClick={handleDeactivate}
+                size="lg"
+                className="w-full sm:w-auto"
               >
-                Confirm
+                <Trash className="mr-2 h-4 w-4" />
+                Deactivate
               </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
+            </PopoverTrigger>
+
+            <PopoverContent align="end" className="flex flex-col gap-2">
+              <div>Are you sure you want to deactivate this customer?</div>
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  disabled={deactivateCustomerMutation.isPending}
+                  onClick={handleDeactivate}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <Button
+            type="submit"
+            form="customer-edit-form"
+            size="lg"
+            className="w-full sm:w-auto"
+            disabled={updateCustomerMutation.isPending}
+          >
+            {updateCustomerMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                Save changes
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -151,8 +181,11 @@ export default function CustomerDetailsPage() {
           <CardTitle>Edit Details</CardTitle>
         </CardHeader>
 
-        <CardContent>
-          <CustomerEditForm customer={customer!} />
+        <CardContent className="mb-3">
+          <CustomerEditForm
+            customer={customer!}
+            updateMutation={updateCustomerMutation}
+          />
         </CardContent>
       </Card>
     </div>

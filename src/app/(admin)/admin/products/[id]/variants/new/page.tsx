@@ -54,7 +54,7 @@ export default function NewProductVariantPage() {
 
   return (
     <div className="max-w-230">
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
         <div>
           <PageHeading className="mb-2">New variant</PageHeading>
           <p className="text-muted-foreground text-sm">
@@ -67,6 +67,7 @@ export default function NewProductVariantPage() {
           type="submit"
           form="product-variant-form"
           disabled={isCreating}
+          className="w-full sm:w-auto"
         >
           {isCreating ? (
             <>
