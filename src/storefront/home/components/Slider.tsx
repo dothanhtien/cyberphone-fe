@@ -5,6 +5,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
 import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 import { useStorefrontSliders } from "@/features/configurations/queries";
 
@@ -24,7 +26,7 @@ export function Slider() {
   }
 
   return (
-    <div className="rounded-xl overflow-hidden shadow-xl">
+    <div className="rounded-xl shadow-xl">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}
@@ -36,7 +38,7 @@ export function Slider() {
       >
         {activeSliders.map((slider, index) => (
           <SwiperSlide key={slider.id}>
-            <div className="relative w-full aspect-16/6 bg-gray-100">
+            <div className="relative w-full aspect-16/6 bg-gray-100 rounded-xl overflow-hidden">
               <Image
                 src={slider.url!}
                 alt={slider.altText ?? slider.title ?? `Slide ${index + 1}`}
