@@ -113,7 +113,7 @@ export function MiniCart() {
           aria-label={`Open cart (${itemCount} items)`}
         >
           <div className="relative">
-            <ShoppingCart className="size-5" />
+            <ShoppingCart className="size-4" />
             {!!itemCount && (
               <span className="absolute -top-2.5 -right-2.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
                 {itemCount}
@@ -123,7 +123,10 @@ export function MiniCart() {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent align="end" className="w-96 p-0">
+      <PopoverContent
+        align="end"
+        className="w-96 p-0 max-sm:w-[calc(100vw-2rem)] mini-cart-popup"
+      >
         <PopoverHeader className="px-4 py-3">
           <PopoverTitle className="text-base font-semibold">
             My Cart{" "}

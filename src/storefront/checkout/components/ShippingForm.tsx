@@ -30,7 +30,7 @@ export function ShippingForm({ address, onSubmit }: ShippingFormProps) {
   });
 
   return (
-    <Card className="col-span-3">
+    <Card className="lg:col-span-3">
       <CardHeader>
         <CardTitle className="font-semibold flex items-center gap-2">
           <Contact size={16} /> <span>Customer information</span>
@@ -39,7 +39,7 @@ export function ShippingForm({ address, onSubmit }: ShippingFormProps) {
 
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-2 gap-4 mb-2">
+          <div className="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-2">
             <Field>
               <RequiredFieldLabel>First name</RequiredFieldLabel>
               <Input
@@ -67,7 +67,7 @@ export function ShippingForm({ address, onSubmit }: ShippingFormProps) {
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-3">
+          <div className="grid grid-cols-1 gap-4 mb-3 sm:grid-cols-2">
             <Field>
               <RequiredFieldLabel>Phone number</RequiredFieldLabel>
               <Input {...register("phone")} aria-invalid={!!errors.phone} />
@@ -93,7 +93,7 @@ export function ShippingForm({ address, onSubmit }: ShippingFormProps) {
             )}
           </Field>
 
-          <div className="grid grid-cols-3 gap-4 mb-3">
+          <div className="grid grid-cols-1 gap-4 mb-3 sm:grid-cols-2 md:grid-cols-3">
             <Field>
               <RequiredFieldLabel>Ward</RequiredFieldLabel>
               <Input {...register("ward")} aria-invalid={!!errors.ward} />

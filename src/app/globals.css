@@ -118,6 +118,20 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@media (max-width: 640px) {
+  [data-radix-popper-content-wrapper]:has(.mini-cart-popup) {
+    left: 50% !important;
+    transform: translate(-50%, 84px) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
